@@ -122,7 +122,16 @@ func _die() -> void:
 	AudioManager.play_sfx("puff")
 	_spawn_puff_effect()
 	_drop_coins()
+	_drop_spoils()
 	queue_free()
+
+func _drop_spoils() -> void:
+	var spoil_scene = load("res://scenes/entities/SpoilLoot.tscn")
+	if not spoil_scene:
+		return
+	var spoil = spoil_scene.instantiate()
+	get_parent().add_child(spoil)
+	spoil.global_position = global_position + Vector3(randf_range(-0.4, 0.4), 0.25, randf_range(-0.4, 0.4))
 
 func _spawn_puff_effect() -> void:
 	# Nuvem cinza fofa ("puf")

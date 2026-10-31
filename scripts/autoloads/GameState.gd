@@ -4,6 +4,7 @@ extends Node
 # Gerencia moedas voláteis, vida do rei, tropas ativas e status da fase
 
 signal coins_changed(new_amount: int)
+signal spoils_changed(new_amount: int)
 signal king_hp_changed(current_hp: int, max_hp: int)
 signal wave_started(wave_number: int, total_waves: int)
 signal wave_completed(wave_number: int)
@@ -16,6 +17,7 @@ signal troop_count_changed(count: int)
 var current_stage: int = 1
 var current_world: int = 1
 var stage_coins: int = 0
+var stage_spoils: int = 0
 var stage_gold_reward: int = 0
 var stage_timer: float = 0.0
 
@@ -39,6 +41,7 @@ func start_stage(stage_id: int) -> void:
 	current_stage = stage_id
 	current_world = int((stage_id - 1) / 10) + 1
 	stage_coins = 15 # Moedas iniciais da fase para contratar o 1º arqueiro
+	stage_spoils = 0
 	stage_timer = 0.0
 	is_stage_active = true
 	is_game_over = false
@@ -67,6 +70,17 @@ func spend_stage_coins(amount: int) -> bool:
 	if stage_coins >= amount:
 		stage_coins -= amount
 		coins_changed.emit(stage_coins)
+		return true
+	return false
+
+func add_stage_spoils(amount: int) -> void:
+	stage_spoils += amount
+	spoils_changed.emit(stage_spoils)
+
+func spend_stage_spoils(amount: int) -> bool:
+	if stage_spoils >= amount:
+		stage_spoils -= amount
+		spoils_changed.emit(stage_spoils)
 		return true
 	return false
 

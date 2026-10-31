@@ -6,21 +6,26 @@
 size = Vector3(2.4, 0.6, 2.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_base"]
-size = Vector3(2.2, 0.1, 2.2)
+size = Vector3(2.5, 0.12, 2.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
-albedo_color = Color(0.38, 0.68, 0.38, 1)
-roughness = 0.8
+albedo_color = Color(0.32, 0.58, 0.32, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_rim"]
+size = Vector3(2.7, 0.08, 2.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rim"]
+albedo_color = Color(0.55, 0.42, 0.28, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_fill"]
-size = Vector3(1.9, 0.12, 1.9)
+size = Vector3(2.2, 0.15, 2.2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold"]
-albedo_color = Color(1, 0.82, 0.15, 1)
-roughness = 0.3
-
-[sub_resource type="BoxMesh" id="BoxMesh_icon"]
-size = Vector3(0.15, 0.6, 0.15)
+albedo_color = Color(1.0, 0.82, 0.1, 1)
+emission_enabled = true
+emission = Color(0.8, 0.65, 0.1, 1)
+emission_energy_multiplier = 0.5
 
 [node name="PurchasePad" type="Area3D"]
 script = ExtResource("1_pad")
@@ -29,26 +34,28 @@ script = ExtResource("1_pad")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 shape = SubResource("BoxShape3D_pad")
 
+[node name="RimMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+mesh = SubResource("BoxMesh_rim")
+surface_material_override/0 = SubResource("StandardMaterial3D_rim")
+
 [node name="BaseMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
 mesh = SubResource("BoxMesh_base")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood")
 
 [node name="FillProgress" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.01, 0, 0, 0, 1, 0, 0, 0, 0.01, 0, 0.06, 0)
+transform = Transform3D(0.01, 0, 0, 0, 1, 0, 0, 0, 0.01, 0, 0.1, 0)
 mesh = SubResource("BoxMesh_fill")
 surface_material_override/0 = SubResource("StandardMaterial3D_gold")
 
-[node name="PadIcon" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-mesh = SubResource("BoxMesh_icon")
-
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 billboard = 1
 double_sided = false
-text = "5"
-font_size = 42
-outline_size = 10
-outline_modulate = Color(0, 0, 0, 0.8)
+text = "🏹\n🪙 5"
+font_size = 78
+outline_size = 22
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(1, 0.96, 0.75, 1)
 

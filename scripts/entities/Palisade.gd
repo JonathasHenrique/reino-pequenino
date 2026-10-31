@@ -27,7 +27,7 @@ func take_damage(amount: int) -> void:
 
 func _update_ui() -> void:
 	if hp_label:
-		hp_label.text = "%d / %d" % [current_hp, max_hp]
+		hp_label.text = "🪵 %d / %d" % [current_hp, max_hp]
 
 func _break_palisade() -> void:
 	alive = false

@@ -5,8 +5,8 @@ extends CanvasLayer
 
 signal dialogue_finished()
 
-@onready var portrait_label: Label = $Panel/HBox/Portrait
-@onready var name_label: Label = $Panel/HBox/VBox/NameLabel
+@onready var portrait_label: Label = $Panel/HBox/PortraitPanel/Portrait
+@onready var name_label: Label = $Panel/HBox/VBox/NameContainer/NameLabel
 @onready var text_label: Label = $Panel/HBox/VBox/TextLabel
 @onready var continue_btn: Button = $Panel/HBox/VBox/ContinueButton
 

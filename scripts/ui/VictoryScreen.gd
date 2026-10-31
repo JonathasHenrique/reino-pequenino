@@ -44,6 +44,8 @@ func _on_next_pressed() -> void:
 
 func _on_village_pressed() -> void:
 	AudioManager.play_sfx("button_click")
+	GameState.is_game_over = false
+	GameState.is_stage_active = false
 	return_to_village_requested.emit()
 	get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
 

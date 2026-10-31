@@ -1,57 +1,93 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/village/VillageBuilding.gd" id="1_bld"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
-size = Vector3(5.0, 3.0, 5.0)
+size = Vector3(5.5, 3.5, 5.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stone_foundation"]
+size = Vector3(3.6, 0.4, 3.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.46, 0.48, 0.52, 1)
+roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_house"]
-size = Vector3(3.2, 2.2, 3.2)
+size = Vector3(3.2, 2.0, 3.2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_clay"]
-albedo_color = Color(0.85, 0.55, 0.38, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plaster"]
+albedo_color = Color(0.92, 0.88, 0.78, 1)
 roughness = 0.8
 
 [sub_resource type="PrismMesh" id="PrismMesh_roof"]
-size = Vector3(3.6, 1.4, 3.6)
+size = Vector3(3.8, 1.5, 3.8)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_roof"]
-albedo_color = Color(0.75, 0.22, 0.18, 1)
+albedo_color = Color(0.78, 0.25, 0.2, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+size = Vector3(0.8, 1.2, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood_door"]
+albedo_color = Color(0.42, 0.28, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_window_glow"]
+albedo_color = Color(1.0, 0.85, 0.4, 1)
+emission_enabled = true
+emission = Color(1.0, 0.8, 0.3, 1)
+emission_energy_multiplier = 1.2
 
 [node name="VillageBuilding" type="Area3D"]
 script = ExtResource("1_bld")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
 shape = SubResource("BoxShape3D_trigger")
 
 [node name="Visuals" type="Node3D" parent="."]
 
+[node name="Foundation" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_stone_foundation")
+surface_material_override/0 = SubResource("StandardMaterial3D_stone")
+
 [node name="HouseBase" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 mesh = SubResource("BoxMesh_house")
-surface_material_override/0 = SubResource("StandardMaterial3D_clay")
+surface_material_override/0 = SubResource("StandardMaterial3D_plaster")
 
 [node name="Roof" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.15, 0)
 mesh = SubResource("PrismMesh_roof")
 surface_material_override/0 = SubResource("StandardMaterial3D_roof")
 
+[node name="Door" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 1.62)
+mesh = SubResource("BoxMesh_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood_door")
+
+[node name="Window" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 1.0, 1.5, 1.62)
+mesh = SubResource("BoxMesh_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_window_glow")
+
 [node name="LabelLevel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 0)
 billboard = 1
 double_sided = false
 text = "Edifício\nNível 1"
-font_size = 38
-outline_size = 10
-outline_modulate = Color(0, 0, 0, 0.85)
+font_size = 72
+outline_size = 20
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(1.0, 0.95, 0.75, 1)
 
 [node name="LabelUpgrade" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
 billboard = 1
 double_sided = false
 text = "Melhorar: 🪙 40 Ouro"
-font_size = 32
-outline_size = 8
-outline_modulate = Color(0, 0, 0, 0.85)
-
+font_size = 64
+outline_size = 18
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(1.0, 0.88, 0.25, 1)

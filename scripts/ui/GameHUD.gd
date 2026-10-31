@@ -4,6 +4,7 @@ extends CanvasLayer
 # Exibe moedas, vida do rei, botão de habilidade do herói e joystick virtual
 
 @onready var coin_label: Label = $TopBar/HBox/CoinContainer/CoinLabel
+@onready var spoil_label: Label = $TopBar/HBox/SpoilContainer/SpoilLabel
 @onready var hp_bar: ProgressBar = $TopBar/HBox/HPContainer/HPBar
 @onready var wave_label: Label = $TopBar/HBox/WaveLabel
 @onready var troop_label: Label = $TopBar/HBox/TroopContainer/TroopLabel
@@ -13,6 +14,7 @@ extends CanvasLayer
 
 func _ready() -> void:
 	GameState.coins_changed.connect(_on_coins_changed)
+	GameState.spoils_changed.connect(_on_spoils_changed)
 	GameState.king_hp_changed.connect(_on_king_hp_changed)
 	GameState.wave_started.connect(_on_wave_started)
 	GameState.troop_count_changed.connect(_on_troop_count_changed)
@@ -24,9 +26,14 @@ func _ready() -> void:
 		skill_button.pressed.connect(_on_skill_pressed)
 	
 	_on_coins_changed(GameState.stage_coins)
+	_on_spoils_changed(GameState.stage_spoils)
 	_on_king_hp_changed(GameState.king_hp, GameState.king_max_hp)
 	_on_troop_count_changed(GameState.active_troops.size())
 	_setup_hero_button()
+
+func _on_spoils_changed(amount: int) -> void:
+	if spoil_label:
+		spoil_label.text = str(amount)
 
 func _process(_delta: float) -> void:
 	if fps_label:

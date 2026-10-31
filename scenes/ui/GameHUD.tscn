@@ -56,13 +56,32 @@ layout_mode = 2
 
 [node name="CoinIcon" type="Label" parent="TopBar/HBox/CoinContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 26
 text = "🪙"
 
 [node name="CoinLabel" type="Label" parent="TopBar/HBox/CoinContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.9, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 24
 text = "15"
+
+[node name="SpoilContainer" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+
+[node name="SpoilIcon" type="Label" parent="TopBar/HBox/SpoilContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "🪖"
+
+[node name="SpoilLabel" type="Label" parent="TopBar/HBox/SpoilContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.5, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 24
+text = "0"
 
 [node name="HPContainer" type="HBoxContainer" parent="TopBar/HBox"]
 layout_mode = 2

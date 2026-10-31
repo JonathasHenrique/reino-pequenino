@@ -65,6 +65,10 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, move_speed * 8.0 * delta)
 	
 	move_and_slide()
+	
+	# Limita o movimento do Rei estritamente dentro da área do diorama
+	global_position.x = clamp(global_position.x, -26.0, 26.0)
+	global_position.z = clamp(global_position.z, -26.0, 26.0)
 
 func _on_magnet_area_entered(area: Area3D) -> void:
 	if area.is_in_group("coins"):

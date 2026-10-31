@@ -1,0 +1,97 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/MerchantCounter.gd" id="1_merch"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trig"]
+size = Vector3(3.6, 2.5, 3.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_counter"]
+size = Vector3(2.4, 0.9, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.48, 0.32, 0.18, 1)
+roughness = 0.85
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_npc_body"]
+top_radius = 0.28
+bottom_radius = 0.35
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_apron"]
+albedo_color = Color(0.25, 0.55, 0.35, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_npc_head"]
+radius = 0.24
+height = 0.48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skin"]
+albedo_color = Color(1.0, 0.88, 0.76, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hat"]
+top_radius = 0.38
+bottom_radius = 0.45
+height = 0.12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_straw"]
+albedo_color = Color(0.88, 0.76, 0.42, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_roof"]
+size = Vector3(2.6, 0.15, 1.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awning"]
+albedo_color = Color(0.85, 0.25, 0.25, 1)
+
+[node name="MerchantCounter" type="Area3D"]
+script = ExtResource("1_merch")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("BoxShape3D_trig")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Table" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("BoxMesh_counter")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="Awning" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 2.2, -0.1)
+mesh = SubResource("BoxMesh_roof")
+surface_material_override/0 = SubResource("StandardMaterial3D_awning")
+
+[node name="MerchantBody" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -0.65)
+mesh = SubResource("CylinderMesh_npc_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_apron")
+
+[node name="MerchantHead" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -0.65)
+mesh = SubResource("SphereMesh_npc_head")
+surface_material_override/0 = SubResource("StandardMaterial3D_skin")
+
+[node name="MerchantHat" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -0.65)
+mesh = SubResource("CylinderMesh_hat")
+surface_material_override/0 = SubResource("StandardMaterial3D_straw")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
+billboard = 1
+double_sided = false
+text = "🏪 MERCADOR TOBIAS\n(Venda Capacetes: 🪖 = 🪙 4)"
+font_size = 72
+outline_size = 20
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(1.0, 0.9, 0.35, 1)
+
+[node name="SpeechBubble" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+visible = false
+billboard = 1
+double_sided = false
+text = "Negócio fechado, Majestade!"
+font_size = 64
+outline_size = 18
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(0.4, 1.0, 0.5, 1)

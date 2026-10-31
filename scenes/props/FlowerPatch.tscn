@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=3]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_stem"]
+top_radius = 0.03
+bottom_radius = 0.04
+height = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stem"]
+albedo_color = Color(0.2, 0.55, 0.2, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_petal_yellow"]
+radius = 0.14
+height = 0.22
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yellow"]
+albedo_color = Color(1.0, 0.88, 0.15, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_petal_red"]
+radius = 0.14
+height = 0.22
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_red"]
+albedo_color = Color(0.9, 0.25, 0.25, 1)
+
+[node name="FlowerPatch" type="Node3D"]
+
+[node name="Stem1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.18, 0.2)
+mesh = SubResource("CylinderMesh_stem")
+surface_material_override/0 = SubResource("StandardMaterial3D_stem")
+
+[node name="Flower1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.38, 0.2)
+mesh = SubResource("SphereMesh_petal_yellow")
+surface_material_override/0 = SubResource("StandardMaterial3D_yellow")
+
+[node name="Stem2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.15, -0.15)
+mesh = SubResource("CylinderMesh_stem")
+surface_material_override/0 = SubResource("StandardMaterial3D_stem")
+
+[node name="Flower2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.35, -0.15)
+mesh = SubResource("SphereMesh_petal_red")
+surface_material_override/0 = SubResource("StandardMaterial3D_red")
+
+[node name="Stem3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.18, 0.35)
+mesh = SubResource("CylinderMesh_stem")
+surface_material_override/0 = SubResource("StandardMaterial3D_stem")
+
+[node name="Flower3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.38, 0.35)
+mesh = SubResource("SphereMesh_petal_yellow")
+surface_material_override/0 = SubResource("StandardMaterial3D_yellow")

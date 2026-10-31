@@ -117,7 +117,34 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 - Todos os efeitos sonoros e músicas são gerados proceduralmente em GDScript via síntese de ondas puras (chiptune / som FM nostálgico), garantindo ausência de qualquer arquivo externo com problemas de licença e reduzindo o peso do jogo para poucos megabytes.
 - Pipeline de integração contínua (CI) implementado para compilar automaticamente o APK do Android a cada push na branch `main`.
 
-### O que falta (Passos para o Desenvolvedor Humano):
-1. Subir o repositório para o GitHub (`git remote add origin <URL>` e `git push -u origin main`).
-2. Baixar o arquivo `ReinoPequenino.apk` gerado automaticamente na aba **Actions** do GitHub.
-3. Instalar no celular Android para curtir a experiência em primeira mão!
+---
+
+## [Etapa 10] Overhaul Visual Diorama, Economia de Pilhagem & Ajustes de Jogabilidade
+**Data:** 31 de Outubro de 2026
+
+### O que foi feito:
+1. **Loop de Construção e Pilhagem em Tempo Real na Fase:**
+   - Inimigos derrotados soltam sucatas e capacetes (`SpoilLoot.tscn`), atraídos pelo ímã do Rei.
+   - Rei Teodoro agora empilha duas colunas visuais 3D: à esquerda moedas de ouro (`CoinStack`), à direita capacetes de inimigos (`SpoilStack`) empilhados no alforje do pônei Biscoito.
+   - Balcão do Mercador Tobias (`MerchantCounter.tscn`) instalado na base da fase: o Rei entrega os capacetes acumulados e recebe 4 moedas de ouro por peça, com jatos animados de moedas e balões de diálogo temáticos.
+   - Construções de apoio em campo: Guilda de Arqueiros (`FieldBarracks.tscn`) treina tropas adicionais periodicamente; Ferraria de Campo (`FieldForge.tscn`) concede bônus temporário de +30% de dano.
+2. **Cercamento Perimetral do Acampamento:**
+   - Paliçadas (`Palisade.tscn`) agora se organizam em 8 slots perimetrais ordenados, cercando e protegendo a base em arco contra o avanço dos Brumosos.
+   - Compras adicionais de paliçada restauram a vida das paliçadas danificadas.
+3. **Upgrades Gráficos para Estilo Diorama Vivo:**
+   - Criação de props 3D estilizados: Árvore Frondosa de Carvalho (`Tree.tscn`), Pinheiro Cônico em Camadas (`PineTree.tscn`), Rochedos com Musgo (`Rock.tscn`), Cercas Rústicas de Madeira (`WoodenFence.tscn`) e Canteiros de Flores Silvestres (`FlowerPatch.tscn`).
+   - Torre de Arqueiros reformulada com 4 pilares de sustentação de madeira, sapatas de pedra, guarda-corpo, toldo e bandeira real tremulando.
+   - Rei Teodoro e Pônei Biscoito remodelados em 3D detalhado (patas, arreios, sela de couro, capa real esvoaçante e coroa dourada com rubi).
+   - Inclusão de trilhas de terra batida e gramado delimitado na fase principal e praça de paralelepípedos na Vila do Rei.
+4. **Resolução de Fronteiras e Movimentação:**
+   - Adicionadas barreiras físicas (`Boundaries`) em ambos os mapas (`StageMain` e `Village`) nas quatro bordas (±27) para impedir que o Rei caia no abismo.
+   - `King.gd` com `clamp` de coordenadas em `-26.0` a `26.0`.
+   - Correção total da movimentação na Vila do Rei: conexão do joystick virtual restaurada e limpeza de sinal de derrota.
+5. **Legibilidade Móvel e Polimento Narrativo:**
+   - Todas as etiquetas 3D (`Label3D`) nas plataformas de compra, totens, torres, balcão e edifícios foram ampliadas para tamanhos entre 70 e 80, com contornos escuros de alta densidade e ícones visuais para identificação imediata na tela do celular.
+   - Remoção de qualquer ambiguidade de texto; telas de derrota e diálogos agora enfatizam a comédia acolhedora entre Teodoro, a avó estrategista Dona Zenaide e as maçãs do pônei guloso Biscoito.
+
+### O que foi testado:
+- Suíte integral de testes com 51 cenas e arquivos de dados: 100% aprovado.
+- Teste de compilação e execução real em motor Godot 4.3 headless (60 frames em `StageMain.tscn` e `Village.tscn`): 0 erros, saída limpa.
+- Integração contínua (CI) no GitHub Actions: compilação do APK do Android validada com sucesso.

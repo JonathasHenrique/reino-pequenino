@@ -53,11 +53,11 @@ func take_damage(amount: int) -> void:
 func _update_ui() -> void:
 	if hp_label:
 		if is_shielded:
-			hp_label.text = "🛡️ Totem Protegido pela Bruma!\n(Derrote as ondas primeiro)"
-			hp_label.modulate = Color(0.7, 0.75, 0.85)
+			hp_label.text = "🛡️ BRUMA PROTETORA!\n(Derrote as ondas primeiro)"
+			hp_label.modulate = Color(0.9, 0.95, 1.0)
 		else:
-			hp_label.text = "⚔️ Totem Vulnerável: %d / %d" % [current_hp, max_hp]
-			hp_label.modulate = Color(1.0, 0.4, 0.4)
+			hp_label.text = "⚔️ TOTEM VULNERÁVEL!\n[HP: %d / %d]" % [current_hp, max_hp]
+			hp_label.modulate = Color(1.0, 0.5, 0.5)
 
 func _spawn_damage_text(msg: String) -> void:
 	var float_scene = load("res://scenes/ui/FloatingNumber.tscn")

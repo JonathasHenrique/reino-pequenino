@@ -58,7 +58,16 @@ func _finalize_purchase() -> void:
 
 func _update_ui() -> void:
 	if cost_label_3d:
-		cost_label_3d.text = "%d / %d" % [current_paid, current_cost] if current_paid > 0 else str(current_cost)
+		var type_icon = "🏹"
+		if "tower" in pad_type:
+			type_icon = "🗼"
+		elif "palisade" in pad_type:
+			type_icon = "🪵"
+			
+		if current_paid > 0:
+			cost_label_3d.text = "%s\n🪙 %d / %d" % [type_icon, current_paid, current_cost]
+		else:
+			cost_label_3d.text = "%s\n🪙 %d" % [type_icon, current_cost]
 	
 	if fill_mesh:
 		var ratio = float(current_paid) / float(current_cost)
