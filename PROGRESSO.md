@@ -37,39 +37,41 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 3] Vila do Rei, Economia & Configurações
 **Data:** 31 de Outubro de 2026
+- Vila Real isométrica com navegação do Rei Teodoro.
+- Edifícios com melhorias instantâneas em Ouro (Quartel, Ferraria, Estábulo, Taverna, Mural da Coroa) sem timers.
+- Moinho de Vento com geração passiva de Ouro offline e limite progressivo.
+- Menu de Configurações completo (volume, vibração, 3 dificuldades, modo retrô, redução de efeitos e idiomas).
+
+---
+
+## [Etapa 4] Mundo 1 Completo: 9 Fases, Tutorial Dona Zenaide & Cena de Abertura
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. **Cena da Vila Real Isométrica (`Village.tscn` & `Village.gd`):**
-   - Cenário pacífico em maquete com gramado, luz quente de entardecer e navegação do Rei Teodoro com seu pônei Biscoito.
-2. **Edifícios e Melhorias Instantâneas (`VillageBuilding.gd` & `VillageBuilding.tscn`):**
-   - Quartel Real (aumenta o dano base das tropas).
-   - Ferraria da Vila (reduz custo de plataformas em combate).
-   - Estábulo do Biscoito (aumenta vida e velocidade do Rei).
-   - Taverna dos Viajantes (seleção rápida de heróis).
-   - Mural da Coroa Mãe (exibe as Estrelas da Coroa conquistadas).
-   - **Zero timers de espera artificial:** melhorias funcionam instantaneamente com gasto de Ouro!
-3. **Moinho e Fazenda (`Mill.gd` & `Mill.tscn`):**
-   - Pás animadas girando suavemente em 3D.
-   - Geração de Ouro passivo ao longo do tempo com acúmulo offline e limite máximo (Cap de 100 Ouro no nível 1, escalonando até 300).
-   - Coleta instantânea de Ouro ao passar perto do moinho.
-4. **Painel Completo de Configurações (`SettingsMenu.tscn` & `SettingsMenu.gd`):**
-   - Sliders de volume de música e efeitos sonoros.
-   - Alternância de vibração háptica no celular.
-   - Seletor das 3 Dificuldades: Tranquilo, Clássico e Veterano.
-   - Alternador do Modo Retrô (filtro CRT e variação chiptune) e Redução de Efeitos Visuais (acessibilidade).
-   - Seletor de idioma (Português pt-BR / English en).
-5. **HUD da Vila (`VillageHUD.tscn` & `VillageHUD.gd`):**
-   - Monitoramento do saldo de Ouro permanente, estrelas da coroa recuperadas e acesso à batalha.
+1. **Configuração Integral das 9 Fases do Mundo 1 (`world1_waves.json`):**
+   - Curva suave de aprendizado e escalonamento de vida dos totens (de 120 HP na Fase 1 até 450 HP na Fase 9).
+   - Inimigos variados introduzidos progressivamente: Brumoso Corredor, Brumoso Escudeiro, Arqueiro de Névoa, Corvo Cinzento voador e o mini-chefe Gigante da Bruma na Fase 9.
+   - Desbloqueio da tropa do Lanceiro na Fase 5.
+2. **Cena de Abertura Narrativa (`IntroCutscene.tscn` & `IntroCutscene.gd`):**
+   - Apresentação da história das 6 Estrelas da Coroa Mãe e o Barão Cinzão amuado por não ter sido chamado para o baile.
+   - Humor em duas camadas: fofura para crianças e ironia madura para jovens adultos.
+3. **Caixa de Diálogo Reutilizável (`DialogueBox.tscn` & `DialogueBox.gd`):**
+   - Retrato expressivo de Dona Zenaide, avanço por toque na tela ou botão e efeitos sonoros de clique.
+4. **Tutorial Progressivo nas Fases 1 a 3:**
+   - Fase 1: Movimento com joystick e atração magnética de moedas.
+   - Fase 2: Uso das plataformas de compra gradual para contratar arqueiros.
+   - Fase 3: Táticas de defesa com paliçadas e foco na destruição do Totem.
+5. **Menu Principal do Jogo (`MainMenu.tscn` & `MainMenu.gd`):**
+   - Ponto de entrada com logo da coroa dourada, acesso à jornada, à vila e aos ajustes.
 
 ### O que foi testado:
-- 22 cenas TSCN validadas e funcionais.
-- Curva de progressão de custos das construções da vila estritamente crescente.
-- Simulação de acumulação do Moinho: 10 minutos = 60 Ouro; 24 horas retido no teto de 100 Ouro no nível 1.
-- Teste de resiliência a corrupção do arquivo de save com recuperação do backup `.bak`.
+- 25 cenas TSCN validadas e funcionais.
+- Integridade das 9 fases de ondas do Mundo 1.
+- Verificação do desbloqueio do Lanceiro na Fase 5 e surgimento do Gigante na Fase 9.
 
 ### Decisões tomadas:
-- Sem esperas pagas ou timers artificiais para melhorias: o jogador investe seu Ouro e a vila evolui na hora, preservando a experiência autêntica de jogo clássico.
-- O moinho grava o timestamp de coleta no savegame local, calculando os ganhos offline de forma justa sem requerer conexão de rede.
+- O botão "Pular História" na introdução permite aos jogadores retornarem rapidamente ao combate caso reiniciem o jogo.
+- O diálogo do tutorial aparece apenas nas primeiras fases para não interromper a fluidez de ritmo nas fases avançadas.
 
 ### O que falta:
-- Iniciar a Etapa 4: Mundo 1 Completo (todas as 9 fases normais do Vale dos Girassóis, diálogos com humor em duas camadas com Dona Zenaide, tutorial progressivo e cena de abertura).
+- Iniciar a Etapa 5: Sistema de Minigames & Desafio 10 (A Catapulta do Vale com física 2D de lançamento em alvos de blocos cinzentos, desbloqueio da 1ª Estrela da Coroa e da Heroína Marta, a Ferreira).

@@ -34,6 +34,44 @@ func _ready() -> void:
 		tower_pad.purchase_completed.connect(_on_purchase_completed)
 	if palisade_pad:
 		palisade_pad.purchase_completed.connect(_on_purchase_completed)
+		
+	_trigger_stage_tutorial_if_needed()
+
+func _trigger_stage_tutorial_if_needed() -> void:
+	# Dicas da Dona Zenaide nas fases 1 a 3
+	var tutorial_lines: Array[Dictionary] = []
+	match stage_id:
+		1:
+			tutorial_lines = [
+				{
+					"speaker": "Dona Zenaide",
+					"icon": "👵",
+					"text": "Teodoro, use o polegar no joystick virtual para andar. E pegue as moedas no chão... o ímã da sua armadura puxa elas direto pra sua sacola!"
+				}
+			]
+		2:
+			tutorial_lines = [
+				{
+					"speaker": "Dona Zenaide",
+					"icon": "👵",
+					"text": "Veja aquele quadrado de madeira no chão! Fique parado em cima dele para suas moedas contratarem arqueiros. Arqueiro nenhum trabalha de graça no meu reino."
+				}
+			]
+		3:
+			tutorial_lines = [
+				{
+					"speaker": "Dona Zenaide",
+					"icon": "👵",
+					"text": "Lá vêm os Brumosos mais cascas-grossas com tampas de barril. Construa paliçadas e mande seus arqueiros derrubarem o Totem de Bruma!"
+				}
+			]
+			
+	if not tutorial_lines.is_empty():
+		var dlg_scene = load("res://scenes/ui/DialogueBox.tscn")
+		if dlg_scene:
+			var dlg = dlg_scene.instantiate()
+			add_child(dlg)
+			dlg.show_dialogue(tutorial_lines)
 
 func _on_purchase_completed(pad_type: String) -> void:
 	match pad_type:
