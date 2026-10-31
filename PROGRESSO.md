@@ -107,18 +107,17 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
    - `README.md`, `CREDITS.md`, `PRIVACY_POLICY.md` e `PROGRESSO.md`.
 
 ### O que foi testado:
-- Suíte integral de testes automatizados (`tests/test_runner.py`) aprovada com 100% de sucesso:
-  - 42 cenas TSCN validadas e funcionais.
-  - 60 fases distribuídas nos 6 mundos temáticos.
-  - Integridade de todos os 7 heróis, 6 tropas e 6 inimigos.
-  - Matriz de balanceamento das 3 dificuldades.
-  - Conformidade ética da loja e preset Android.
+- Suíte integral de testes automatizados (`tests/test_runner.py`) aprovada com 100% de sucesso.
+- Validação real no motor Godot 4.3 headless (`tests/smoke_test.gd`): 20/20 cenas e nós principais instanciados e executados sem falhas.
+- Execução do loop principal (`MainMenu.tscn`, `StageMain.tscn`, `Village.tscn`) com término limpo (código 0).
+- Workflow de CI/CD para GitHub Actions (`.github/workflows/android_build.yml`) configurado com Godot 4.3 export templates, Java 17, Android SDK e geração automatizada de APK de debug como artefato para download.
 
 ### Decisões tomadas:
 - O projeto está estruturado de forma completamente desacoplada e orientada a dados, permitindo balancear valores numéricos simplesmente editando os arquivos JSON na pasta `data/`.
-- Todos os efeitos sonoros e músicas são gerados proceduralmente em GDScript, garantindo ausência de qualquer arquivo externo com problemas de licença e reduzindo o peso do jogo.
+- Todos os efeitos sonoros e músicas são gerados proceduralmente em GDScript via síntese de ondas puras (chiptune / som FM nostálgico), garantindo ausência de qualquer arquivo externo com problemas de licença e reduzindo o peso do jogo para poucos megabytes.
+- Pipeline de integração contínua (CI) implementado para compilar automaticamente o APK do Android a cada push na branch `main`.
 
 ### O que falta (Passos para o Desenvolvedor Humano):
-1. Abrir o projeto no Godot 4 e testar em aparelho Android físico real.
-2. Gerar a keystore privada definitiva de release.
-3. Exportar o arquivo `.aab` e submeter à Google Play Store.
+1. Subir o repositório para o GitHub (`git remote add origin <URL>` e `git push -u origin main`).
+2. Baixar o arquivo `ReinoPequenino.apk` gerado automaticamente na aba **Actions** do GitHub.
+3. Instalar no celular Android para curtir a experiência em primeira mão!
