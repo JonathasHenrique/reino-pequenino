@@ -8,6 +8,8 @@ extends CanvasLayer
 @onready var battle_button: Button = $BottomBar/BattleButton
 @onready var heroes_button: Button = $BottomBar/HeroesButton
 @onready var settings_button: Button = $TopBar/HBox/SettingsButton
+@onready var album_button: Button = $TopBar/HBox/AlbumButton
+@onready var trophies_button: Button = $TopBar/HBox/TrophiesButton
 
 func _ready() -> void:
 	_update_hud()
@@ -19,6 +21,22 @@ func _ready() -> void:
 		heroes_button.pressed.connect(_on_heroes_pressed)
 	if settings_button:
 		settings_button.pressed.connect(_on_settings_pressed)
+	if album_button:
+		album_button.pressed.connect(_on_album_pressed)
+	if trophies_button:
+		trophies_button.pressed.connect(_on_trophies_pressed)
+
+func _on_album_pressed() -> void:
+	AudioManager.play_sfx("button_click")
+	var scene = load("res://scenes/ui/StickerAlbum.tscn")
+	if scene:
+		add_child(scene.instantiate())
+
+func _on_trophies_pressed() -> void:
+	AudioManager.play_sfx("button_click")
+	var scene = load("res://scenes/ui/TrophiesMenu.tscn")
+	if scene:
+		add_child(scene.instantiate())
 
 func _update_hud() -> void:
 	if gold_label:

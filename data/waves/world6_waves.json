@@ -1,0 +1,11 @@
+{
+  "stage_51": {"name": "Os Portões de Cinza", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 6000},
+  "stage_52": {"name": "A Névoa Espessa", "total_waves": 5, "prep_time_seconds": 7.5, "totem_hp": 6500},
+  "stage_53": {"name": "Torres Solitárias", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 7000},
+  "stage_54": {"name": "O Pátio das Memórias", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 7500},
+  "stage_55": {"name": "A Cor que Retorna", "total_waves": 5, "prep_time_seconds": 6.5, "totem_hp": 8000},
+  "stage_56": {"name": "Salão dos Estandartes", "total_waves": 6, "prep_time_seconds": 6.5, "totem_hp": 8600},
+  "stage_57": {"name": "A Escadaria de Fumaça", "total_waves": 6, "prep_time_seconds": 6.0, "totem_hp": 9200},
+  "stage_58": {"name": "O Terraço da Solidão", "total_waves": 6, "prep_time_seconds": 6.0, "totem_hp": 9800},
+  "stage_59": {"name": "A Fortaleza do Barão", "total_waves": 6, "prep_time_seconds": 7.0, "has_boss": true, "totem_hp": 11000}
+}

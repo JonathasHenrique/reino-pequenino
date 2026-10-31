@@ -1,0 +1,32 @@
+{
+  "first_victory": {
+    "name": "Primeira Vitória Real",
+    "description": "Derrubou o primeiro Totem de Bruma no Vale dos Girassóis.",
+    "icon": "🌱"
+  },
+  "catapult_master": {
+    "name": "Mestre da Catapulta",
+    "description": "Venceu o Desafio 10 e recuperou a 1ª Estrela da Coroa.",
+    "icon": "🎯"
+  },
+  "sudoku_wizard": {
+    "name": "Sábio dos Números",
+    "description": "Completou o Cofre dos Números sem cometer erros.",
+    "icon": "📐"
+  },
+  "shield_hero": {
+    "name": "Escudo Inquebrável",
+    "description": "Venceu o Desafio 30 mantendo todas as 3 vidas.",
+    "icon": "🛡️"
+  },
+  "village_architect": {
+    "name": "Arquiteto do Vilarejo",
+    "description": "Melhorou todos os edifícios da vila ao menos uma vez.",
+    "icon": "🏰"
+  },
+  "full_crown": {
+    "name": "A Coroa Reunida",
+    "description": "Recuperou todas as 6 Estrelas e levou o Barão para a festa.",
+    "icon": "👑"
+  }
+}

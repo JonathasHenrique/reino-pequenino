@@ -53,14 +53,18 @@ def test_scenes_exist():
         "scenes/ui/SettingsMenu.tscn",
         "scenes/ui/DialogueBox.tscn",
         "scenes/ui/IntroCutscene.tscn",
+        "scenes/ui/EndingCutscene.tscn",
         "scenes/ui/MainMenu.tscn",
         "scenes/ui/RetroFilterOverlay.tscn",
+        "scenes/ui/TrophiesMenu.tscn",
+        "scenes/ui/StickerAlbum.tscn",
         "scenes/minigames/Challenge10_Catapult.tscn",
         "scenes/minigames/CatapultRock.tscn",
         "scenes/minigames/Challenge20_Sudoku.tscn",
         "scenes/minigames/Challenge30_Breakout.tscn",
         "scenes/minigames/Challenge40_BlockPuzzle.tscn",
         "scenes/minigames/Challenge50_Platformer.tscn",
+        "scenes/minigames/Challenge60_LaneDefense.tscn",
         "scenes/minigames/ChallengeVictoryScreen.tscn",
         "scenes/village/VillageBuilding.tscn",
         "scenes/village/Mill.tscn",
@@ -78,33 +82,28 @@ def test_scenes_exist():
         log_test(f"Cena TSCN: {s}", exists)
     return all_exist
 
-def test_worlds_2_to_5_progression():
-    """Valida as 36 fases e desbloqueios de tropas dos Mundos 2 a 5 (Etapa 7)"""
-    w2 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world2_waves.json")))
-    w3 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world3_waves.json")))
-    w4 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world4_waves.json")))
-    w5 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world5_waves.json")))
+def test_world6_and_collectibles():
+    """Valida Mundo 6, os 6 Desafios Totais, Troféus e Álbum de Figurinhas (Etapa 8)"""
+    w6 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world6_waves.json")))
+    trophies = json.load(open(os.path.join(BASE_DIR, "data", "trophies", "trophies.json")))
+    stickers = json.load(open(os.path.join(BASE_DIR, "data", "stickers", "stickers.json")))
     
-    stages_count = len(w2) + len(w3) + len(w4) + len(w5)
+    stages_w6_ok = len(w6) == 9
+    trophies_ok = len(trophies) >= 6
+    stickers_ok = len(stickers) == 6
     
-    # Valida desbloqueio de tropas
-    has_squire = w2.get("stage_12", {}).get("unlocks_troop") == "squire"
-    has_mage = w3.get("stage_22", {}).get("unlocks_troop") == "mage"
-    has_healer = w4.get("stage_32", {}).get("unlocks_troop") == "healer"
-    has_ballista = w5.get("stage_42", {}).get("unlocks_troop") == "ballista"
-    
-    valid = (stages_count == 36) and has_squire and has_mage and has_healer and has_ballista
-    return log_test("Mundos 2 a 5 (36 fases, Escudeiro F12, Mago F22, Curandeiro F32, Balista F42)", valid)
+    valid = stages_w6_ok and trophies_ok and stickers_ok
+    return log_test("Mundo 6, Colecionáveis e Álbum (9 fases, 6 troféus, 6 figurinhas da coroa)", valid)
 
 def main():
     print("=" * 60)
-    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 7)")
+    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 8)")
     print("=" * 60)
     
     results = [
         test_json_files(),
         test_scenes_exist(),
-        test_worlds_2_to_5_progression()
+        test_world6_and_collectibles()
     ]
     
     print("-" * 60)

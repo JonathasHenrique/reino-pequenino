@@ -1,0 +1,38 @@
+{
+  "star_1": {
+    "name": "Estrela do Vale",
+    "rarity": "Rara",
+    "icon": "⭐",
+    "description": "Brilha com o amarelo dos girassóis do Mundo 1."
+  },
+  "star_2": {
+    "name": "Estrela dos Cogumelos",
+    "rarity": "Rara",
+    "icon": "🌟",
+    "description": "Pulsa com a energia rúnica dos números do Mundo 2."
+  },
+  "star_3": {
+    "name": "Estrela do Mel",
+    "rarity": "Épica",
+    "icon": "✨",
+    "description": "Resplandece com o dourado dos penhascos do Mundo 3."
+  },
+  "star_4": {
+    "name": "Estrela dos Espelhos",
+    "rarity": "Épica",
+    "icon": "💫",
+    "description": "Reflete as águas cristalinas do Mundo 4."
+  },
+  "star_5": {
+    "name": "Estrela do Inverno",
+    "rarity": "Lendária",
+    "icon": "❄️",
+    "description": "Reluz com os cristais de gelo do Mundo 5."
+  },
+  "star_6": {
+    "name": "Estrela da Festa",
+    "rarity": "Lendária",
+    "icon": "👑",
+    "description": "A última Estrela devolvida com um abraço pelo Barão Cinzão."
+  }
+}

@@ -71,32 +71,38 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 7] Mundos 2 a 5 & Seus 4 Desafios Autorais
 **Data:** 31 de Outubro de 2026
+- Fases 11 a 49 estruturadas em dados com escalonamento equilibrado.
+- Desafios 20 (Sudoku), 30 (Quebra-blocos), 40 (Muralha de Peças) e 50 (Corrida de Biscoito 2D).
+- Desbloqueio das Estrelas 2, 3, 4 e 5 e seus heróis respectivos.
+
+---
+
+## [Etapa 8] Mundo 6, Batalha Final, Desfecho Redentor, Troféus & Álbum de Figurinhas
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. **Mundos 2 a 5 Baseados em Dados (36 novas fases):**
-   - `world2_waves.json`: Floresta dos Cogumelos (Fases 11 a 19). Desbloqueia o **Escudeiro de Carvalho** na Fase 12.
-   - `world3_waves.json`: Penhascos de Mel (Fases 21 a 29). Desbloqueia o **Mago Aprendiz** na Fase 22.
-   - `world4_waves.json`: Lago dos Espelhos (Fases 31 a 39). Desbloqueia o **Curandeiro de Campo** na Fase 32.
-   - `world5_waves.json`: Pico do Inverno (Fases 41 a 49). Desbloqueia a **Balista de Rodas** na Fase 42.
-2. **Desafio 20: Cofre dos Números (`Challenge20_Sudoku.tscn`):**
-   - Sudoku místico com grade 4x4, numpad na tela, 3 dicas no Clássico (0 no Veterano) e sem timer.
-   - Desbloqueia a 2ª Estrela da Coroa e o **Mago Fidélio**.
-3. **Desafio 30: Escudo e Bola (`Challenge30_Breakout.tscn`):**
-   - Quebra-blocos autoral com escudo na base, bola radiante, 32 blocos e 3 vidas.
-   - Desbloqueia a 3ª Estrela da Coroa e a **Capitã Rosa**.
-4. **Desafio 40: A Muralha de Peças (`Challenge40_BlockPuzzle.tscn`):**
-   - Grade 8x8 de encaixe autoral, eliminação de linhas completas e meta de 300 pontos.
-   - Desbloqueia a 4ª Estrela da Coroa e a **Irmã Clara**.
-5. **Desafio 50: A Corrida de Biscoito (`Challenge50_Platformer.tscn`):**
-   - Plataforma 2D nostálgica com física de corrida, pulo, coleta de moedas e chegada à bandeira real.
-   - Desbloqueia a 5ª Estrela da Coroa e o **Urso Bento**.
+1. **Mundo 6: Castelo Cinzão (`world6_waves.json`):**
+   - 9 fases avançadas (Fases 51 a 59) no castelo de pedra cinzenta que ganha cor conforme Teodoro e seu exército avançam.
+2. **Desafio 60: Jardim da Defesa (`Challenge60_LaneDefense.tscn`):**
+   - Minigame autoral de 5 faixas defensivas sem cópia de jogos comerciais.
+   - Estrelas cadentes caem e o jogador toca na tela para coletar faíscas estelares.
+   - Posicionamento tático de arqueiros, lanceiros, barris de mel desaceleradores e magos.
+   - Batalha contra o chefe final **Barão Cinzão** em 3 fases climáticas.
+   - Desbloqueia a 6ª e última Estrela da Coroa e o **Barão Cinzão (Redimido)** como Herói selecionável.
+3. **Cena Final da Festa do Reino (`EndingCutscene.tscn` & `EndingCutscene.gd`):**
+   - O Barão Cinzão é acolhido com bolo de amoras e chapéu festivo colorido pela Dona Zenaide e pelo jovem Rei Teodoro em vez de violência.
+4. **Mural de Troféus do Reino (`TrophiesMenu.tscn` & `TrophiesMenu.gd`):**
+   - Sistema de conquistas (`first_victory`, `catapult_master`, `sudoku_wizard`, `shield_hero`, `village_architect`, `full_crown`).
+5. **Álbum de Figurinhas Colecionável (`StickerAlbum.tscn` & `StickerAlbum.gd`):**
+   - Coleção das 6 Estrelas da Coroa em cartões nostálgicos com descrição e raridade.
 
 ### O que foi testado:
-- 35 cenas TSCN validadas e funcionais.
-- Integridade das 36 fases e desbloqueios de tropas nos Mundos 2, 3, 4 e 5.
+- 40 cenas TSCN validadas e funcionais.
+- Integridade do Mundo 6 (Fases 51 a 59).
+- Total de 6 Troféus e 6 Figurinhas da Coroa validados no banco de dados JSON.
 
 ### Decisões tomadas:
-- Cada minigame funciona como uma cena autocontida com sua própria interface e mecânica, garantindo total isolamento de bugs e variedade máxima de jogabilidade.
+- O desfecho consolida a filosofia do jogo: classificação indicativa Livre a 10 anos com afeto, sem derrotas humilhantes ou violência gráfica.
 
 ### O que falta:
-- Iniciar a Etapa 8: Mundo 6 (Castelo Cinzão), Desafio 60 (Jardim da Defesa com 5 faixas e luta em 3 fases contra o Barão Cinzão), desfecho da história (festa com bolo em vez de derrota bélica), Troféus do Reino e Álbum de Figurinhas colecionáveis.
+- Iniciar a Etapa 9: Finalização (StoreService integrado com UI da loja de heróis e cosméticos, balanceamento fino das 3 dificuldades, menu de debug, documentação final e instruções de empacotamento do APK/AAB).
