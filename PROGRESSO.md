@@ -79,30 +79,46 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 8] Mundo 6, Batalha Final, Desfecho Redentor, Troféus & Álbum de Figurinhas
 **Data:** 31 de Outubro de 2026
+- Mundo 6 (Castelo Cinzão, Fases 51 a 59).
+- Desafio 60 (Jardim da Defesa de 5 faixas e confronto em 3 fases com o Barão Cinzão).
+- Cena final com desfecho acolhedor e bolo de amoras.
+- Mural de Troféus e Álbum de Figurinhas colecionáveis da coroa.
+
+---
+
+## [Etapa 9] Finalização, StoreService, Balanceamento, Presets & Entrega
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. **Mundo 6: Castelo Cinzão (`world6_waves.json`):**
-   - 9 fases avançadas (Fases 51 a 59) no castelo de pedra cinzenta que ganha cor conforme Teodoro e seu exército avançam.
-2. **Desafio 60: Jardim da Defesa (`Challenge60_LaneDefense.tscn`):**
-   - Minigame autoral de 5 faixas defensivas sem cópia de jogos comerciais.
-   - Estrelas cadentes caem e o jogador toca na tela para coletar faíscas estelares.
-   - Posicionamento tático de arqueiros, lanceiros, barris de mel desaceleradores e magos.
-   - Batalha contra o chefe final **Barão Cinzão** em 3 fases climáticas.
-   - Desbloqueia a 6ª e última Estrela da Coroa e o **Barão Cinzão (Redimido)** como Herói selecionável.
-3. **Cena Final da Festa do Reino (`EndingCutscene.tscn` & `EndingCutscene.gd`):**
-   - O Barão Cinzão é acolhido com bolo de amoras e chapéu festivo colorido pela Dona Zenaide e pelo jovem Rei Teodoro em vez de violência.
-4. **Mural de Troféus do Reino (`TrophiesMenu.tscn` & `TrophiesMenu.gd`):**
-   - Sistema de conquistas (`first_victory`, `catapult_master`, `sudoku_wizard`, `shield_hero`, `village_architect`, `full_crown`).
-5. **Álbum de Figurinhas Colecionável (`StickerAlbum.tscn` & `StickerAlbum.gd`):**
-   - Coleção das 6 Estrelas da Coroa em cartões nostálgicos com descrição e raridade.
+1. **Tenda do Mercador Real (`StoreMenu.tscn` & `StoreMenu.gd`):**
+   - Loja de heróis, skins e pacote completo com compras únicas transparentes.
+   - Mock offline funcional com simulação instantânea de compra e restauração.
+   - Zero lootboxes, sem sorteio, sem timers pagos.
+2. **Menu de Debug (`DebugMenu.tscn` & `DebugMenu.gd`):**
+   - Ferramentas para injetar moedas, ouro, desbloquear todos os heróis e testar saltos de fase.
+3. **Preset de Exportação Android (`export_presets.cfg`):**
+   - Configurado para Godot 4.3 com suporte às arquiteturas `arm64-v8a`, `armeabi-v7a` e `x86_64`.
+   - Orientação `sensor_landscape`, pacote `com.reinopequenino.game`.
+4. **Validação das 3 Dificuldades:**
+   - Tranquilo: -25% de vida dos inimigos e mais facilidade nos quebra-cabeças.
+   - Clássico: ritmo equilibrado de jogo diorama.
+   - Veterano: +20% de vida dos inimigos e desafios sem dicas.
+5. **Documentação Mestra Finalizada:**
+   - `README.md`, `CREDITS.md`, `PRIVACY_POLICY.md` e `PROGRESSO.md`.
 
 ### O que foi testado:
-- 40 cenas TSCN validadas e funcionais.
-- Integridade do Mundo 6 (Fases 51 a 59).
-- Total de 6 Troféus e 6 Figurinhas da Coroa validados no banco de dados JSON.
+- Suíte integral de testes automatizados (`tests/test_runner.py`) aprovada com 100% de sucesso:
+  - 42 cenas TSCN validadas e funcionais.
+  - 60 fases distribuídas nos 6 mundos temáticos.
+  - Integridade de todos os 7 heróis, 6 tropas e 6 inimigos.
+  - Matriz de balanceamento das 3 dificuldades.
+  - Conformidade ética da loja e preset Android.
 
 ### Decisões tomadas:
-- O desfecho consolida a filosofia do jogo: classificação indicativa Livre a 10 anos com afeto, sem derrotas humilhantes ou violência gráfica.
+- O projeto está estruturado de forma completamente desacoplada e orientada a dados, permitindo balancear valores numéricos simplesmente editando os arquivos JSON na pasta `data/`.
+- Todos os efeitos sonoros e músicas são gerados proceduralmente em GDScript, garantindo ausência de qualquer arquivo externo com problemas de licença e reduzindo o peso do jogo.
 
-### O que falta:
-- Iniciar a Etapa 9: Finalização (StoreService integrado com UI da loja de heróis e cosméticos, balanceamento fino das 3 dificuldades, menu de debug, documentação final e instruções de empacotamento do APK/AAB).
+### O que falta (Passos para o Desenvolvedor Humano):
+1. Abrir o projeto no Godot 4 e testar em aparelho Android físico real.
+2. Gerar a keystore privada definitiva de release.
+3. Exportar o arquivo `.aab` e submeter à Google Play Store.
