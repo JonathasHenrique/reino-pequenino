@@ -91,3 +91,4 @@ func get_formation_position(index: int, total: int) -> Vector3:
 	var angle = remaining_idx * angle_step
 	var offset = Vector3(cos(angle) * current_radius, 0, sin(angle) * current_radius)
 	return global_position + offset
+

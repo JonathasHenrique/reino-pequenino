@@ -8,7 +8,7 @@ bounce = 0.25
 radius = 24.0
 
 [sub_resource type="Gradient" id="Gradient_rock"]
-colors = PackedColorArray(0.55, 0.45, 0.35, 1), Color(0.35, 0.28, 0.22, 1)
+colors = PackedColorArray(0.55, 0.45, 0.35, 1, 0.35, 0.28, 0.22, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_rock"]
 gradient = SubResource("Gradient_rock")
@@ -27,3 +27,4 @@ shape = SubResource("CircleShape2D_rock")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("GradientTexture2D_rock")
+

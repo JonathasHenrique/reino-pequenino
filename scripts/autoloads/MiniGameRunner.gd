@@ -55,3 +55,4 @@ func complete_challenge(challenge_id: int, result: Dictionary) -> void:
 		SaveManager.unlock_trophy("challenge_" + str(challenge_id))
 	
 	challenge_completed.emit(challenge_id, result)
+

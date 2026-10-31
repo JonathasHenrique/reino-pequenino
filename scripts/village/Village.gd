@@ -10,3 +10,4 @@ extends Node3D
 func _ready() -> void:
 	GameState.is_stage_active = false
 	AudioManager.play_music("village")
+

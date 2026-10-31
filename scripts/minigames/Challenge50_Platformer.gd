@@ -85,3 +85,4 @@ func _update_hud() -> void:
 		hud_hearts.text = "❤️ " + str(hearts)
 	if hud_coins:
 		hud_coins.text = "🪙 " + str(coins_collected)
+

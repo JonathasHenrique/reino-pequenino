@@ -163,3 +163,4 @@ func unlock_sticker(sticker_id: String) -> void:
 		stickers.append(sticker_id)
 		save_data["stickers"] = stickers
 		save_game()
+

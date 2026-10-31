@@ -36,3 +36,4 @@ func _on_settings_pressed() -> void:
 	if settings_scene:
 		var menu = settings_scene.instantiate()
 		add_child(menu)
+

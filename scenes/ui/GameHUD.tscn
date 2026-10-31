@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/VirtualJoystick.tscn" id="2_joy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hudbar"]
-bg_color = Color(0.18, 0.12, 0.08, 0.75) # Madeira escura aconchegante
+bg_color = Color(0.18, 0.12, 0.08, 0.75)
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 content_margin_left = 16.0
@@ -20,14 +20,14 @@ corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
-bg_color = Color(0.2, 0.8, 0.35, 1) # Verde vida vibrante
+bg_color = Color(0.2, 0.8, 0.35, 1)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-bg_color = Color(0.9, 0.65, 0.15, 1) # Botão dourado de madeira
+bg_color = Color(0.9, 0.65, 0.15, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -140,3 +140,4 @@ offset_bottom = 26.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.7)
 theme_override_font_sizes/font_size = 14
 text = "FPS: 60"
+

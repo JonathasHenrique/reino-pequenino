@@ -24,3 +24,4 @@ func _process(delta: float) -> void:
 	else:
 		var alpha = lifetime / initial_lifetime
 		label.modulate.a = alpha
+

@@ -26,3 +26,4 @@ func show_victory(_challenge_id: int, _stars: int, hero_name: String, star_index
 func _on_village_pressed() -> void:
 	AudioManager.play_sfx("button_click")
 	get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
+

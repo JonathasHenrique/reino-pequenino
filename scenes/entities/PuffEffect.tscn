@@ -28,3 +28,4 @@ script = SubResource("GDScript_puff")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_cloud")
 surface_material_override/0 = SubResource("StandardMaterial3D_puff")
+

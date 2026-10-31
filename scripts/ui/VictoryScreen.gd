@@ -46,3 +46,4 @@ func _on_village_pressed() -> void:
 	AudioManager.play_sfx("button_click")
 	return_to_village_requested.emit()
 	get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
+

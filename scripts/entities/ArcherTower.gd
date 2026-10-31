@@ -40,3 +40,4 @@ func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("troops") and body.get("troop_id") == "archer" and not body.is_mounted_on_tower:
 		if garrisoned_archers.size() < max_garrison:
 			_mount_archer(body)
+

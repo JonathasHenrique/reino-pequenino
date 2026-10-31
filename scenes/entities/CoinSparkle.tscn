@@ -28,3 +28,4 @@ script = SubResource("GDScript_sparkle")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_star")
 surface_material_override/0 = SubResource("StandardMaterial3D_gold")
+

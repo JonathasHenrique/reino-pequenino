@@ -96,3 +96,4 @@ func _reset_joystick() -> void:
 	output_direction = Vector2.ZERO
 	knob.position = (base_circle.size * 0.5) - (knob.size * 0.5)
 	joystick_updated.emit(output_direction)
+

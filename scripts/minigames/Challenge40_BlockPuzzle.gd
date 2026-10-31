@@ -62,7 +62,7 @@ func _spawn_piece_options() -> void:
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(80, 70)
 		btn.text = "Peça %d" % (i + 1)
-		btn.theme_override_font_sizes/font_size = 16
+		btn.add_theme_font_size_override("font_size", 16)
 		btn.pressed.connect(_on_piece_clicked.bind(template))
 		pieces_container.add_child(btn)
 
@@ -134,3 +134,4 @@ func _trigger_victory() -> void:
 	
 	if victory_ui:
 		victory_ui.show_victory(40, stars, "Irmã Clara", 4)
+

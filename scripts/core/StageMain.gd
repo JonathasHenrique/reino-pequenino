@@ -17,8 +17,14 @@ extends Node3D
 @onready var north_spawn: Marker3D = $Spawners/NorthSpawn
 
 func _ready() -> void:
+	# CORREÇÃO: a fase vem do GameState (definida pelo menu/vitória), não do valor fixo da cena
+	stage_id = GameState.current_stage
 	GameState.start_stage(stage_id)
 	AudioManager.play_music("battle")
+	
+	# O Totem fica protegido pela Bruma até a última onda ser vencida
+	if totem and wave_manager:
+		wave_manager.all_waves_spawned.connect(totem.remove_shield)
 	
 	if wave_manager:
 		wave_manager.stage_id = stage_id

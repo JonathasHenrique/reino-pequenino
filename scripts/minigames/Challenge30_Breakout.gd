@@ -156,3 +156,4 @@ func _trigger_victory() -> void:
 	
 	if victory_ui:
 		victory_ui.show_victory(30, stars, "Capitã Rosa", 3)
+

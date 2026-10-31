@@ -51,3 +51,4 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			_display_next_line()
 			get_viewport().set_input_as_handled()
+

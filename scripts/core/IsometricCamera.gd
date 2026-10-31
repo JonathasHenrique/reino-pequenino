@@ -35,3 +35,4 @@ func _physics_process(delta: float) -> void:
 		var target_pos = target_node.global_position + offset_vector
 		global_position = global_position.lerp(target_pos, follow_speed * delta)
 		look_at(target_node.global_position, Vector3.UP)
+

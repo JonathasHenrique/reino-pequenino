@@ -9,7 +9,7 @@ size = Vector3(3.2, 1.8, 0.6)
 size = Vector3(3.0, 1.6, 0.4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
-albedo_color = Color(0.48, 0.32, 0.18, 1) # Troncos escuros pontiagudos
+albedo_color = Color(0.48, 0.32, 0.18, 1)
 roughness = 0.9
 
 [node name="Palisade" type="StaticBody3D" groups=["palisades"]]
@@ -32,3 +32,4 @@ text = "220 / 220"
 font_size = 32
 outline_size = 8
 outline_modulate = Color(0, 0, 0, 0.8)
+

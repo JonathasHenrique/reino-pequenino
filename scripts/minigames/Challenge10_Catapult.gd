@@ -167,3 +167,4 @@ func _trigger_defeat() -> void:
 	get_tree().create_timer(2.0).timeout.connect(func():
 		get_tree().reload_current_scene()
 	)
+

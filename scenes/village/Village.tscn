@@ -12,7 +12,7 @@
 size = Vector2(80, 80)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_village_grass"]
-albedo_color = Color(0.42, 0.68, 0.28, 1) # Grama agradável da vila
+albedo_color = Color(0.42, 0.68, 0.28, 1)
 roughness = 0.85
 
 [sub_resource type="Environment" id="Environment_village"]
@@ -97,3 +97,4 @@ base_cost = 0
 [node name="VirtualJoystick" parent="." instance=ExtResource("7_joy")]
 
 [node name="VillageHUD" parent="." instance=ExtResource("6_hud")]
+

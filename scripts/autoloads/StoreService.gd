@@ -75,3 +75,4 @@ func _process_real_billing(_product_id: String) -> void:
 	# Integrado via plugin oficial 'godot-google-play-billing'
 	# Consultar README.md para instruções de compilação com credenciais do Play Console
 	pass
+

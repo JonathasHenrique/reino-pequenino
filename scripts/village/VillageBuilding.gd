@@ -62,3 +62,4 @@ func _on_body_entered(body: Node3D) -> void:
 		# Tenta melhorar automaticamente ao aproximar se o jogador tiver ouro suficiente
 		if current_level < max_level and SaveManager.get_gold() >= get_upgrade_cost():
 			try_upgrade()
+

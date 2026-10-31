@@ -12,3 +12,4 @@ func _ready() -> void:
 
 func _on_retro_toggled(enabled: bool) -> void:
 	visible = enabled
+

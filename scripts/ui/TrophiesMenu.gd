@@ -34,7 +34,7 @@ func _populate_trophies() -> void:
 		
 		var icon_lbl = Label.new()
 		icon_lbl.text = info.get("icon", "🏆") if is_unlocked else "🔒"
-		icon_lbl.theme_override_font_sizes/font_size = 32
+		icon_lbl.add_theme_font_size_override("font_size", 32)
 		hbox.add_child(icon_lbl)
 		
 		var vbox = VBoxContainer.new()
@@ -42,14 +42,15 @@ func _populate_trophies() -> void:
 		
 		var title_lbl = Label.new()
 		title_lbl.text = info.get("name", "")
-		title_lbl.theme_override_font_sizes/font_size = 18
+		title_lbl.add_theme_font_size_override("font_size", 18)
 		title_lbl.modulate = Color(1.0, 0.85, 0.25) if is_unlocked else Color(0.6, 0.6, 0.6)
 		vbox.add_child(title_lbl)
 		
 		var desc_lbl = Label.new()
 		desc_lbl.text = info.get("description", "")
-		desc_lbl.theme_override_font_sizes/font_size = 14
+		desc_lbl.add_theme_font_size_override("font_size", 14)
 		desc_lbl.modulate = Color(0.85, 0.85, 0.85) if is_unlocked else Color(0.45, 0.45, 0.45)
 		vbox.add_child(desc_lbl)
 		
 		list_container.add_child(panel)
+

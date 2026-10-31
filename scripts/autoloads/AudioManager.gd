@@ -177,3 +177,4 @@ func play_music(track_name: String) -> void:
 func stop_music() -> void:
 	music_player.stop()
 	current_track = ""
+

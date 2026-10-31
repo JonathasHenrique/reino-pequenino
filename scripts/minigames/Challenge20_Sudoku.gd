@@ -65,7 +65,7 @@ func _render_cells() -> void:
 			btn.custom_minimum_size = Vector2(70, 70)
 			var val = player_grid[r][c]
 			btn.text = str(val) if val > 0 else ""
-			btn.theme_override_font_sizes/font_size = 28
+			btn.add_theme_font_size_override("font_size", 28)
 			
 			if locked_cells[r][c]:
 				btn.modulate = Color(0.7, 0.85, 1.0)
@@ -83,7 +83,7 @@ func _setup_number_pad() -> void:
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(60, 50)
 		btn.text = str(i)
-		btn.theme_override_font_sizes/font_size = 24
+		btn.add_theme_font_size_override("font_size", 24)
 		btn.pressed.connect(_on_number_selected.bind(i))
 		num_buttons_container.add_child(btn)
 		
@@ -142,3 +142,4 @@ func _check_solution() -> void:
 	
 	if victory_ui:
 		victory_ui.show_victory(20, stars, "Mago Fidélio", 2)
+

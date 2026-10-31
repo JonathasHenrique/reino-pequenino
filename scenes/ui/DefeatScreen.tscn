@@ -15,7 +15,7 @@ border_width_bottom = 4
 border_color = Color(0.65, 0.68, 0.75, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_retry"]
-bg_color = Color(0.35, 0.65, 0.88, 1) # Azul animado
+bg_color = Color(0.35, 0.65, 0.88, 1)
 corner_radius_top_left = 14
 corner_radius_top_right = 14
 corner_radius_bottom_right = 14
@@ -95,3 +95,4 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_retry")
 text = "Tentar de Novo 🔄"
+

@@ -1,0 +1,13 @@
+# Godot-specific ignores
+.godot/
+*.translation
+
+# Build outputs
+build/
+*.apk
+*.aab
+*.keystore
+
+# Tools and logs
+tools/
+*.log

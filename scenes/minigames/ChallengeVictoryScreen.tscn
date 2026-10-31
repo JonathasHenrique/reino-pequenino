@@ -108,3 +108,4 @@ theme_override_colors/font_color = Color(0.15, 0.1, 0.05, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_gold")
 text = "Retornar à Vila Real 🏰"
+

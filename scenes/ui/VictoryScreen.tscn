@@ -12,7 +12,7 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.95, 0.78, 0.22, 1) # Moldura dourada
+border_color = Color(0.95, 0.78, 0.22, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold"]
 bg_color = Color(0.92, 0.72, 0.16, 1)
@@ -100,3 +100,4 @@ theme_override_colors/font_color = Color(0.15, 0.1, 0.05, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_gold")
 text = "Próxima Fase ➔"
+

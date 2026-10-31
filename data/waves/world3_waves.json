@@ -9,3 +9,4 @@
   "stage_28": {"name": "Frente de Batalha de Mel", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 1500},
   "stage_29": {"name": "Colosso Melífero", "total_waves": 5, "prep_time_seconds": 9.0, "has_boss": true, "totem_hp": 1650}
 }
+

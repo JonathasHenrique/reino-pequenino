@@ -9,3 +9,4 @@
   "stage_18": {"name": "O Grande Cerco Fúngico", "total_waves": 4, "prep_time_seconds": 7.0, "totem_hp": 800},
   "stage_19": {"name": "Guardião dos Cogumelos", "total_waves": 5, "prep_time_seconds": 9.0, "has_boss": true, "totem_hp": 900}
 }
+

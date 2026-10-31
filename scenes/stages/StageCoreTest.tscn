@@ -10,7 +10,7 @@
 size = Vector2(80, 80)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
-albedo_color = Color(0.48, 0.72, 0.28, 1) # Grama de feltro verde viva
+albedo_color = Color(0.48, 0.72, 0.28, 1)
 roughness = 0.85
 
 [sub_resource type="Environment" id="Environment_sunset"]
@@ -32,7 +32,7 @@ environment = SubResource("Environment_sunset")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 15, 20, 15)
-light_color = Color(1, 0.94, 0.84, 1) # Luz suave de fim de tarde
+light_color = Color(1, 0.94, 0.84, 1)
 light_energy = 1.1
 shadow_enabled = true
 
@@ -66,3 +66,4 @@ base_cost = 5
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0)
 
 [node name="GameHUD" parent="." instance=ExtResource("5_hud")]
+

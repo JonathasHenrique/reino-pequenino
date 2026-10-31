@@ -148,3 +148,4 @@ func use_hero_ability() -> void:
 	
 	# Efeito dura 8 segundos
 	get_tree().create_timer(8.0).timeout.connect(func(): hero_ability_active = false)
+

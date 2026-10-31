@@ -3,10 +3,10 @@ extends CanvasLayer
 # GameHUD.gd - Interface do jogador durante as fases
 # Exibe moedas, vida do rei, botão de habilidade do herói e joystick virtual
 
-@onready var coin_label: Label = $TopBar/CoinContainer/CoinLabel
-@onready var hp_bar: ProgressBar = $TopBar/HPContainer/HPBar
-@onready var wave_label: Label = $TopBar/WaveLabel
-@onready var troop_label: Label = $TopBar/TroopContainer/TroopLabel
+@onready var coin_label: Label = $TopBar/HBox/CoinContainer/CoinLabel
+@onready var hp_bar: ProgressBar = $TopBar/HBox/HPContainer/HPBar
+@onready var wave_label: Label = $TopBar/HBox/WaveLabel
+@onready var troop_label: Label = $TopBar/HBox/TroopContainer/TroopLabel
 @onready var skill_button: Button = $ActionContainer/SkillButton
 @onready var joystick: Control = $VirtualJoystick
 @onready var fps_label: Label = $DebugOverlay/FPSLabel
@@ -74,3 +74,4 @@ func _on_skill_pressed() -> void:
 func _on_joystick_updated(direction: Vector2) -> void:
 	if GameState.king_node and is_instance_valid(GameState.king_node):
 		GameState.king_node.set_input_direction(direction)
+

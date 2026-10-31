@@ -136,3 +136,4 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_jump")
 text = "PULAR"
 
 [node name="VictoryUI" parent="." instance=ExtResource("2_cvic")]
+

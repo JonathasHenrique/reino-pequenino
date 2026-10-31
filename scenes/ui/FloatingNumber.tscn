@@ -12,3 +12,4 @@ text = "-12"
 font_size = 48
 outline_size = 12
 outline_modulate = Color(0, 0, 0, 0.75)
+

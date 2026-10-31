@@ -10,7 +10,7 @@ size = Vector2(140, 24)
 radius = 12.0
 
 [sub_resource type="Gradient" id="Gradient_ball"]
-colors = PackedColorArray(1, 0.95, 0.6, 1), Color(1, 0.7, 0.1, 1)
+colors = PackedColorArray(1, 0.95, 0.6, 1, 1, 0.7, 0.1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ball"]
 gradient = SubResource("Gradient_ball")
@@ -77,3 +77,4 @@ text = "DESAFIO 30: ESCUDO E BOLA"
 horizontal_alignment = 1
 
 [node name="VictoryUI" parent="." instance=ExtResource("2_cvic")]
+

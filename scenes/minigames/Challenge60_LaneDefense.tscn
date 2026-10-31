@@ -142,3 +142,4 @@ layout_mode = 2
 text = "🔮 Mago\n(100 ✨)"
 
 [node name="VictoryUI" parent="." instance=ExtResource("2_cvic")]
+

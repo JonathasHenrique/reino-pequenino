@@ -66,7 +66,7 @@ func _spawn_falling_spark() -> void:
 	
 	var lbl = Label.new()
 	lbl.text = "⭐"
-	lbl.theme_override_font_sizes/font_size = 32
+	lbl.add_theme_font_size_override("font_size", 32)
 	lbl.position = Vector2(-16, -20)
 	spark.add_child(lbl)
 	
@@ -114,7 +114,7 @@ func _spawn_lane_enemy() -> void:
 	
 	var lbl = Label.new()
 	lbl.text = "👾"
-	lbl.theme_override_font_sizes/font_size = 36
+	lbl.add_theme_font_size_override("font_size", 36)
 	lbl.position = Vector2(-20, -25)
 	enemy.add_child(lbl)
 	
@@ -151,7 +151,7 @@ func place_defender_on_lane(lane_idx: int) -> void:
 		def.position = Vector2(240, lane_y_positions[lane_idx])
 		var lbl = Label.new()
 		lbl.text = "🏹" if selected_defender == "archer" else "🛡️"
-		lbl.theme_override_font_sizes/font_size = 36
+		lbl.add_theme_font_size_override("font_size", 36)
 		def.add_child(lbl)
 		lane_container.add_child(def)
 		
@@ -184,3 +184,4 @@ func _trigger_victory() -> void:
 	
 	if victory_ui:
 		victory_ui.show_victory(60, 3, "Barão Cinzão (Redimido)", 6)
+

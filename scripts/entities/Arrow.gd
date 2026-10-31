@@ -43,3 +43,4 @@ func _hit_target() -> void:
 	if is_instance_valid(target_node) and target_node.has_method("take_damage"):
 		target_node.take_damage(damage)
 	queue_free()
+

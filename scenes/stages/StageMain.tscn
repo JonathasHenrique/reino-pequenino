@@ -16,7 +16,7 @@
 size = Vector2(90, 90)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
-albedo_color = Color(0.48, 0.72, 0.28, 1) # Grama de feltro
+albedo_color = Color(0.48, 0.72, 0.28, 1)
 roughness = 0.85
 
 [sub_resource type="Environment" id="Environment_sunset"]

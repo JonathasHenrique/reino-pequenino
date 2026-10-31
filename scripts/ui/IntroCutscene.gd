@@ -62,3 +62,4 @@ func _finish_intro() -> void:
 	intro_completed.emit()
 	GameState.start_stage(1)
 	get_tree().change_scene_to_file("res://scenes/stages/StageMain.tscn")
+

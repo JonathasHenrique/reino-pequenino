@@ -34,7 +34,7 @@ func _populate_store() -> void:
 		
 		var icon_lbl = Label.new()
 		icon_lbl.text = "👑" if "crown" in p_id else ("🦄" if "pony" in p_id else "🛡️")
-		icon_lbl.theme_override_font_sizes/font_size = 32
+		icon_lbl.add_theme_font_size_override("font_size", 32)
 		hbox.add_child(icon_lbl)
 		
 		var vbox = VBoxContainer.new()
@@ -43,12 +43,12 @@ func _populate_store() -> void:
 		
 		var name_lbl = Label.new()
 		name_lbl.text = item.get("name", "")
-		name_lbl.theme_override_font_sizes/font_size = 18
+		name_lbl.add_theme_font_size_override("font_size", 18)
 		vbox.add_child(name_lbl)
 		
 		var desc_lbl = Label.new()
 		desc_lbl.text = "Compra única permanente. Sem surpresas."
-		desc_lbl.theme_override_font_sizes/font_size = 13
+		desc_lbl.add_theme_font_size_override("font_size", 13)
 		desc_lbl.modulate = Color(0.7, 0.7, 0.7)
 		vbox.add_child(desc_lbl)
 		
@@ -77,3 +77,4 @@ func _on_restore_pressed() -> void:
 	if status_label:
 		status_label.text = "Compras restauradas com sucesso!"
 		status_label.modulate = Color(0.4, 0.9, 0.4)
+

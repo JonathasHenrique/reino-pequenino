@@ -28,3 +28,4 @@ Todos os recursos visuais, códigos, efeitos sonoros e músicas deste projeto s�
 
 ## 🛡️ Declaração de Originalidade
 Conforme exigido pelo regulamento do projeto, este jogo **não contém** nomes, marcas, logos ou personagens de outros títulos comerciais (como Kingshot, Clash of Clans, Super Mario ou similares). Qualquer imagem constante na pasta `reference/` foi utilizada estritamente para estudo de proporção de câmera e ritmo técnico.
+

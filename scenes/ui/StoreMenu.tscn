@@ -81,3 +81,4 @@ text = "Restaurar Compras"
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "Voltar à Vila"
+

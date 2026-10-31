@@ -23,10 +23,28 @@ var alive: bool = true
 func _ready() -> void:
 	# Escalonamento de +8% de HP por fase a partir da fase 1
 	var stage_scale = pow(1.08, float(maxi(0, GameState.current_stage - 1)))
-	current_hp = int(base_hp * stage_scale)
+	var diff_scale = 1.0
+	match Settings.difficulty:
+		Settings.Difficulty.TRANQUILO:
+			diff_scale = 0.75
+		Settings.Difficulty.VETERANO:
+			diff_scale = 1.20
+	current_hp = int(base_hp * stage_scale * diff_scale)
 	
 	add_to_group("enemies")
 	GameState.register_enemy(self)
+
+func apply_look(scale_mult: float, tint: Color) -> void:
+	if not visuals:
+		visuals = $Visuals
+	if visuals:
+		visuals.scale = Vector3(scale_mult, scale_mult, scale_mult)
+		var body_mesh = visuals.get_node_or_null("Body")
+		if body_mesh and body_mesh is MeshInstance3D:
+			var mat = StandardMaterial3D.new()
+			mat.albedo_color = tint
+			mat.roughness = 0.7
+			body_mesh.material_override = mat
 
 func _exit_tree() -> void:
 	GameState.unregister_enemy(self)
@@ -124,3 +142,4 @@ func _drop_coins() -> void:
 		get_parent().add_child(coin)
 		var rand_offset = Vector3(randf_range(-0.7, 0.7), 0.2, randf_range(-0.7, 0.7))
 		coin.global_position = global_position + rand_offset
+

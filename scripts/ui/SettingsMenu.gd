@@ -96,3 +96,4 @@ func _on_close_pressed() -> void:
 	AudioManager.play_sfx("button_click")
 	closed.emit()
 	queue_free()
+

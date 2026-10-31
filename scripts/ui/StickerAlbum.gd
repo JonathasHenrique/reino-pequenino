@@ -38,21 +38,22 @@ func _populate_stickers() -> void:
 		
 		var icon_lbl = Label.new()
 		icon_lbl.text = info.get("icon", "⭐") if is_unlocked else "❓"
-		icon_lbl.theme_override_font_sizes/font_size = 46
+		icon_lbl.add_theme_font_size_override("font_size", 46)
 		icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		vbox.add_child(icon_lbl)
 		
 		var name_lbl = Label.new()
 		name_lbl.text = info.get("name", "") if is_unlocked else "Figurinha %s" % key.replace("star_", "")
-		name_lbl.theme_override_font_sizes/font_size = 14
+		name_lbl.add_theme_font_size_override("font_size", 14)
 		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		vbox.add_child(name_lbl)
 		
 		var rarity_lbl = Label.new()
 		rarity_lbl.text = info.get("rarity", "") if is_unlocked else "Bloqueada"
-		rarity_lbl.theme_override_font_sizes/font_size = 12
+		rarity_lbl.add_theme_font_size_override("font_size", 12)
 		rarity_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		rarity_lbl.modulate = Color(1.0, 0.8, 0.2) if is_unlocked else Color(0.5, 0.5, 0.5)
 		vbox.add_child(rarity_lbl)
 		
 		grid_container.add_child(card)
+

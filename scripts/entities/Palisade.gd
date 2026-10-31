@@ -33,3 +33,4 @@ func _break_palisade() -> void:
 	alive = false
 	AudioManager.play_sfx("puff")
 	queue_free()
+

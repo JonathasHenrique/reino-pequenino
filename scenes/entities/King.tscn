@@ -10,16 +10,15 @@ height = 1.4
 [sub_resource type="SphereShape3D" id="SphereShape3D_magnet"]
 radius = 4.5
 
-[sub_resource type="TorusMesh" id="TorusMesh_ring"]
-inner_radius = 2.3
-outer_radius = 2.45
-rings = 32
-ring_segments = 3
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ring"]
 albedo_color = Color(1, 1, 1, 0.45)
 transparency = 1
 roughness = 0.8
+
+[sub_resource type="TorusMesh" id="TorusMesh_ring"]
+material = SubResource("StandardMaterial3D_ring")
+inner_radius = 2.3
+outer_radius = 2.45
 
 [sub_resource type="BoxMesh" id="BoxMesh_pony"]
 size = Vector3(0.7, 0.55, 1.1)
@@ -59,7 +58,6 @@ shape = SubResource("SphereShape3D_magnet")
 [node name="FormationAura" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 mesh = SubResource("TorusMesh_ring")
-surface_material_override/0 = SubResource("StandardMaterial3D_ring")
 
 [node name="CoinStack" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -0.2)
@@ -81,3 +79,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_skin")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.15)
 mesh = SubResource("CylinderMesh_crown")
 surface_material_override/0 = SubResource("StandardMaterial3D_crown")
+

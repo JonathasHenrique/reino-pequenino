@@ -11,7 +11,7 @@ radius = 0.3
 height = 0.9
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tunic"]
-albedo_color = Color(0.24, 0.54, 0.88, 1) # Túnica azul dos arqueiros
+albedo_color = Color(0.24, 0.54, 0.88, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_head"]
 radius = 0.22
@@ -48,3 +48,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_skin")
 [node name="Bow" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.5, 0.1)
 mesh = SubResource("BoxMesh_bow")
+

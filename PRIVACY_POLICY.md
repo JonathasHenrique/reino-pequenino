@@ -27,3 +27,4 @@ O jogo **Reino Pequenino** foi desenvolvido com respeito integral à privacidade
 
 ## 4. Contato
 Para esclarecimentos ou dúvidas sobre esta política de privacidade, contate os desenvolvedores através do repositório oficial do projeto.
+

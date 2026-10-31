@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=4 format=3]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_leaves"]
 emission_shape = 3
@@ -11,12 +11,13 @@ gravity = Vector3(0, -1.2, 0)
 scale_min = 0.6
 scale_max = 1.2
 
-[sub_resource type="QuadMesh" id="QuadMesh_leaf"]
-size = Vector2(0.3, 0.45)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leaf"]
-albedo_color = Color(0.95, 0.82, 0.22, 1) # Folhas douradas de girassol
+albedo_color = Color(0.95, 0.82, 0.22, 1)
 cull_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_leaf"]
+material = SubResource("StandardMaterial3D_leaf")
+size = Vector2(0.3, 0.45)
 
 [node name="FallingLeaves" type="GPUParticles3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
@@ -26,4 +27,3 @@ preprocess = 2.0
 visibility_aabb = AABB(-30, -15, -30, 60, 30, 60)
 process_material = SubResource("ParticleProcessMaterial_leaves")
 draw_pass_1 = SubResource("QuadMesh_leaf")
-draw_skin = SubResource("StandardMaterial3D_leaf")

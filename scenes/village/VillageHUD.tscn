@@ -12,7 +12,7 @@ content_margin_right = 20.0
 content_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_battle_btn"]
-bg_color = Color(0.88, 0.25, 0.2, 1) # Vermelho festivo
+bg_color = Color(0.88, 0.25, 0.2, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16

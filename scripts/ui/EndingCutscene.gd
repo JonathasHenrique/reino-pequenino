@@ -50,3 +50,4 @@ func _on_dialogue_finished() -> void:
 func _on_village_pressed() -> void:
 	AudioManager.play_sfx("button_click")
 	get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
+

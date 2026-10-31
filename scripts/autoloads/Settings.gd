@@ -86,3 +86,4 @@ func load_settings() -> void:
 		retro_mode = bool(d.get("retro_mode", retro_mode))
 		language = str(d.get("language", language))
 		reduced_effects = bool(d.get("reduced_effects", reduced_effects))
+

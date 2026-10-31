@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="2_dlg"]
 
 [sub_resource type="Gradient" id="Gradient_bg"]
-colors = PackedColorArray(0.95, 0.75, 0.35, 1), Color(0.35, 0.65, 0.88, 1)
+colors = PackedColorArray(0.95, 0.75, 0.35, 1, 0.35, 0.65, 0.88, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
 gradient = SubResource("Gradient_bg")
@@ -83,3 +83,4 @@ theme_override_font_sizes/font_size = 22
 text = "Celebrar na Vila Real 🎉"
 
 [node name="DialogueBox" parent="." instance=ExtResource("2_dlg")]
+

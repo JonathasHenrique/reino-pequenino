@@ -37,3 +37,4 @@ func _on_unlock_heroes() -> void:
 func _on_skip_stage() -> void:
 	GameState.complete_stage(true)
 	queue_free()
+

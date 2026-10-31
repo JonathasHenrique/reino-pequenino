@@ -14,7 +14,7 @@ func _ready() -> void:
 		lbl.text = "⚠️ ➔"
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		lbl.theme_override_font_sizes/font_size = 24
+		lbl.add_theme_font_size_override("font_size", 24)
 		lbl.modulate = Color(1.0, 0.4, 0.2, 0.9)
 		lbl.visible = false
 		add_child(lbl)
@@ -70,3 +70,4 @@ func _process(_delta: float) -> void:
 	while ind_idx < max_indicators:
 		indicator_pool[ind_idx].visible = false
 		ind_idx += 1
+

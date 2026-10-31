@@ -77,3 +77,4 @@ func _on_enemy_died(_enemy: Node3D) -> void:
 func spawn_20_archers_stress_test() -> void:
 	for i in range(20):
 		_recruit_archer()
+

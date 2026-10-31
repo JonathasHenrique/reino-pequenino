@@ -129,3 +129,4 @@ func mount_on_tower(tower: Node3D, mount_position: Vector3) -> void:
 	mounted_tower_node = tower
 	global_position = mount_position
 	velocity = Vector3.ZERO
+

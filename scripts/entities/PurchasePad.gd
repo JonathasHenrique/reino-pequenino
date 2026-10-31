@@ -73,3 +73,4 @@ func _on_body_exited(body: Node3D) -> void:
 	if body == GameState.king_node or body.is_in_group("king"):
 		is_king_present = false
 		spend_timer = 0.0
+
