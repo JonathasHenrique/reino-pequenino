@@ -1,0 +1,94 @@
+{
+  "field": {
+    "archer_tower": {
+      "id": "archer_tower",
+      "name": "Torre de Vigia",
+      "cost": 15,
+      "max_garrison": 3,
+      "range_bonus": 1.35,
+      "damage_bonus": 1.25,
+      "description": "Plataforma elevada de madeira. Arqueiros sobem automaticamente para ganhar alcance e dano extra."
+    },
+    "palisade": {
+      "id": "palisade",
+      "name": "Paliçada de Carvalho",
+      "cost": 8,
+      "hp": 220,
+      "description": "Cerca de troncos pontiagudos que bloqueia o avanço de inimigos terrestres."
+    },
+    "barracks_tent": {
+      "id": "barracks_tent",
+      "name": "Barracão de Campo",
+      "cost": 20,
+      "spawn_interval": 12.0,
+      "description": "Tenda reforçada que treina um novo lanceiro a cada 12 segundos."
+    },
+    "field_forge": {
+      "id": "field_forge",
+      "name": "Ferraria de Bordo",
+      "cost": 18,
+      "aura_radius": 7.0,
+      "damage_buff": 1.25,
+      "description": "Forja portátil que afia flechas e lâminas de tropas num raio ao redor."
+    },
+    "healing_well": {
+      "id": "healing_well",
+      "name": "Poço de Água Serena",
+      "cost": 16,
+      "aura_radius": 6.5,
+      "heal_per_second": 8,
+      "description": "Fonte cristalina que restaura a energia do Rei e tropas próximas."
+    }
+  },
+  "village": {
+    "barracks": {
+      "name": "Quartel Real",
+      "base_cost": 40,
+      "cost_mult": 1.6,
+      "max_level": 5,
+      "benefit_per_level": "+10% de dano base para todas as tropas"
+    },
+    "blacksmith": {
+      "name": "Ferraria da Vila",
+      "base_cost": 50,
+      "cost_mult": 1.7,
+      "max_level": 5,
+      "benefit_per_level": "-5% de custo de moedas nas plataformas da fase"
+    },
+    "stable": {
+      "name": "Estábulo do Biscoito",
+      "base_cost": 35,
+      "cost_mult": 1.5,
+      "max_level": 5,
+      "benefit_per_level": "+20 HP máximo e +5% de velocidade de movimento para Teodoro"
+    },
+    "mill": {
+      "name": "Moinho de Vento e Fazenda",
+      "base_cost": 45,
+      "cost_mult": 1.6,
+      "max_level": 5,
+      "benefit_per_level": "Produz Ouro passivo (acumula até 100/150/200/250/300 Ouro)"
+    },
+    "mage_tower": {
+      "name": "Torre Arcana",
+      "base_cost": 75,
+      "cost_mult": 1.8,
+      "max_level": 3,
+      "benefit_per_level": "Recarga de habilidade de herói reduzida e efeito ampliado"
+    },
+    "tavern": {
+      "name": "Taverna dos Viajantes",
+      "base_cost": 30,
+      "cost_mult": 1.4,
+      "max_level": 3,
+      "benefit_per_level": "Permite escolher qualquer herói desbloqueado antes de entrar na fase"
+    },
+    "crown_wall": {
+      "name": "Mural da Coroa Mãe",
+      "base_cost": 0,
+      "cost_mult": 1.0,
+      "max_level": 6,
+      "benefit_per_level": "Exibe as 6 Estrelas da Coroa recuperadas dos desafios"
+    }
+  }
+}

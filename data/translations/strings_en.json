@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "play": "Play",
+    "village": "Royal Village",
+    "settings": "Settings",
+    "store": "Merchant Tent",
+    "trophies": "Kingdom Trophies",
+    "album": "Sticker Album",
+    "stage": "Stage",
+    "world": "World",
+    "victory": "Glorious Victory!",
+    "defeat": "Time for a Nap!",
+    "defeat_sub": "The young king tripped gently, but Biscoito already woke him with a happy lick.",
+    "retry": "Try Again",
+    "continue": "Continue",
+    "pause": "Pause",
+    "resume": "Resume",
+    "quit_to_village": "Return to Village",
+    "gold_earned": "Permanent Gold Earned:",
+    "coins": "Coins",
+    "wave": "Wave",
+    "recruit": "Recruit",
+    "build": "Build",
+    "repair": "Repair",
+    "upgrade": "Upgrade",
+    "collect": "Collect",
+    "full": "Full!"
+  },
+  "settings": {
+    "title": "Kingdom Settings",
+    "music": "Music",
+    "sfx": "Sound Effects",
+    "vibration": "Vibration",
+    "difficulty": "Difficulty",
+    "diff_tranquilo": "Relaxed (Breeze Mode)",
+    "diff_classico": "Classic (Recommended)",
+    "diff_veterano": "Veteran (No Hints & Tougher)",
+    "retro_mode": "Retro Mode (Vintage Screen & Chiptune)",
+    "reduced_effects": "Reduce Visual Effects",
+    "language": "Language"
+  },
+  "dialogues": {
+    "intro_1": "Grandma Zenaide: 'Theodoro, sweetie... I told you not to leave the Mother Crown on the windowsill during breakfast.'",
+    "intro_2": "Theodoro: 'But Grandma, Biscoito wanted to admire his shiny reflection!'",
+    "intro_3": "Grandma Zenaide: 'Well, now Baron Ash got moody because he wasn't invited to the festival and took all 6 Stars into the Mist. Grab your wooden sword and go fetch them.'",
+    "tutorial_move": "Grandma Zenaide: 'Drag the virtual stick to walk. No running in socks across the polished floor.'",
+    "tutorial_coins": "Grandma Zenaide: 'Collect the coins on the grass. They're magnetic... cutting edge tech from our local forge.'",
+    "tutorial_buy": "Grandma Zenaide: 'Stand still on the purchase square until the coins fill it up. Archers don't volunteer for free.'",
+    "tutorial_defense": "Grandma Zenaide: 'Here come the Misty critters with cooking pots on their heads. Keep your archers close and smash that Totem!'",
+    "boss_world_1": "Grandma Zenaide: 'That Valley Totem is billowing smoke all over my freshly hung laundry. Knock it down quickly!'"
+  }
+}

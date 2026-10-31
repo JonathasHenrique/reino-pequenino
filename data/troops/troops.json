@@ -1,0 +1,81 @@
+{
+  "archer": {
+    "id": "archer",
+    "name": "Arqueiro Real",
+    "cost": 5,
+    "hp": 30,
+    "damage": 12,
+    "attack_range": 9.0,
+    "attack_speed": 1.1,
+    "unlock_stage": 1,
+    "projectile_speed": 18.0,
+    "can_mount_tower": true,
+    "description": "Atira flechas rápidas à distância com arco de madeira entalhada."
+  },
+  "spearman": {
+    "id": "spearman",
+    "name": "Lanceiro Valente",
+    "cost": 8,
+    "hp": 60,
+    "damage": 18,
+    "attack_range": 2.8,
+    "attack_speed": 1.0,
+    "unlock_stage": 5,
+    "projectile_speed": 0.0,
+    "can_mount_tower": false,
+    "description": "Guerreiro de infantaria que ataca à meia distância com lança de freixo."
+  },
+  "squire": {
+    "id": "squire",
+    "name": "Escudeiro de Carvalho",
+    "cost": 10,
+    "hp": 130,
+    "damage": 10,
+    "attack_range": 2.0,
+    "attack_speed": 0.9,
+    "unlock_stage": 12,
+    "projectile_speed": 0.0,
+    "can_mount_tower": false,
+    "description": "Porta um escudo redondo grosso de madeira e atrai a atenção dos inimigos."
+  },
+  "mage": {
+    "id": "mage",
+    "name": "Mago Aprendiz",
+    "cost": 15,
+    "hp": 45,
+    "damage": 26,
+    "attack_range": 8.0,
+    "attack_speed": 0.8,
+    "unlock_stage": 22,
+    "projectile_speed": 14.0,
+    "can_mount_tower": true,
+    "description": "Lança orbes de faíscas que explodem causando dano mágico em área."
+  },
+  "healer": {
+    "id": "healer",
+    "name": "Curandeiro de Campo",
+    "cost": 18,
+    "hp": 55,
+    "damage": 0,
+    "heal_power": 15,
+    "attack_range": 6.5,
+    "attack_speed": 0.7,
+    "unlock_stage": 32,
+    "projectile_speed": 0.0,
+    "can_mount_tower": false,
+    "description": "Restaura pontos de vida do Rei e das tropas próximas."
+  },
+  "ballista": {
+    "id": "ballista",
+    "name": "Balista de Rodas",
+    "cost": 25,
+    "hp": 90,
+    "damage": 65,
+    "attack_range": 12.0,
+    "attack_speed": 0.5,
+    "unlock_stage": 42,
+    "projectile_speed": 22.0,
+    "can_mount_tower": false,
+    "description": "Arma de cerco móvel que dispara virotes pesados capazes de perfurar múltiplos inimigos."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "teodoro": {
+    "name": "Teodoro",
+    "title": "O Jovem Rei",
+    "description": "Portador da grande Coroa de ouro. Determinado e curioso.",
+    "passive_desc": "Ímã de moedas 35% mais amplo.",
+    "skill_name": "Grito de Coragem",
+    "skill_desc": "Tropas atacam 30% mais rápido por 8 segundos.",
+    "magnet_radius_bonus": 1.35,
+    "unlocked_by_default": true
+  },
+  "marta": {
+    "name": "Marta",
+    "title": "A Ferreira Confiável",
+    "description": "Ferreira veterana que nunca larga sua bigorna de bolso.",
+    "passive_desc": "Construções e torres na fase custam 15% menos moedas.",
+    "skill_name": "Martelada Mestra",
+    "skill_desc": "Conserta e reforça instantaneamente todas as torres e paliçadas.",
+    "cost_discount": 0.15,
+    "unlocked_by_default": false
+  },
+  "fidelio": {
+    "name": "Mago Fidélio",
+    "title": "Erudito dos Números",
+    "description": "Mago que calcula trajetórias místicas com giz e régua.",
+    "passive_desc": "Magos e arqueiros causam 10% de dano adicional em área.",
+    "skill_name": "Chuva de Números",
+    "skill_desc": "Invoca chuva rúnica que causa dano contínuo a todos os inimigos na tela.",
+    "aoe_bonus": 0.10,
+    "unlocked_by_default": false
+  },
+  "rosa": {
+    "name": "Capitã Rosa",
+    "title": "Comandante da Vanguarda",
+    "description": "Estrategista destemida que ensinou o rei a manter a formação.",
+    "passive_desc": "Tropas aliadas recebem 15% menos dano de projéteis e impacto.",
+    "skill_name": "Muralha de Escudos",
+    "skill_desc": "Cria um escudo radiante protetor ao redor da formação por 8 segundos.",
+    "armor_bonus": 0.15,
+    "unlocked_by_default": false
+  },
+  "clara": {
+    "name": "Irmã Clara",
+    "title": "Curandeira da Luz",
+    "description": "Guardiã do poço de água doce e dos moinhos serenos.",
+    "passive_desc": "O rei e as tropas regeneram vida gradualmente.",
+    "skill_name": "Bênção do Moinho",
+    "skill_desc": "Restaura instantaneamente 100% da vida do Rei e de todas as tropas ativas.",
+    "regen_per_sec": 3.0,
+    "unlocked_by_default": false
+  },
+  "bento": {
+    "name": "Bento",
+    "title": "O Urso Guardião",
+    "description": "Um urso gigante de coração mole e patas poderosas.",
+    "passive_desc": "Ataques das tropas empurram inimigos ligeiramente para trás.",
+    "skill_name": "Rugido Gentil",
+    "skill_desc": "Um rugido que afasta todos os inimigos próximos do Rei.",
+    "knockback_bonus": 1.25,
+    "unlocked_by_default": false
+  },
+  "barao": {
+    "name": "Barão Cinzão",
+    "title": "O Guardião Redimido",
+    "description": "Agora com um chapéu colorido e um pedaço de bolo na mão.",
+    "passive_desc": "Inimigos caminham 15% mais devagar perto do Rei.",
+    "skill_name": "Névoa Protetora",
+    "skill_desc": "Envolve o Rei em uma névoa amiga que cega temporariamente os inimigos.",
+    "slow_aura": 0.15,
+    "unlocked_by_default": false
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "misty_runner": {
+    "id": "misty_runner",
+    "name": "Brumoso Corredor",
+    "hp": 24,
+    "speed": 3.2,
+    "damage": 6,
+    "attack_range": 1.2,
+    "attack_rate": 1.0,
+    "coin_drop": 2,
+    "is_flying": false,
+    "description": "Criaturinha cinza-azulada com panela na cabeça e passinhos rápidos."
+  },
+  "misty_squire": {
+    "id": "misty_squire",
+    "name": "Brumoso Escudeiro",
+    "hp": 55,
+    "speed": 2.2,
+    "damage": 10,
+    "attack_range": 1.3,
+    "attack_rate": 0.9,
+    "coin_drop": 4,
+    "is_flying": false,
+    "description": "Carrega tampa de barril de metal como escudo e aguenta muitos golpes."
+  },
+  "misty_archer": {
+    "id": "misty_archer",
+    "name": "Arqueiro de Névoa",
+    "hp": 22,
+    "speed": 2.5,
+    "damage": 9,
+    "attack_range": 7.5,
+    "attack_rate": 0.8,
+    "coin_drop": 3,
+    "is_flying": false,
+    "description": "Dispara pedrinhas e lascas de carvão à distância."
+  },
+  "misty_crow": {
+    "id": "misty_crow",
+    "name": "Corvo Cinzento",
+    "hp": 18,
+    "speed": 3.8,
+    "damage": 8,
+    "attack_range": 1.5,
+    "attack_rate": 1.2,
+    "coin_drop": 3,
+    "is_flying": true,
+    "description": "Voa graciosamente por cima das paliçadas e ataca diretamente o Rei."
+  },
+  "misty_giant": {
+    "id": "misty_giant",
+    "name": "Gigante de Névoa",
+    "hp": 240,
+    "speed": 1.6,
+    "damage": 22,
+    "attack_range": 2.2,
+    "attack_rate": 0.6,
+    "coin_drop": 15,
+    "is_flying": false,
+    "description": "Mini-chefe imponente feito de fumaça densa com um caldeirão no chapéu."
+  },
+  "mist_totem": {
+    "id": "mist_totem",
+    "name": "Totem de Bruma",
+    "hp": 150,
+    "speed": 0.0,
+    "damage": 0,
+    "attack_range": 0.0,
+    "attack_rate": 0.0,
+    "coin_drop": 25,
+    "is_flying": false,
+    "description": "Pilar de pedra cinzenta esculpida que emana a névoa do Barão."
+  }
+}

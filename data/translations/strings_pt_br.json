@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "play": "Jogar",
+    "village": "Vila Real",
+    "settings": "Configurações",
+    "store": "Tenda do Mercador",
+    "trophies": "Troféus do Reino",
+    "album": "Álbum de Figurinhas",
+    "stage": "Fase",
+    "world": "Mundo",
+    "victory": "Vitória Gloriosa!",
+    "defeat": "Hora de um Descanso!",
+    "defeat_sub": "O Rei deu uma leve tropeçada, mas o Biscoito já o acordou com uma lambida.",
+    "retry": "Tentar Novamente",
+    "continue": "Continuar",
+    "pause": "Pausa",
+    "resume": "Retomar",
+    "quit_to_village": "Voltar para Vila",
+    "gold_earned": "Ouro permanente ganho:",
+    "coins": "Moedas",
+    "wave": "Onda",
+    "recruit": "Recrutar",
+    "build": "Construir",
+    "repair": "Reparar",
+    "upgrade": "Melhorar",
+    "collect": "Coletar",
+    "full": "Cheio!"
+  },
+  "settings": {
+    "title": "Ajustes do Reino",
+    "music": "Música",
+    "sfx": "Efeitos Sonoros",
+    "vibration": "Vibração",
+    "difficulty": "Dificuldade",
+    "diff_tranquilo": "Tranquilo (Modo Passeio)",
+    "diff_classico": "Clássico (Recomendado)",
+    "diff_veterano": "Veterano (Sem Dicas & Desafiador)",
+    "retro_mode": "Modo Retrô (Tela Vintage & Chiptune)",
+    "reduced_effects": "Reduzir Efeitos Visuais",
+    "language": "Idioma"
+  },
+  "dialogues": {
+    "intro_1": "Dona Zenaide: 'Teodoro, meu neto... eu avisei para não deixar a Coroa Mãe na janela enquanto tomava café.'",
+    "intro_2": "Teodoro: 'Mas Vovó, o Biscoito queria ver o reflexo brilhante dele!'",
+    "intro_3": "Dona Zenaide: 'Pois é. Agora o Barão Cinzão ficou amuado porque não foi chamado pro baile e levou as 6 Estrelas embora na Bruma. Pegue sua espadinha de madeira e vá buscar.'",
+    "tutorial_move": "Dona Zenaide: 'Use o joystick virtual na tela para andar. Não corra de meia no piso liso.'",
+    "tutorial_coins": "Dona Zenaide: 'Pegue as moedas no chão. Elas têm ímã... tecnologia de ponta do nosso ferreiro.'",
+    "tutorial_buy": "Dona Zenaide: 'Fique parado sobre o quadrado de madeira até a moeda encher a caixinha. Arqueiros não trabalham de graça.'",
+    "tutorial_defense": "Dona Zenaide: 'Lá vêm os Brumosos com aquelas panelas na cabeça. Mantenha seus arqueiros por perto e destrua aquele Totem!'",
+    "boss_world_1": "Dona Zenaide: 'Aquele Totem do Vale está fazendo uma fumaça que vai sujar a roupa no varal. Derrube logo!'"
+  }
+}
