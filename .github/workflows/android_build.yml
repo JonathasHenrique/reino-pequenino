@@ -15,6 +15,9 @@ jobs:
   export-android:
     name: Exportar APK do Godot 4.3
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
       - name: Checkout do Repositório
@@ -25,9 +28,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Configurar Android SDK
-        uses: android-actions/setup-android@v3
 
       - name: Baixar Godot Engine 4.3 e Templates de Exportação
         run: |
