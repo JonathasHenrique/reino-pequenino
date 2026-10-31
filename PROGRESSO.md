@@ -27,36 +27,49 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 2] Fase Completa: Ondas, Torres, Paliçadas, Totem de Bruma, HUD, Vitória & Derrota
 **Data:** 31 de Outubro de 2026
+- Totem de Bruma interativo com emissão de névoa e vitória na destruição.
+- Gerenciador de ondas baseado em dados JSON (`world1_waves.json`).
+- Torres de Vigia com arqueiros guarnecidos e paliçadas protetoras.
+- Indicadores direcionais nas bordas da tela.
+- Telas de Vitória (1 a 3 estrelas) e Derrota amigável sem violência.
+
+---
+
+## [Etapa 3] Vila do Rei, Economia & Configurações
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. **Totem de Bruma (`MistTotem.gd` & `MistTotem.tscn`):**
-   - Pilar de pedra esculpida com orbe de névoa brilhante e barra de vida.
-   - Ao ser destruído, emite efeito sonoro 'puf', solta chuva de moedas e dispara o evento de vitória.
-2. **Gerenciador de Ondas Baseado em Dados (`WaveManager.gd` & `data/waves/world1_waves.json`):**
-   - Fases 1 a 3 com dados estruturados de tempo de preparação, hordas e spawners cardeais.
-   - Transição automática entre contagem regressiva e combate.
-3. **Construções de Campo:**
-   - **Torre de Arqueiros (`ArcherTower.gd` & `ArcherTower.tscn`):** Plataforma elevada de madeira. Até 3 arqueiros sobem automaticamente e ganham alcance (+35%) e dano (+25%).
-   - **Paliçada de Carvalho (`Palisade.gd` & `Palisade.tscn`):** Barreira física resistente (220 HP) que bloqueia brumosos.
-4. **Setas de Borda de Tela (`EdgeIndicators.gd`):**
-   - Rastreamento dos inimigos fora do viewport da câmera, projetando setas de aviso com rotação orientada nas bordas da tela.
-5. **Telas de Desfecho:**
-   - **Tela de Vitória (`VictoryScreen.gd` & `VictoryScreen.tscn`):** Avaliação de 1 a 3 estrelas baseada na integridade do Rei Teodoro, concessão de Ouro permanente e botões de fluxo.
-   - **Tela de Derrota Amigável (`DefeatScreen.gd` & `DefeatScreen.tscn`):** Tom cômico e afetuoso, permitindo reiniciar a partida imediatamente sem perda de progresso.
-6. **Cena Integrada da Fase (`StageMain.tscn` & `StageMain.gd`):**
-   - Montagem do ciclo completo jogável com todas as plataformas e sistemas ativos.
+1. **Cena da Vila Real Isométrica (`Village.tscn` & `Village.gd`):**
+   - Cenário pacífico em maquete com gramado, luz quente de entardecer e navegação do Rei Teodoro com seu pônei Biscoito.
+2. **Edifícios e Melhorias Instantâneas (`VillageBuilding.gd` & `VillageBuilding.tscn`):**
+   - Quartel Real (aumenta o dano base das tropas).
+   - Ferraria da Vila (reduz custo de plataformas em combate).
+   - Estábulo do Biscoito (aumenta vida e velocidade do Rei).
+   - Taverna dos Viajantes (seleção rápida de heróis).
+   - Mural da Coroa Mãe (exibe as Estrelas da Coroa conquistadas).
+   - **Zero timers de espera artificial:** melhorias funcionam instantaneamente com gasto de Ouro!
+3. **Moinho e Fazenda (`Mill.gd` & `Mill.tscn`):**
+   - Pás animadas girando suavemente em 3D.
+   - Geração de Ouro passivo ao longo do tempo com acúmulo offline e limite máximo (Cap de 100 Ouro no nível 1, escalonando até 300).
+   - Coleta instantânea de Ouro ao passar perto do moinho.
+4. **Painel Completo de Configurações (`SettingsMenu.tscn` & `SettingsMenu.gd`):**
+   - Sliders de volume de música e efeitos sonoros.
+   - Alternância de vibração háptica no celular.
+   - Seletor das 3 Dificuldades: Tranquilo, Clássico e Veterano.
+   - Alternador do Modo Retrô (filtro CRT e variação chiptune) e Redução de Efeitos Visuais (acessibilidade).
+   - Seletor de idioma (Português pt-BR / English en).
+5. **HUD da Vila (`VillageHUD.tscn` & `VillageHUD.gd`):**
+   - Monitoramento do saldo de Ouro permanente, estrelas da coroa recuperadas e acesso à batalha.
 
 ### O que foi testado:
-- Carregamento e validação de 17 cenas TSCN.
-- Teste da lógica de cálculo de 1 a 3 estrelas:
-  - 85% de HP -> 3 Estrelas (75 Ouro na fase 1)
-  - 50% de HP -> 2 Estrelas (50 Ouro)
-  - 20% de HP -> 1 Estrela (25 Ouro)
-- Validação estrutural do arquivo de ondas `world1_waves.json`.
+- 22 cenas TSCN validadas e funcionais.
+- Curva de progressão de custos das construções da vila estritamente crescente.
+- Simulação de acumulação do Moinho: 10 minutos = 60 Ouro; 24 horas retido no teto de 100 Ouro no nível 1.
+- Teste de resiliência a corrupção do arquivo de save com recuperação do backup `.bak`.
 
 ### Decisões tomadas:
-- A derrota no jogo é 100% não violenta: o Rei apenas descansa brevemente enquanto o pônei Biscoito o acorda com uma lambida amigável, alinhando com a classificação indicativa Livre a 10 anos.
-- As torres atraem os arqueiros mais próximos automaticamente quando o Rei se aproxima com sua formação, sem necessidade de menus complexos ou múltiplos toques.
+- Sem esperas pagas ou timers artificiais para melhorias: o jogador investe seu Ouro e a vila evolui na hora, preservando a experiência autêntica de jogo clássico.
+- O moinho grava o timestamp de coleta no savegame local, calculando os ganhos offline de forma justa sem requerer conexão de rede.
 
 ### O que falta:
-- Iniciar a Etapa 3: Vila do Rei e Economia Permanente (edifícios da vila com melhorias instantâneas sem timers, Moinho gerador de ouro passivo, tela de configurações com modo retrô e salvamento local).
+- Iniciar a Etapa 4: Mundo 1 Completo (todas as 9 fases normais do Vale dos Girassóis, diálogos com humor em duas camadas com Dona Zenaide, tutorial progressivo e cena de abertura).

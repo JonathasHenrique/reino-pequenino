@@ -1,0 +1,145 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/SettingsMenu.gd" id="1_sett"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.12, 0.1, 0.08, 0.94)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.85, 0.68, 0.22, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.85, 0.65, 0.15, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="SettingsMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_sett")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Panel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(620, 520)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -310.0
+offset_top = -260.0
+offset_right = 310.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
+theme_override_font_sizes/font_size = 28
+text = "AJUSTES DO REINO"
+horizontal_alignment = 1
+
+[node name="Grid" type="GridContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 14
+columns = 2
+
+[node name="MusicLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Volume da Música:"
+
+[node name="MusicSlider" type="HSlider" parent="Panel/VBox/Grid"]
+custom_minimum_size = Vector2(250, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 80.0
+
+[node name="SFXLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Efeitos Sonoros:"
+
+[node name="SFXSlider" type="HSlider" parent="Panel/VBox/Grid"]
+custom_minimum_size = Vector2(250, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 90.0
+
+[node name="VibrationLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Vibração no Celular:"
+
+[node name="VibrationCheck" type="CheckBox" parent="Panel/VBox/Grid"]
+layout_mode = 2
+button_pressed = true
+text = "Ativada"
+
+[node name="DiffLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Dificuldade do Jogo:"
+
+[node name="DiffOption" type="OptionButton" parent="Panel/VBox/Grid"]
+custom_minimum_size = Vector2(250, 36)
+layout_mode = 2
+
+[node name="RetroLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Modo Retrô (Tela Vintage):"
+
+[node name="RetroCheck" type="CheckBox" parent="Panel/VBox/Grid"]
+layout_mode = 2
+text = "Ativar Filtro CRT & Chiptune"
+
+[node name="EffectsLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Reduzir Efeitos Visuais:"
+
+[node name="EffectsCheck" type="CheckBox" parent="Panel/VBox/Grid"]
+layout_mode = 2
+text = "Acessibilidade / Desempenho"
+
+[node name="LangLabel" type="Label" parent="Panel/VBox/Grid"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Idioma / Language:"
+
+[node name="LangOption" type="OptionButton" parent="Panel/VBox/Grid"]
+custom_minimum_size = Vector2(250, 36)
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(200, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.12, 0.08, 0.04, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Salvar e Fechar"

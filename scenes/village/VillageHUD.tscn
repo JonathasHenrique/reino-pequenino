@@ -1,0 +1,107 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/village/VillageHUD.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar"]
+bg_color = Color(0.18, 0.12, 0.08, 0.85)
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_battle_btn"]
+bg_color = Color(0.88, 0.25, 0.2, 1) # Vermelho festivo
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hero_btn"]
+bg_color = Color(0.25, 0.55, 0.85, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[node name="VillageHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="TopBar" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_right = -20.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bar")
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="GoldContainer" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+
+[node name="Icon" type="Label" parent="TopBar/HBox/GoldContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "🪙 Ouro:"
+
+[node name="GoldLabel" type="Label" parent="TopBar/HBox/GoldContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.25, 1)
+theme_override_font_sizes/font_size = 24
+text = "50"
+
+[node name="CrownContainer" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Icon" type="Label" parent="TopBar/HBox/CrownContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "👑 Estrelas da Coroa:"
+
+[node name="CrownLabel" type="Label" parent="TopBar/HBox/CrownContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+text = "0 / 6"
+
+[node name="SettingsButton" type="Button" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(48, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "⚙️"
+
+[node name="BottomBar" type="HBoxContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -80.0
+offset_right = -40.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 2
+
+[node name="HeroesButton" type="Button" parent="BottomBar"]
+custom_minimum_size = Vector2(180, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_hero_btn")
+text = "Herói: Teodoro"
+
+[node name="BattleButton" type="Button" parent="BottomBar"]
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_battle_btn")
+text = "⚔️ Batalha (Fase 1)"

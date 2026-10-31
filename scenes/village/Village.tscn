@@ -1,0 +1,99 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/village/Village.gd" id="1_vil"]
+[ext_resource type="Script" path="res://scripts/core/IsometricCamera.gd" id="2_cam"]
+[ext_resource type="PackedScene" path="res://scenes/entities/King.tscn" id="3_king"]
+[ext_resource type="PackedScene" path="res://scenes/village/VillageBuilding.tscn" id="4_bld"]
+[ext_resource type="PackedScene" path="res://scenes/village/Mill.tscn" id="5_mill"]
+[ext_resource type="PackedScene" path="res://scenes/village/VillageHUD.tscn" id="6_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/VirtualJoystick.tscn" id="7_joy"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(80, 80)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_village_grass"]
+albedo_color = Color(0.42, 0.68, 0.28, 1) # Grama agradável da vila
+roughness = 0.85
+
+[sub_resource type="Environment" id="Environment_village"]
+background_mode = 1
+background_color = Color(0.75, 0.85, 0.98, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.9, 0.92, 0.96, 1)
+ambient_light_energy = 0.8
+tonemap_mode = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(80, 1, 80)
+
+[node name="Village" type="Node3D"]
+script = ExtResource("1_vil")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_village")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 12, 18, 12)
+light_color = Color(1, 0.96, 0.88, 1)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("PlaneMesh_ground")
+surface_material_override/0 = SubResource("StandardMaterial3D_village_grass")
+
+[node name="King" parent="." instance=ExtResource("3_king")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="IsometricCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, -0.454519, 0.541675, 0, 0.766044, 0.642788, -0.707107, -0.454519, 0.541675, 14, 16, 14)
+current = true
+fov = 44.0
+script = ExtResource("2_cam")
+target_path = NodePath("../King")
+camera_distance = 25.0
+
+[node name="Buildings" type="Node3D" parent="."]
+
+[node name="Barracks" parent="Buildings" instance=ExtResource("4_bld")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -6)
+building_id = "barracks"
+building_name = "Quartel Real"
+base_cost = 40
+
+[node name="Blacksmith" parent="Buildings" instance=ExtResource("4_bld")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -6)
+building_id = "blacksmith"
+building_name = "Ferraria da Vila"
+base_cost = 50
+
+[node name="Stable" parent="Buildings" instance=ExtResource("4_bld")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 4)
+building_id = "stable"
+building_name = "Estábulo do Biscoito"
+base_cost = 35
+
+[node name="Mill" parent="Buildings" instance=ExtResource("5_mill")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 6)
+
+[node name="Tavern" parent="Buildings" instance=ExtResource("4_bld")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+building_id = "tavern"
+building_name = "Taverna dos Viajantes"
+base_cost = 30
+
+[node name="CrownWall" parent="Buildings" instance=ExtResource("4_bld")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+building_id = "crown_wall"
+building_name = "Mural da Coroa Mãe"
+base_cost = 0
+
+[node name="VirtualJoystick" parent="." instance=ExtResource("7_joy")]
+
+[node name="VillageHUD" parent="." instance=ExtResource("6_hud")]
