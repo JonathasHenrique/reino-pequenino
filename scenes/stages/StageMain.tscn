@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/ui/EdgeIndicators.gd" id="8_edge"]
 [ext_resource type="PackedScene" path="res://scenes/ui/VictoryScreen.tscn" id="9_vic"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DefeatScreen.tscn" id="10_def"]
+[ext_resource type="PackedScene" path="res://scenes/entities/FallingLeaves.tscn" id="11_leaves"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 size = Vector2(90, 90)
@@ -81,6 +82,8 @@ pad_type = "build_palisade"
 base_cost = 8
 
 [node name="Spawners" type="Node3D" parent="."]
+
+[node name="FallingLeaves" parent="." instance=ExtResource("11_leaves")]
 
 [node name="EastSpawn" type="Marker3D" parent="Spawners"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, 0)

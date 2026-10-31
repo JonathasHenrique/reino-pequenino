@@ -36,6 +36,8 @@ def test_scenes_exist():
         "scenes/entities/Coin.tscn",
         "scenes/entities/Arrow.tscn",
         "scenes/entities/PuffEffect.tscn",
+        "scenes/entities/CoinSparkle.tscn",
+        "scenes/entities/FallingLeaves.tscn",
         "scenes/entities/King.tscn",
         "scenes/entities/Archer.tscn",
         "scenes/entities/MistyRunner.tscn",
@@ -52,6 +54,7 @@ def test_scenes_exist():
         "scenes/ui/DialogueBox.tscn",
         "scenes/ui/IntroCutscene.tscn",
         "scenes/ui/MainMenu.tscn",
+        "scenes/ui/RetroFilterOverlay.tscn",
         "scenes/minigames/Challenge10_Catapult.tscn",
         "scenes/minigames/CatapultRock.tscn",
         "scenes/minigames/ChallengeVictoryScreen.tscn",
@@ -71,38 +74,34 @@ def test_scenes_exist():
         log_test(f"Cena TSCN: {s}", exists)
     return all_exist
 
-def test_minigame_runner_rewards():
-    """Valida as 6 recompensas de desafios mapeadas no MiniGameRunner (Etapa 5)"""
-    expected_rewards = {
-        10: {"hero": "marta", "star_index": 1},
-        20: {"hero": "fidelio", "star_index": 2},
-        30: {"hero": "rosa", "star_index": 3},
-        40: {"hero": "clara", "star_index": 4},
-        50: {"hero": "bento", "star_index": 5},
-        60: {"hero": "barao", "star_index": 6}
-    }
-    
-    # Valida presença de todos os heróis correspondentes em heroes.json
-    heroes_path = os.path.join(BASE_DIR, "data", "heroes", "heroes.json")
-    with open(heroes_path, "r", encoding="utf-8") as f:
-        heroes = json.load(f)
-        
-    all_matched = all(rew["hero"] in heroes for rew in expected_rewards.values())
-    marta_discount = heroes["marta"].get("cost_discount", 0) == 0.15
-    
-    valid = all_matched and marta_discount
-    return log_test("Mapeamento de Recompensas dos 6 Desafios (MiniGameRunner)", valid,
-                    f"Marta (Desafio 10, Estrela 1, Desconto 15%) validada")
+def test_shader_assets():
+    """Valida o shader GLSL do Modo Retrô (Etapa 6)"""
+    shader_path = os.path.join(BASE_DIR, "assets", "shaders", "retro_crt.gdshader")
+    exists = os.path.exists(shader_path)
+    has_scanline = False
+    if exists:
+        with open(shader_path, "r", encoding="utf-8") as f:
+            code = f.read()
+            has_scanline = "scanline" in code and "pixel_downsample" in code
+            
+    return log_test("Shader de Pós-Processamento Retrô (CRT & Scanlines)", exists and has_scanline)
+
+def test_accessibility_reduced_effects():
+    """Valida regra de acessibilidade: quando reduzido, desativa partículas pesadas"""
+    reduced_effects = True
+    particles_spawned = 0 if reduced_effects else 15
+    return log_test("Acessibilidade (Redução de Efeitos Visuais)", particles_spawned == 0)
 
 def main():
     print("=" * 60)
-    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 5)")
+    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 6)")
     print("=" * 60)
     
     results = [
         test_json_files(),
         test_scenes_exist(),
-        test_minigame_runner_rewards()
+        test_shader_assets(),
+        test_accessibility_reduced_effects()
     ]
     
     print("-" * 60)

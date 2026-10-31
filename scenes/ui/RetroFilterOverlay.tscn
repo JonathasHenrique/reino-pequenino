@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/RetroFilterOverlay.gd" id="1_retro"]
+[ext_resource type="Shader" path="res://assets/shaders/retro_crt.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("2_shader")
+shader_parameter/scanline_density = 360.0
+shader_parameter/scanline_intensity = 0.12
+shader_parameter/pixel_downsample = 1.0
+
+[node name="RetroFilterOverlay" type="CanvasLayer"]
+process_mode = 3
+layer = 100
+script = ExtResource("1_retro")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_crt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

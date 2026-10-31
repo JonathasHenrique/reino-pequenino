@@ -32,9 +32,19 @@ func _process(delta: float) -> void:
 		if step.length() >= dist or dist < 0.6:
 			# Coleta concluída
 			GameState.add_stage_coins(coin_value)
+			_spawn_sparkle()
 			queue_free()
 		else:
 			global_position += step
+
+func _spawn_sparkle() -> void:
+	if Settings.reduced_effects:
+		return
+	var sparkle_scene = load("res://scenes/entities/CoinSparkle.tscn")
+	if sparkle_scene and get_parent():
+		var sp = sparkle_scene.instantiate()
+		get_parent().add_child(sp)
+		sp.global_position = global_position
 
 func attract_to(king: Node3D) -> void:
 	if not is_being_attracted:

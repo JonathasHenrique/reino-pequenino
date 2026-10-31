@@ -21,6 +21,7 @@ GameState="*res://scripts/autoloads/GameState.gd"
 AudioManager="*res://scripts/autoloads/AudioManager.gd"
 MiniGameRunner="*res://scripts/autoloads/MiniGameRunner.gd"
 StoreService="*res://scripts/autoloads/StoreService.gd"
+RetroFilterOverlay="*res://scenes/ui/RetroFilterOverlay.tscn"
 
 [display]
 

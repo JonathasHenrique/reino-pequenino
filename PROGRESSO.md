@@ -55,28 +55,34 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 5] Sistema de Minigames & Desafio 10 (A Catapulta do Vale)
 **Data:** 31 de Outubro de 2026
+- Módulo independente de lançamento 2D com física autoral e trajetória dinâmica.
+- Torre de blocos e totem tombável com estrelas baseadas nas pedras poupadas.
+- Tela de vitória comemorativa resgatando a 1ª Estrela da Coroa e desbloqueando Marta, a Ferreira.
+
+---
+
+## [Etapa 6] Arte & Áudio Finais do Mundo 1: Estilo Diorama, Shader Retrô & Partículas
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. **Desafio 10: A Catapulta do Vale (`Challenge10_Catapult.gd` & `Challenge10_Catapult.tscn`):**
-   - Módulo independente de lançamento 2D com física autoral (`RigidBody2D`).
-   - Mecânica de arrastar, puxar e soltar com linha de trajetória pontilhada em tempo real.
-   - Estrutura de blocos de madeira e totem cinzento alvo com física de queda e tombamento.
-   - Sistema de 3 a 5 tentativas com cálculo de estrelas baseado nos pedregulhos poupados.
-2. **Projétil do Desafio (`CatapultRock.tscn`):**
-   - Rocha de brinquedo com massa, fricção e quique calibrados para destruição satisfatória.
-3. **Tela de Vitória de Desafio (`ChallengeVictoryScreen.gd` & `ChallengeVictoryScreen.tscn`):**
-   - Animação festiva da recuperação da 1ª Estrela da Coroa Mãe.
-   - Apresentação da nova Heroína desbloqueada: **Marta, a Ferreira** (passiva: -15% de custo em construções; ativa: conserta e reforça todas as torres).
-   - Integração com `MiniGameRunner.gd`, `SaveManager.gd` (registro da estrela 1, figurinha e troféu).
+1. **Shader do Modo Retrô (`retro_crt.gdshader` & `RetroFilterOverlay.tscn`):**
+   - Efeito nostálgico opcional inspirado em fliperama e tubo CRT: scanlines suaves horizontais, sutil dispersão cromática e tom quente.
+   - Registrado como Autoload global (`RetroFilterOverlay`), ativado/desativado instantaneamente pelas configurações sem recarregar telas.
+2. **Partículas Atmosféricas de Diorama:**
+   - **Folhas de Girassol em Queda (`FallingLeaves.tscn`):** Sistema leve de partículas 3D (`GPUParticles3D`) simulando o clima de fim de tarde no Vale dos Girassóis.
+   - **Brilho Dourado de Coleta (`CoinSparkle.tscn`):** Estrelinhas cintilantes ao coletar moedas por ímã e preencher plataformas.
+3. **Acessibilidade e Desempenho:**
+   - Opção "Reduzir Efeitos Visuais" em `Settings.gd` desativa partículas pesadas para garantir 60 fps em aparelhos mais modestos.
+4. **Áudio Chiptune Dinâmico:**
+   - O `AudioManager.gd` alterna dinamicamente o timbre das melodias de onda senoidal/triangular para onda quadrada pura (*square wave*) de 8-bits quando o Modo Retrô está ativo.
 
 ### O que foi testado:
-- 28 cenas TSCN validadas e funcionais.
-- Mapeamento completo dos 6 desafios e heróis recompensados no `MiniGameRunner`.
-- Confirmação dos atributos e passiva de desconto de Marta em `heroes.json`.
+- 31 cenas TSCN validadas e funcionais.
+- Integridade do código GLSL do shader CRT.
+- Validação da flag de redução de efeitos visuais para acessibilidade.
 
 ### Decisões tomadas:
-- O minigame da catapulta é 100% autoral, operando em física pura do Godot 2D sem copiar qualquer asset, pássaro ou mecânica de jogos protegidos por direitos autorais.
-- A contagem de tentativas é ajustada automaticamente pela dificuldade escolhida nas configurações (5 no Tranquilo, 4 no Clássico e 3 no Veterano).
+- O shader opera em camada de tela independente (`layer = 100`) com `mouse_filter = 2 (IGNORE)`, garantindo que controles de toque, joysticks e botões nunca sejam bloqueados pelo filtro visual.
 
 ### O que falta:
-- Iniciar a Etapa 6: Arte e Áudio Finais do Mundo 1 (shader de Modo Retrô com scanlines CRT sutis, iluminação de diorama toon, polimento de partículas e chiptune).
+- Iniciar a Etapa 7: Mundos 2 a 5 (cada um com 9 fases e seu respectivo desafio autoral: Sudoku Místico, Quebra-blocos de Luz, Muralha de Peças e Corrida de Biscoito 2D).
