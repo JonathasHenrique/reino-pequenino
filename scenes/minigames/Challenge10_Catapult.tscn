@@ -1,0 +1,166 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/minigames/Challenge10_Catapult.gd" id="1_cata"]
+[ext_resource type="PackedScene" path="res://scenes/minigames/ChallengeVictoryScreen.tscn" id="2_cvic"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(1300, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_block"]
+size = Vector2(50, 70)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_totem"]
+size = Vector2(60, 90)
+
+[sub_resource type="Gradient" id="Gradient_sky"]
+colors = PackedColorArray(0.4, 0.65, 0.95, 1), Color(0.85, 0.92, 0.75, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sky"]
+gradient = SubResource("Gradient_sky")
+width = 1280
+height = 720
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uibar"]
+bg_color = Color(0.16, 0.12, 0.08, 0.85)
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+
+[node name="Challenge10_Catapult" type="Node2D"]
+script = ExtResource("1_cata")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = SubResource("GradientTexture2D_sky")
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(640, 680)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="ColorRect" type="ColorRect" parent="Ground"]
+offset_left = -650.0
+offset_top = -40.0
+offset_right = 650.0
+offset_bottom = 40.0
+color = Color(0.38, 0.62, 0.28, 1)
+
+[node name="CatapultAnchor" type="Marker2D" parent="."]
+position = Vector2(220, 480)
+
+[node name="CatapultWoodBase" type="ColorRect" parent="."]
+offset_left = 195.0
+offset_top = 480.0
+offset_right = 245.0
+offset_bottom = 640.0
+color = Color(0.48, 0.32, 0.18, 1)
+
+[node name="TrajectoryLine" type="Line2D" parent="."]
+width = 5.0
+default_color = Color(1, 0.88, 0.3, 0.7)
+
+[node name="Targets" type="Node2D" parent="."]
+position = Vector2(950, 600)
+
+[node name="Block1" type="RigidBody2D" parent="Targets"]
+position = Vector2(-40, 0)
+mass = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/Block1"]
+shape = SubResource("RectangleShape2D_block")
+
+[node name="ColorRect" type="ColorRect" parent="Targets/Block1"]
+offset_left = -25.0
+offset_top = -35.0
+offset_right = 25.0
+offset_bottom = 35.0
+color = Color(0.55, 0.42, 0.28, 1)
+
+[node name="Block2" type="RigidBody2D" parent="Targets"]
+position = Vector2(40, 0)
+mass = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/Block2"]
+shape = SubResource("RectangleShape2D_block")
+
+[node name="ColorRect" type="ColorRect" parent="Targets/Block2"]
+offset_left = -25.0
+offset_top = -35.0
+offset_right = 25.0
+offset_bottom = 35.0
+color = Color(0.55, 0.42, 0.28, 1)
+
+[node name="Beam" type="RigidBody2D" parent="Targets"]
+position = Vector2(0, -60)
+mass = 1.5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/Beam"]
+shape = SubResource("RectangleShape2D_block")
+
+[node name="ColorRect" type="ColorRect" parent="Targets/Beam"]
+offset_left = -60.0
+offset_top = -10.0
+offset_right = 60.0
+offset_bottom = 10.0
+color = Color(0.65, 0.52, 0.35, 1)
+
+[node name="TargetTotem" type="RigidBody2D" parent="Targets"]
+position = Vector2(0, -120)
+mass = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Targets/TargetTotem"]
+shape = SubResource("RectangleShape2D_totem")
+
+[node name="ColorRect" type="ColorRect" parent="Targets/TargetTotem"]
+offset_left = -30.0
+offset_top = -45.0
+offset_right = 30.0
+offset_bottom = 45.0
+color = Color(0.42, 0.48, 0.58, 1)
+
+[node name="TotemFace" type="Label" parent="Targets/TargetTotem"]
+offset_left = -28.0
+offset_top = -40.0
+offset_right = 28.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 28
+text = "🗿"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="PanelContainer" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 30.0
+offset_right = -30.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uibar")
+
+[node name="HBox" type="HBoxContainer" parent="UI/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="TitleLabel" type="Label" parent="UI/TopBar/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
+theme_override_font_sizes/font_size = 22
+text = "DESAFIO 10: A CATAPULTA DO VALE"
+
+[node name="AttemptsLabel" type="Label" parent="UI/TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 20
+text = "Pedregulhos Restantes: 4"
+horizontal_alignment = 2
+
+[node name="VictoryUI" parent="." instance=ExtResource("2_cvic")]

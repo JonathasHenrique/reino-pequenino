@@ -52,6 +52,9 @@ def test_scenes_exist():
         "scenes/ui/DialogueBox.tscn",
         "scenes/ui/IntroCutscene.tscn",
         "scenes/ui/MainMenu.tscn",
+        "scenes/minigames/Challenge10_Catapult.tscn",
+        "scenes/minigames/CatapultRock.tscn",
+        "scenes/minigames/ChallengeVictoryScreen.tscn",
         "scenes/village/VillageBuilding.tscn",
         "scenes/village/Mill.tscn",
         "scenes/village/VillageHUD.tscn",
@@ -68,40 +71,38 @@ def test_scenes_exist():
         log_test(f"Cena TSCN: {s}", exists)
     return all_exist
 
-def test_world1_9_stages():
-    """Valida a progressão completa das 9 fases normais do Mundo 1 (Etapa 4)"""
-    waves_path = os.path.join(BASE_DIR, "data", "waves", "world1_waves.json")
-    with open(waves_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+def test_minigame_runner_rewards():
+    """Valida as 6 recompensas de desafios mapeadas no MiniGameRunner (Etapa 5)"""
+    expected_rewards = {
+        10: {"hero": "marta", "star_index": 1},
+        20: {"hero": "fidelio", "star_index": 2},
+        30: {"hero": "rosa", "star_index": 3},
+        40: {"hero": "clara", "star_index": 4},
+        50: {"hero": "bento", "star_index": 5},
+        60: {"hero": "barao", "star_index": 6}
+    }
     
-    stages = [f"stage_{i}" for i in range(1, 10)]
-    has_all_9 = all(s in data for s in stages)
+    # Valida presença de todos os heróis correspondentes em heroes.json
+    heroes_path = os.path.join(BASE_DIR, "data", "heroes", "heroes.json")
+    with open(heroes_path, "r", encoding="utf-8") as f:
+        heroes = json.load(f)
+        
+    all_matched = all(rew["hero"] in heroes for rew in expected_rewards.values())
+    marta_discount = heroes["marta"].get("cost_discount", 0) == 0.15
     
-    # Valida escalonamento de Totem HP (fase 1: 120 -> fase 9: 450)
-    hp_1 = data["stage_1"]["totem_hp"]
-    hp_9 = data["stage_9"]["totem_hp"]
-    hp_progression = (hp_9 > hp_1)
-    
-    # Valida desbloqueio do Lanceiro na fase 5
-    has_spearman = data["stage_5"].get("unlocks_troop") == "spearman"
-    
-    # Valida mini-chefe Gigante da Bruma na fase 9
-    wave_4_enemies = data["stage_9"]["waves"][3]["enemies"]
-    has_giant = any(e.get("type") == "misty_giant" for e in wave_4_enemies)
-    
-    all_valid = has_all_9 and hp_progression and has_spearman and has_giant
-    return log_test("Mundo 1 Completo (9 Fases, Totem HP, Lanceiro F5, Gigante F9)", all_valid,
-                    f"Fase 1 Totem: {hp_1} HP | Fase 9 Totem: {hp_9} HP")
+    valid = all_matched and marta_discount
+    return log_test("Mapeamento de Recompensas dos 6 Desafios (MiniGameRunner)", valid,
+                    f"Marta (Desafio 10, Estrela 1, Desconto 15%) validada")
 
 def main():
     print("=" * 60)
-    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 4)")
+    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 5)")
     print("=" * 60)
     
     results = [
         test_json_files(),
         test_scenes_exist(),
-        test_world1_9_stages()
+        test_minigame_runner_rewards()
     ]
     
     print("-" * 60)

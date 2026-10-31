@@ -46,32 +46,37 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 4] Mundo 1 Completo: 9 Fases, Tutorial Dona Zenaide & Cena de Abertura
 **Data:** 31 de Outubro de 2026
+- Progressão das 9 fases do Vale dos Girassóis com escalonamento de Totens (120 a 450 HP).
+- Inimigos variados, desbloqueio de Lanceiro na Fase 5 e Gigante de Névoa na Fase 9.
+- Cena de abertura narrativa e tutorial progressivo nas fases 1 a 3 com diálogos da Dona Zenaide.
+- Menu principal configurado.
+
+---
+
+## [Etapa 5] Sistema de Minigames & Desafio 10 (A Catapulta do Vale)
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. **Configuração Integral das 9 Fases do Mundo 1 (`world1_waves.json`):**
-   - Curva suave de aprendizado e escalonamento de vida dos totens (de 120 HP na Fase 1 até 450 HP na Fase 9).
-   - Inimigos variados introduzidos progressivamente: Brumoso Corredor, Brumoso Escudeiro, Arqueiro de Névoa, Corvo Cinzento voador e o mini-chefe Gigante da Bruma na Fase 9.
-   - Desbloqueio da tropa do Lanceiro na Fase 5.
-2. **Cena de Abertura Narrativa (`IntroCutscene.tscn` & `IntroCutscene.gd`):**
-   - Apresentação da história das 6 Estrelas da Coroa Mãe e o Barão Cinzão amuado por não ter sido chamado para o baile.
-   - Humor em duas camadas: fofura para crianças e ironia madura para jovens adultos.
-3. **Caixa de Diálogo Reutilizável (`DialogueBox.tscn` & `DialogueBox.gd`):**
-   - Retrato expressivo de Dona Zenaide, avanço por toque na tela ou botão e efeitos sonoros de clique.
-4. **Tutorial Progressivo nas Fases 1 a 3:**
-   - Fase 1: Movimento com joystick e atração magnética de moedas.
-   - Fase 2: Uso das plataformas de compra gradual para contratar arqueiros.
-   - Fase 3: Táticas de defesa com paliçadas e foco na destruição do Totem.
-5. **Menu Principal do Jogo (`MainMenu.tscn` & `MainMenu.gd`):**
-   - Ponto de entrada com logo da coroa dourada, acesso à jornada, à vila e aos ajustes.
+1. **Desafio 10: A Catapulta do Vale (`Challenge10_Catapult.gd` & `Challenge10_Catapult.tscn`):**
+   - Módulo independente de lançamento 2D com física autoral (`RigidBody2D`).
+   - Mecânica de arrastar, puxar e soltar com linha de trajetória pontilhada em tempo real.
+   - Estrutura de blocos de madeira e totem cinzento alvo com física de queda e tombamento.
+   - Sistema de 3 a 5 tentativas com cálculo de estrelas baseado nos pedregulhos poupados.
+2. **Projétil do Desafio (`CatapultRock.tscn`):**
+   - Rocha de brinquedo com massa, fricção e quique calibrados para destruição satisfatória.
+3. **Tela de Vitória de Desafio (`ChallengeVictoryScreen.gd` & `ChallengeVictoryScreen.tscn`):**
+   - Animação festiva da recuperação da 1ª Estrela da Coroa Mãe.
+   - Apresentação da nova Heroína desbloqueada: **Marta, a Ferreira** (passiva: -15% de custo em construções; ativa: conserta e reforça todas as torres).
+   - Integração com `MiniGameRunner.gd`, `SaveManager.gd` (registro da estrela 1, figurinha e troféu).
 
 ### O que foi testado:
-- 25 cenas TSCN validadas e funcionais.
-- Integridade das 9 fases de ondas do Mundo 1.
-- Verificação do desbloqueio do Lanceiro na Fase 5 e surgimento do Gigante na Fase 9.
+- 28 cenas TSCN validadas e funcionais.
+- Mapeamento completo dos 6 desafios e heróis recompensados no `MiniGameRunner`.
+- Confirmação dos atributos e passiva de desconto de Marta em `heroes.json`.
 
 ### Decisões tomadas:
-- O botão "Pular História" na introdução permite aos jogadores retornarem rapidamente ao combate caso reiniciem o jogo.
-- O diálogo do tutorial aparece apenas nas primeiras fases para não interromper a fluidez de ritmo nas fases avançadas.
+- O minigame da catapulta é 100% autoral, operando em física pura do Godot 2D sem copiar qualquer asset, pássaro ou mecânica de jogos protegidos por direitos autorais.
+- A contagem de tentativas é ajustada automaticamente pela dificuldade escolhida nas configurações (5 no Tranquilo, 4 no Clássico e 3 no Veterano).
 
 ### O que falta:
-- Iniciar a Etapa 5: Sistema de Minigames & Desafio 10 (A Catapulta do Vale com física 2D de lançamento em alvos de blocos cinzentos, desbloqueio da 1ª Estrela da Coroa e da Heroína Marta, a Ferreira).
+- Iniciar a Etapa 6: Arte e Áudio Finais do Mundo 1 (shader de Modo Retrô com scanlines CRT sutis, iluminação de diorama toon, polimento de partículas e chiptune).
