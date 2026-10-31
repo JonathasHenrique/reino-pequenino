@@ -1,0 +1,11 @@
+{
+  "stage_21": {"name": "Subida dos Penhascos", "total_waves": 3, "prep_time_seconds": 9.0, "totem_hp": 950},
+  "stage_22": {"name": "O Mago e a Faísca", "total_waves": 4, "prep_time_seconds": 9.0, "unlocks_troop": "mage", "totem_hp": 1000},
+  "stage_23": {"name": "Enxame Amarelo", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 1080},
+  "stage_24": {"name": "Paliçadas de Rocha", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 1150},
+  "stage_25": {"name": "Ventos Dourados", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 1220},
+  "stage_26": {"name": "Queda de Carvão", "total_waves": 4, "prep_time_seconds": 7.0, "totem_hp": 1300},
+  "stage_27": {"name": "Garganta de Mel", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 1400},
+  "stage_28": {"name": "Frente de Batalha de Mel", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 1500},
+  "stage_29": {"name": "Colosso Melífero", "total_waves": 5, "prep_time_seconds": 9.0, "has_boss": true, "totem_hp": 1650}
+}

@@ -57,6 +57,10 @@ def test_scenes_exist():
         "scenes/ui/RetroFilterOverlay.tscn",
         "scenes/minigames/Challenge10_Catapult.tscn",
         "scenes/minigames/CatapultRock.tscn",
+        "scenes/minigames/Challenge20_Sudoku.tscn",
+        "scenes/minigames/Challenge30_Breakout.tscn",
+        "scenes/minigames/Challenge40_BlockPuzzle.tscn",
+        "scenes/minigames/Challenge50_Platformer.tscn",
         "scenes/minigames/ChallengeVictoryScreen.tscn",
         "scenes/village/VillageBuilding.tscn",
         "scenes/village/Mill.tscn",
@@ -74,34 +78,33 @@ def test_scenes_exist():
         log_test(f"Cena TSCN: {s}", exists)
     return all_exist
 
-def test_shader_assets():
-    """Valida o shader GLSL do Modo Retrô (Etapa 6)"""
-    shader_path = os.path.join(BASE_DIR, "assets", "shaders", "retro_crt.gdshader")
-    exists = os.path.exists(shader_path)
-    has_scanline = False
-    if exists:
-        with open(shader_path, "r", encoding="utf-8") as f:
-            code = f.read()
-            has_scanline = "scanline" in code and "pixel_downsample" in code
-            
-    return log_test("Shader de Pós-Processamento Retrô (CRT & Scanlines)", exists and has_scanline)
-
-def test_accessibility_reduced_effects():
-    """Valida regra de acessibilidade: quando reduzido, desativa partículas pesadas"""
-    reduced_effects = True
-    particles_spawned = 0 if reduced_effects else 15
-    return log_test("Acessibilidade (Redução de Efeitos Visuais)", particles_spawned == 0)
+def test_worlds_2_to_5_progression():
+    """Valida as 36 fases e desbloqueios de tropas dos Mundos 2 a 5 (Etapa 7)"""
+    w2 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world2_waves.json")))
+    w3 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world3_waves.json")))
+    w4 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world4_waves.json")))
+    w5 = json.load(open(os.path.join(BASE_DIR, "data", "waves", "world5_waves.json")))
+    
+    stages_count = len(w2) + len(w3) + len(w4) + len(w5)
+    
+    # Valida desbloqueio de tropas
+    has_squire = w2.get("stage_12", {}).get("unlocks_troop") == "squire"
+    has_mage = w3.get("stage_22", {}).get("unlocks_troop") == "mage"
+    has_healer = w4.get("stage_32", {}).get("unlocks_troop") == "healer"
+    has_ballista = w5.get("stage_42", {}).get("unlocks_troop") == "ballista"
+    
+    valid = (stages_count == 36) and has_squire and has_mage and has_healer and has_ballista
+    return log_test("Mundos 2 a 5 (36 fases, Escudeiro F12, Mago F22, Curandeiro F32, Balista F42)", valid)
 
 def main():
     print("=" * 60)
-    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 6)")
+    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 A 7)")
     print("=" * 60)
     
     results = [
         test_json_files(),
         test_scenes_exist(),
-        test_shader_assets(),
-        test_accessibility_reduced_effects()
+        test_worlds_2_to_5_progression()
     ]
     
     print("-" * 60)

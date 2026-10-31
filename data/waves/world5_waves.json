@@ -1,0 +1,11 @@
+{
+  "stage_41": {"name": "Primeira Neve", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 3100},
+  "stage_42": {"name": "Balistas na Geada", "total_waves": 4, "prep_time_seconds": 8.0, "unlocks_troop": "ballista", "totem_hp": 3300},
+  "stage_43": {"name": "Ventos Uivantes", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 3550},
+  "stage_44": {"name": "Gelo e Carvalho", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 3800},
+  "stage_45": {"name": "A Trincheira Congelada", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 4100},
+  "stage_46": {"name": "Nevasca do Barão", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 4400},
+  "stage_47": {"name": "Passo do Urso", "total_waves": 6, "prep_time_seconds": 7.0, "totem_hp": 4750},
+  "stage_48": {"name": "O Penhasco Glacial", "total_waves": 6, "prep_time_seconds": 6.5, "totem_hp": 5100},
+  "stage_49": {"name": "O Monolito do Inverno", "total_waves": 6, "prep_time_seconds": 8.0, "has_boss": true, "totem_hp": 5600}
+}

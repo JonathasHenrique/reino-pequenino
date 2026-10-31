@@ -1,0 +1,11 @@
+{
+  "stage_31": {"name": "Margens Cristalinas", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 1750},
+  "stage_32": {"name": "O Poço da Serenidade", "total_waves": 4, "prep_time_seconds": 8.0, "unlocks_troop": "healer", "totem_hp": 1850},
+  "stage_33": {"name": "Reflexos Enganosos", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 1950},
+  "stage_34": {"name": "As Águas Cinzentas", "total_waves": 4, "prep_time_seconds": 7.0, "totem_hp": 2080},
+  "stage_35": {"name": "Cruzada das Pontes", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 2200},
+  "stage_36": {"name": "Cerco Submerso", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 2350},
+  "stage_37": {"name": "Névoa sobre o Espelho", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 2500},
+  "stage_38": {"name": "Garras Flutuantes", "total_waves": 5, "prep_time_seconds": 7.0, "totem_hp": 2680},
+  "stage_39": {"name": "O Espelho Quebrado", "total_waves": 6, "prep_time_seconds": 8.0, "has_boss": true, "totem_hp": 2900}
+}

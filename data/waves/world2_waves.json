@@ -1,0 +1,11 @@
+{
+  "stage_11": {"name": "Entrada dos Cogumelos", "total_waves": 3, "prep_time_seconds": 9.0, "totem_hp": 480},
+  "stage_12": {"name": "Guarda de Carvalho", "total_waves": 3, "prep_time_seconds": 9.0, "unlocks_troop": "squire", "totem_hp": 520},
+  "stage_13": {"name": "Esporos na Bruma", "total_waves": 3, "prep_time_seconds": 8.0, "totem_hp": 560},
+  "stage_14": {"name": "Voo Noturno", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 600},
+  "stage_15": {"name": "A Clareira Rúnica", "total_waves": 4, "prep_time_seconds": 8.0, "totem_hp": 650},
+  "stage_16": {"name": "Emboscada Musgosa", "total_waves": 4, "prep_time_seconds": 7.0, "totem_hp": 700},
+  "stage_17": {"name": "Caminho da Névoa Azul", "total_waves": 4, "prep_time_seconds": 7.0, "totem_hp": 750},
+  "stage_18": {"name": "O Grande Cerco Fúngico", "total_waves": 4, "prep_time_seconds": 7.0, "totem_hp": 800},
+  "stage_19": {"name": "Guardião dos Cogumelos", "total_waves": 5, "prep_time_seconds": 9.0, "has_boss": true, "totem_hp": 900}
+}

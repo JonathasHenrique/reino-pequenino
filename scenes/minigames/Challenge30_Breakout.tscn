@@ -1,0 +1,79 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/minigames/Challenge30_Breakout.gd" id="1_break"]
+[ext_resource type="PackedScene" path="res://scenes/minigames/ChallengeVictoryScreen.tscn" id="2_cvic"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_paddle"]
+size = Vector2(140, 24)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ball"]
+radius = 12.0
+
+[sub_resource type="Gradient" id="Gradient_ball"]
+colors = PackedColorArray(1, 0.95, 0.6, 1), Color(1, 0.7, 0.1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ball"]
+gradient = SubResource("Gradient_ball")
+width = 24
+height = 24
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Challenge30_Breakout" type="Node2D"]
+script = ExtResource("1_break")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.12, 0.08, 0.14, 1)
+
+[node name="Paddle" type="CharacterBody2D" parent="."]
+position = Vector2(640, 660)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paddle"]
+shape = SubResource("RectangleShape2D_paddle")
+
+[node name="Visual" type="ColorRect" parent="Paddle"]
+offset_left = -70.0
+offset_top = -12.0
+offset_right = 70.0
+offset_bottom = 12.0
+color = Color(0.9, 0.65, 0.2, 1)
+
+[node name="Ball" type="Area2D" parent="."]
+position = Vector2(640, 630)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("CircleShape2D_ball")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball"]
+texture = SubResource("GradientTexture2D_ball")
+
+[node name="Blocks" type="Node2D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="LivesLabel" type="Label" parent="UI"]
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 300.0
+offset_bottom = 55.0
+theme_override_font_sizes/font_size = 22
+text = "Vidas do Escudo: 3"
+
+[node name="TitleLabel" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 22
+text = "DESAFIO 30: ESCUDO E BOLA"
+horizontal_alignment = 1
+
+[node name="VictoryUI" parent="." instance=ExtResource("2_cvic")]
