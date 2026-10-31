@@ -59,3 +59,4 @@ func _init() -> void:
 	else:
 		print("🎉 TODAS AS CENAS RODARAM COM 100% DE SUCESSO NO GODOT 4.3!")
 		quit(0)
+

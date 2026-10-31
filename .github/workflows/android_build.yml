@@ -2,10 +2,14 @@ name: Compilar APK Android (Reino Pequenino)
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ "main", "master" ]
+    tags: [ "v*" ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ "main", "master" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   export-android:
@@ -47,9 +51,20 @@ jobs:
           mkdir -p build
           godot --headless --path . --export-debug "Android" build/ReinoPequenino.apk
 
-      - name: Publicar APK como Artefato do GitHub
+      - name: Publicar APK como Artefato do GitHub Actions
         uses: actions/upload-artifact@v4
         with:
-          name: ReinoPequenino-Android-Debug
+          name: ReinoPequenino-Android-APK
           path: build/ReinoPequenino.apk
-          retention-days: 14
+          retention-days: 30
+
+      - name: Publicar Release no GitHub (Tags)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/ReinoPequenino.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
