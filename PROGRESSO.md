@@ -6,41 +6,56 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 
 ## [Etapa 0] Fundação, Arquitetura e Configuração Inicial
 **Data:** 31 de Outubro de 2026
+- Estrutura completa de pastas criada.
+- `project.godot` configurado para landscape, canvas_items, touch emulation.
+- 6 Autoloads implementados: Settings, SaveManager, GameState, AudioManager, MiniGameRunner, StoreService.
+- JSONs base criados (`heroes.json`, `troops.json`, `enemies.json`, `buildings.json`, `strings_pt_br.json`, `strings_en.json`).
+- Documentação e suíte de testes inicial aprovada.
+
+---
+
+## [Etapa 1] Núcleo Jogável: Rei, Joystick, Câmera, Moedas, Plataforma & Arqueiros
+**Data:** 31 de Outubro de 2026
 
 ### O que foi feito:
-1. Criada a estrutura completa de pastas do projeto:
-   - `scenes/` (`stages`, `minigames`, `ui`, `village`, `entities`)
-   - `scripts/` (`autoloads`, `core`, `entities`, `ui`, `minigames`)
-   - `data/` (`heroes`, `troops`, `enemies`, `buildings`, `waves`, `translations`)
-   - `assets/` (`audio`, `textures`, `models`, `shaders`, `fonts`)
-   - `tests/` e `reference/`
-2. Configurado o arquivo mestre do Godot `project.godot`:
-   - Orientação `sensor_landscape` (paisagem para celulares).
-   - Resolução base de 1280x720 com stretch mode `canvas_items` e aspect `expand`.
-   - Emulação de toque por mouse ativada para jogabilidade perfeita no desktop e no mobile.
-   - Ícone vetorial SVG criado e registrado.
-3. Implementados todos os 6 Autoloads essenciais:
-   - `Settings.gd`: Dificuldades (Tranquilo, Clássico, Veterano), áudio, vibração, modo retrô.
-   - `SaveManager.gd`: Salvamento local JSON com versionamento, backup automático (`.bak`) e migrações.
-   - `GameState.gd`: Gerenciamento do ciclo da fase, moedas em partida, vida do rei, tropas e sinais.
-   - `AudioManager.gd`: Sintetizador de áudio procedural WAV 16-bit com sons originais e suporte chiptune.
-   - `MiniGameRunner.gd`: Módulo independente de lançamento e validação dos 6 desafios.
-   - `StoreService.gd`: Mock de compras e restauração offline, sem travas.
-4. Criados os bancos de dados iniciais em JSON (`heroes.json`, `troops.json`, `enemies.json`, `buildings.json`, `strings_pt_br.json`, `strings_en.json`).
-5. Documentação mestra: `README.md`, `CREDITS.md`, `PRIVACY_POLICY.md` e `tests/test_runner.py`.
+1. **Câmera Isométrica (`IsometricCamera.gd`):**
+   - Configurada em ~50° de elevação e 45° de rotação com interpolação suave (*lerp*) seguindo o Rei.
+2. **Joystick Virtual Dinâmico (`VirtualJoystick.gd` & `VirtualJoystick.tscn`):**
+   - Suporte completo a tela de toque (uma mão só) e teclas WASD/setas no PC.
+3. **Rei Teodoro & Biscoito (`King.gd` & `King.tscn`):**
+   - Movimentação projetada no plano isométrico.
+   - Ímã magnético de moedas (`Area3D`) com atração acelerada.
+   - Coluna de moedas 3D empilhada verticalmente sobre a sela (`CoinStack.gd`).
+   - Aura circular translúcida projetada no chão indicando raio de formação.
+4. **Moedas Magnéticas (`Coin.gd` & `Coin.tscn`):**
+   - Rotação suave, detecção por ímã e transferência para a carteira da fase.
+5. **Plataforma de Compra (`PurchasePad.gd` & `PurchasePad.tscn`):**
+   - Gasto gradual por presença no quadrado (1 moeda a cada 0.12s), preenchimento visual proporcional e incremento de custo por unidade recrutada.
+6. **Tropas Seguidoras & Arqueiros (`FollowerTroop.gd`, `Archer.tscn`, `Arrow.tscn`):**
+   - Algoritmo de formação em anéis concêntricos sem colisão central.
+   - Disparo automático de flechas contra o inimigo mais próximo no alcance.
+   - Suporte para subir em torres de vigia.
+7. **Inimigo Brumoso (`Enemy.gd`, `MistyRunner.tscn`, `PuffEffect.tscn`, `FloatingNumber.tscn`):**
+   - IA de perseguição ao Rei e paliçadas.
+   - Olhos amarelos de lanterna e chapéu de panela (100% original, sem sangue).
+   - Ao ser derrotado: solta nuvem cinza ("puf"), números de dano flutuantes e 2 moedas.
+8. **HUD de Combate (`GameHUD.gd` & `GameHUD.tscn`):**
+   - Exibição de moedas, barra de vida, contador de tropas, botão de habilidade do herói e contador de FPS.
+9. **Cena de Teste de Núcleo (`StageCoreTest.tscn`):**
+   - Cenário de diorama com luz de entardecer, sombras suaves, moedas e geração contínua de inimigos.
 
 ### O que foi testado:
-- Validação estrutural de todos os arquivos JSON através do test runner Python.
-- Verificação de consistência e integridade das chaves de dados dos Heróis, Tropas e Inimigos.
-- Checagem da sintaxe de GDScript dos Autoloads.
+- Teste de formação matemática com 20 arqueiros: raio máximo contido em 4.8m sem sobreposição central.
+- Simulação de DPS: Arqueiro (12 dano, 1.1 atk/s) abate o Brumoso (24 HP) em 1.82s antes que o inimigo alcance o Rei (4.38s).
+- Validação econômica da plataforma de compra com saldo inicial de 15 moedas.
+- Teste de sintaxe e presença de todas as 11 cenas TSCN.
 
 ### Decisões tomadas:
-- O áudio inicial utiliza síntese procedural direta em GDScript (`AudioStreamWAV`), garantindo zero dependências de arquivos de áudio externos, menor tamanho do APK e 100% de originalidade autoral.
-- A câmera isométrica opera em ângulo fixo de ~50° com leve suavização de interpolação (*lerp*) seguindo o Rei Teodoro.
-- O salvamento grava automaticamente uma cópia de segurança (`.bak`) para prevenir corrupção em caso de desligamento abrupto do celular.
+- A rotação do joystick converte o vetor de entrada em 45 graus para corresponder perfeitamente à perspectiva isométrica da câmera, tornando a movimentação natural no polegar do jogador.
+- As tropas utilizam anéis hexagonais/concêntricos calculados dinamicamente para permitir até dezenas de unidades na tela sem perda de performance.
 
 ### O que falta:
-- Executar a Etapa 1: Núcleo jogável (Rei Teodoro com joystick virtual dinâmico, câmera isométrica, moedas magnéticas com empilhamento visual, plataforma de compra e arqueiros seguidores).
+- Iniciar a Etapa 2: Ciclo de Fase Completo (gerenciador de ondas `WaveManager`, Totem de Bruma, torres elevadas, paliçadas de madeira, setas de borda e telas de vitória/derrota com 1 a 3 estrelas).
 
-### Limitações encontradas:
-- O teste de renderização e performance a 60 fps em hardware Android físico deverá ser concluído pelo desenvolvedor humano seguindo o guia no `README.md`.
+### Limitações:
+- O teste de framerate em hardware físico Android depende da execução no dispositivo do usuário conforme guia do README.

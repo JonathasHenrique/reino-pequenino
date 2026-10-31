@@ -8,7 +8,7 @@ config_version=5
 
 config/name="Reino Pequenino"
 config/description="Jogo de defesa e aventura isométrica em diorama 3D"
-run/main_scene="res://scenes/ui/MainMenu.tscn"
+run/main_scene="res://scenes/stages/StageCoreTest.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://icon.svg"

@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/PurchasePad.gd" id="1_pad"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pad"]
+size = Vector3(2.4, 0.6, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+size = Vector3(2.2, 0.1, 2.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.38, 0.68, 0.38, 1) # Borda verde-oliva com estilo de feltro
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_fill"]
+size = Vector3(1.9, 0.12, 1.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold"]
+albedo_color = Color(1, 0.82, 0.15, 1)
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_icon"]
+size = Vector3(0.15, 0.6, 0.15)
+
+[node name="PurchasePad" type="Area3D"]
+script = ExtResource("1_pad")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("BoxShape3D_pad")
+
+[node name="BaseMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_base")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="FillProgress" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.01, 0, 0, 0, 1, 0, 0, 0, 0.01, 0, 0.06, 0)
+mesh = SubResource("BoxMesh_fill")
+surface_material_override/0 = SubResource("StandardMaterial3D_gold")
+
+[node name="PadIcon" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BoxMesh_icon")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+billboard = 1
+double_sided = false
+text = "5"
+font_size = 42
+outline_size = 10
+outline_modulate = Color(0, 0, 0, 0.8)

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/FloatingNumber.gd" id="1_float"]
+
+[node name="FloatingNumber" type="Node3D"]
+script = ExtResource("1_float")
+
+[node name="Label3D" type="Label3D" parent="."]
+billboard = 1
+double_sided = false
+text = "-12"
+font_size = 48
+outline_size = 12
+outline_modulate = Color(0, 0, 0, 0.75)

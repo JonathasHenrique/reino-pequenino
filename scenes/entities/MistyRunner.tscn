@@ -1,0 +1,69 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/Enemy.gd" id="1_enemy"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_misty"]
+radius = 0.35
+height = 1.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_body"]
+radius = 0.38
+height = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mist"]
+albedo_color = Color(0.48, 0.54, 0.62, 1) # Cinza-azulado da bruma
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pot"]
+top_radius = 0.32
+bottom_radius = 0.28
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_metal"]
+albedo_color = Color(0.35, 0.38, 0.42, 1) # Panela de ferro
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_eye"]
+radius = 0.07
+height = 0.14
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lantern"]
+albedo_color = Color(1.0, 0.88, 0.25, 1) # Olhos de lanterna amarelos (nunca vermelhos)
+emission_enabled = true
+emission = Color(1.0, 0.88, 0.25, 1)
+emission_energy_multiplier = 2.0
+
+[node name="MistyRunner" type="CharacterBody3D" groups=["enemies"]]
+script = ExtResource("1_enemy")
+enemy_id = "misty_runner"
+base_hp = 24
+move_speed = 3.2
+damage = 6
+coin_drop_count = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_misty")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("SphereMesh_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_mist")
+
+[node name="CookingPot" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("CylinderMesh_pot")
+surface_material_override/0 = SubResource("StandardMaterial3D_metal")
+
+[node name="LeftEye" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.55, 0.32)
+mesh = SubResource("SphereMesh_eye")
+surface_material_override/0 = SubResource("StandardMaterial3D_lantern")
+
+[node name="RightEye" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.55, 0.32)
+mesh = SubResource("SphereMesh_eye")
+surface_material_override/0 = SubResource("StandardMaterial3D_lantern")

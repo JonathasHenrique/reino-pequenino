@@ -1,0 +1,142 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/GameHUD.gd" id="1_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/VirtualJoystick.tscn" id="2_joy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hudbar"]
+bg_color = Color(0.18, 0.12, 0.08, 0.75) # Madeira escura aconchegante
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.2, 0.2, 0.2, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
+bg_color = Color(0.2, 0.8, 0.35, 1) # Verde vida vibrante
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.9, 0.65, 0.15, 1) # Botão dourado de madeira
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="GameHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="VirtualJoystick" parent="." instance=ExtResource("2_joy")]
+
+[node name="TopBar" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 24.0
+offset_right = -24.0
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hudbar")
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="CoinContainer" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+
+[node name="CoinIcon" type="Label" parent="TopBar/HBox/CoinContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "🪙"
+
+[node name="CoinLabel" type="Label" parent="TopBar/HBox/CoinContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "15"
+
+[node name="HPContainer" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HPIcon" type="Label" parent="TopBar/HBox/HPContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "❤️"
+
+[node name="HPBar" type="ProgressBar" parent="TopBar/HBox/HPContainer"]
+custom_minimum_size = Vector2(160, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+value = 100.0
+show_percentage = false
+
+[node name="TroopContainer" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+
+[node name="TroopIcon" type="Label" parent="TopBar/HBox/TroopContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🏹"
+
+[node name="TroopLabel" type="Label" parent="TopBar/HBox/TroopContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "0"
+
+[node name="WaveLabel" type="Label" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Onda 1 / 3"
+
+[node name="ActionContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -160.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="SkillButton" type="Button" parent="ActionContainer"]
+custom_minimum_size = Vector2(110, 60)
+layout_mode = 0
+offset_left = 25.0
+offset_top = 65.0
+offset_right = 135.0
+offset_bottom = 125.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "Coragem!"
+
+[node name="DebugOverlay" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 10.0
+offset_top = 70.0
+offset_right = 250.0
+offset_bottom = 110.0
+mouse_filter = 2
+
+[node name="FPSLabel" type="Label" parent="DebugOverlay"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.7)
+theme_override_font_sizes/font_size = 14
+text = "FPS: 60"
