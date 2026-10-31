@@ -1,0 +1,74 @@
+{
+  "stage_1": {
+    "total_waves": 2,
+    "prep_time_seconds": 12.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 4, "interval": 1.5, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "east"}
+        ]
+      }
+    ],
+    "totem_hp": 120
+  },
+  "stage_2": {
+    "total_waves": 3,
+    "prep_time_seconds": 10.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 5, "interval": 1.4, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "east"}
+        ]
+      }
+    ],
+    "totem_hp": 160
+  },
+  "stage_3": {
+    "total_waves": 3,
+    "prep_time_seconds": 10.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 2, "interval": 2.0, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "north"},
+          {"type": "misty_archer", "count": 2, "interval": 2.2, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 3, "interval": 1.8, "spawn_point": "east"}
+        ]
+      }
+    ],
+    "totem_hp": 200
+  }
+}

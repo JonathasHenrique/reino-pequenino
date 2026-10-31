@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/Palisade.gd" id="1_pali"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fence"]
+size = Vector3(3.2, 1.8, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_logs"]
+size = Vector3(3.0, 1.6, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.48, 0.32, 0.18, 1) # Troncos escuros pontiagudos
+roughness = 0.9
+
+[node name="Palisade" type="StaticBody3D" groups=["palisades"]]
+script = ExtResource("1_pali")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("BoxShape3D_fence")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BoxMesh_logs")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+billboard = 1
+double_sided = false
+text = "220 / 220"
+font_size = 32
+outline_size = 8
+outline_modulate = Color(0, 0, 0, 0.8)

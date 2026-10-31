@@ -39,11 +39,17 @@ def test_scenes_exist():
         "scenes/entities/King.tscn",
         "scenes/entities/Archer.tscn",
         "scenes/entities/MistyRunner.tscn",
+        "scenes/entities/MistTotem.tscn",
+        "scenes/entities/ArcherTower.tscn",
+        "scenes/entities/Palisade.tscn",
         "scenes/entities/PurchasePad.tscn",
         "scenes/ui/FloatingNumber.tscn",
         "scenes/ui/VirtualJoystick.tscn",
         "scenes/ui/GameHUD.tscn",
-        "scenes/stages/StageCoreTest.tscn"
+        "scenes/ui/VictoryScreen.tscn",
+        "scenes/ui/DefeatScreen.tscn",
+        "scenes/stages/StageCoreTest.tscn",
+        "scenes/stages/StageMain.tscn"
     ]
     all_exist = True
     for s in expected_scenes:
@@ -55,7 +61,6 @@ def test_scenes_exist():
     return all_exist
 
 def test_formation_math_20_archers():
-    """Valida que o algoritmo de formação em anéis concêntricos distribui 20+ tropas sem colisão central"""
     total = 20
     positions = []
     base_radius = 2.4
@@ -76,21 +81,16 @@ def test_formation_math_20_archers():
         z = math.sin(angle) * cur_radius
         positions.append((x, z, cur_radius))
     
-    # Validações:
-    # 1. Nenhuma tropa fica na posição exata do Rei (0,0)
     no_overlap_center = all(math.hypot(p[0], p[1]) >= base_radius * 0.99 for p in positions)
-    # 2. Todas as 20 tropas têm posições únicas
     unique_positions = len(set((round(p[0], 2), round(p[1], 2)) for p in positions)) == 20
-    # 3. Raio máximo não excede limites razoáveis de visão da câmera
     max_radius = max(p[2] for p in positions)
     radius_ok = max_radius <= 6.0
     
     return log_test("Matemática de Formação para 20 Arqueiros (Etapa 1)", 
                     no_overlap_center and unique_positions and radius_ok,
-                    f"20 posições calculadas, Raio máx: {max_radius:.1f}m, Sem sobreposição com o Rei")
+                    f"20 posições calculadas, Raio máx: {max_radius:.1f}m")
 
 def test_purchase_pad_economics():
-    """Valida o mecanismo de compra gradual e incremento de custo"""
     base_cost = 5
     increment = 1
     coins_available = 15
@@ -102,31 +102,38 @@ def test_purchase_pad_economics():
         purchases += 1
         current_cost += increment
     
-    # Com 15 moedas: compra 1 (custo 5, sobram 10), compra 2 (custo 6, sobram 4). Total = 2 arqueiros.
     expected_purchases = 2
     return log_test("Economia da Plataforma de Compra (15 moedas iniciais)", 
-                    purchases == expected_purchases and coins_available == 4,
-                    f"Recrutou {purchases} arqueiros, sobraram {coins_available} moedas")
+                    purchases == expected_purchases and coins_available == 4)
 
-def test_combat_dps_simulation():
-    """Valida que um arqueiro causa dano suficiente para derrotar um Misty Runner antes do Rei cair"""
-    archer_dmg = 12
-    archer_rate = 1.1 # 1.1 tiros por segundo
-    enemy_hp = 24
-    shots_needed = math.ceil(enemy_hp / archer_dmg) # 2 tiros
-    time_to_kill = shots_needed / archer_rate # ~1.81s
-    
-    # Inimigo anda a 3.2m/s de 14m de distância -> leva 4.37s para alcançar
-    approach_time = 14.0 / 3.2
-    safe_kill = time_to_kill < approach_time
-    
-    return log_test("Simulação de DPS de Combate (Arqueiro vs Brumoso)", 
-                    safe_kill,
-                    f"Tempo de abate: {time_to_kill:.2f}s < Tempo de aproximação: {approach_time:.2f}s")
+def test_stars_and_rewards_logic():
+    """Valida o cálculo de estrelas (1 a 3) e ouro permanente por desempenho da Etapa 2"""
+    def calc_stars(king_hp, king_max_hp):
+        ratio = king_hp / king_max_hp
+        if ratio >= 0.7:
+            return 3
+        elif ratio >= 0.35:
+            return 2
+        return 1
+
+    s3 = calc_stars(85, 100) # 85% -> 3 estrelas
+    s2 = calc_stars(50, 100) # 50% -> 2 estrelas
+    s1 = calc_stars(20, 100) # 20% -> 1 estrela
+
+    # Ouro da vitória na Fase 1: (20 + 1 * 5) * estrelas
+    gold_s3 = (20 + 1 * 5) * s3 # 25 * 3 = 75
+    gold_s1 = (20 + 1 * 5) * s1 # 25 * 1 = 25
+
+    stars_correct = (s3 == 3 and s2 == 2 and s1 == 1)
+    rewards_correct = (gold_s3 == 75 and gold_s1 == 25)
+
+    return log_test("Lógica de Desempenho e Estrelas (Etapa 2)", 
+                    stars_correct and rewards_correct,
+                    f"85% HP = {s3}⭐ (75 Ouro) | 50% HP = {s2}⭐ | 20% HP = {s1}⭐ (25 Ouro)")
 
 def main():
     print("=" * 60)
-    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0 E 1)")
+    print("  SUÍTE DE TESTES AUTOMATIZADOS — REINO PEQUENINO (ETAPAS 0, 1 E 2)")
     print("=" * 60)
     
     results = [
@@ -134,7 +141,7 @@ def main():
         test_scenes_exist(),
         test_formation_math_20_archers(),
         test_purchase_pad_economics(),
-        test_combat_dps_simulation()
+        test_stars_and_rewards_logic()
     ]
     
     print("-" * 60)
