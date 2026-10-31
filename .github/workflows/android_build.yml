@@ -32,6 +32,7 @@ jobs:
       - name: Baixar Godot Engine 4.3 e Templates de Exportação
         run: |
           mkdir -p ~/.local/share/godot/export_templates/4.3.stable
+          mkdir -p ~/.local/share/godot/templates/4.3.stable
           curl -sSL -o godot.zip https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
           unzip -q godot.zip
           sudo mv Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
@@ -39,17 +40,36 @@ jobs:
 
           curl -sSL -o templates.tpz https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
           unzip -q templates.tpz
-          mv templates/* ~/.local/share/godot/export_templates/4.3.stable/
+          cp -r templates/* ~/.local/share/godot/export_templates/4.3.stable/
+          cp -r templates/* ~/.local/share/godot/templates/4.3.stable/
           rm -rf templates templates.tpz
 
       - name: Gerar Keystore de Debug para Assinatura
         run: |
           keytool -genkey -v -keystore /tmp/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
+      - name: Configurar Configurações do Editor Godot (Android SDK & Keystore)
+        run: |
+          mkdir -p ~/.config/godot
+          cat <<EOF > ~/.config/godot/editor_settings-4.tres
+[gd_resource type="EditorSettings" format=3]
+
+[resource]
+export/android/android_sdk_path = "${ANDROID_HOME}"
+export/android/debug_keystore = "/tmp/debug.keystore"
+export/android/debug_keystore_user = "androiddebugkey"
+export/android/debug_keystore_pass = "android"
+export/android/force_system_user = false
+EOF
+
+      - name: Importar Assets no Godot Headless
+        run: |
+          godot --headless --editor --quit || true
+
       - name: Compilar APK de Debug
         run: |
           mkdir -p build
-          godot --headless --path . --export-debug "Android" build/ReinoPequenino.apk
+          godot --headless --export-debug "Android" build/ReinoPequenino.apk
 
       - name: Publicar APK como Artefato do GitHub Actions
         uses: actions/upload-artifact@v4
