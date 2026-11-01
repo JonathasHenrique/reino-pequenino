@@ -10,10 +10,14 @@ extends CanvasLayer
 @onready var settings_button: Button = $TopBar/HBox/SettingsButton
 @onready var album_button: Button = $TopBar/HBox/AlbumButton
 @onready var trophies_button: Button = $TopBar/HBox/TrophiesButton
+@onready var joystick: Control = get_node_or_null("VirtualJoystick")
 
 func _ready() -> void:
 	_update_hud()
 	SaveManager.save_saved.connect(_update_hud)
+	
+	if joystick:
+		joystick.joystick_updated.connect(_on_joystick_updated)
 	
 	if battle_button:
 		battle_button.pressed.connect(_on_battle_pressed)
@@ -77,3 +81,7 @@ func _on_settings_pressed() -> void:
 	if settings_scene:
 		var menu = settings_scene.instantiate()
 		add_child(menu)
+
+func _on_joystick_updated(direction: Vector2) -> void:
+	if GameState.king_node and is_instance_valid(GameState.king_node):
+		GameState.king_node.set_input_direction(direction)

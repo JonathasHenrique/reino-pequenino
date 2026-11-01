@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=15 format=3]
 
 [sub_resource type="GDScript" id="GDScript_barracks"]
 script/source = "extends StaticBody3D
 
-@export var train_interval: float = 18.0
+@export var train_interval: float = 16.0
 var timer: float = 0.0
 
 @onready var label: Label3D = $Label3D
@@ -13,7 +13,7 @@ func _process(delta: float) -> void:
 		return
 	timer += delta
 	if label:
-		label.text = \"🏹 Treinando Arqueiro:\\n%d s\" % int(maxf(0.0, train_interval - timer))
+		label.text = \"🏹 Treinando Arqueiro: %d s\" % int(maxf(0.0, train_interval - timer))
 	if timer >= train_interval:
 		timer = 0.0
 		_spawn_archer()
@@ -23,63 +23,131 @@ func _spawn_archer() -> void:
 	if archer_scene:
 		var a = archer_scene.instantiate()
 		get_parent().add_child(a)
-		a.global_position = global_position + Vector3(randf_range(-1.0, 1.0), 0, 2.0)
+		a.global_position = global_position + Vector3(randf_range(-1.2, 1.2), 0, 2.2)
 		AudioManager.play_sfx(\"recruit\")
+		Art.pop_in(a)
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_col"]
-size = Vector3(3.2, 2.6, 2.8)
+size = Vector3(3.4, 2.8, 3.0)
 
-[sub_resource type="BoxMesh" id="BoxMesh_house"]
-size = Vector3(2.8, 1.8, 2.4)
+[sub_resource type="BoxMesh" id="BoxMesh_foundation"]
+size = Vector3(3.2, 0.4, 2.6)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_timber"]
-albedo_color = Color(0.55, 0.38, 0.22, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.48, 0.48, 0.46, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_walls"]
+size = Vector3(3.0, 1.6, 2.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plaster"]
+albedo_color = Color(0.92, 0.88, 0.80, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_beam_v"]
+size = Vector3(0.2, 1.62, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_beam"]
+albedo_color = Color(0.38, 0.22, 0.12, 1)
 roughness = 0.85
 
 [sub_resource type="PrismMesh" id="PrismMesh_roof"]
-size = Vector3(3.2, 1.2, 2.8)
+size = Vector3(3.4, 1.4, 2.8)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thatch"]
-albedo_color = Color(0.78, 0.65, 0.35, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shingles"]
+albedo_color = Color(0.55, 0.32, 0.18, 1)
+roughness = 0.75
 
-[sub_resource type="BoxMesh" id="BoxMesh_sign"]
-size = Vector3(0.8, 0.4, 0.08)
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+size = Vector3(0.8, 1.2, 0.08)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bow_sign"]
-albedo_color = Color(0.2, 0.5, 0.85, 1)
+[sub_resource type="CylinderMesh" id="CylinderMesh_target"]
+top_radius = 0.45
+bottom_radius = 0.45
+height = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_straw"]
+albedo_color = Color(0.85, 0.72, 0.40, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_target_red"]
+albedo_color = Color(0.85, 0.22, 0.18, 1)
 
 [node name="FieldBarracks" type="StaticBody3D"]
 script = SubResource("GDScript_barracks")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 shape = SubResource("BoxShape3D_col")
 
 [node name="Visuals" type="Node3D" parent="."]
 
+[node name="Foundation" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_foundation")
+surface_material_override/0 = SubResource("StandardMaterial3D_stone")
+
 [node name="House" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("BoxMesh_house")
-surface_material_override/0 = SubResource("StandardMaterial3D_timber")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+mesh = SubResource("BoxMesh_walls")
+surface_material_override/0 = SubResource("StandardMaterial3D_plaster")
+
+[node name="BeamTL" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.2, 1.1)
+mesh = SubResource("BoxMesh_beam_v")
+surface_material_override/0 = SubResource("StandardMaterial3D_beam")
+
+[node name="BeamTR" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.2, 1.1)
+mesh = SubResource("BoxMesh_beam_v")
+surface_material_override/0 = SubResource("StandardMaterial3D_beam")
+
+[node name="BeamBL" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.2, -1.1)
+mesh = SubResource("BoxMesh_beam_v")
+surface_material_override/0 = SubResource("StandardMaterial3D_beam")
+
+[node name="BeamBR" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.2, -1.1)
+mesh = SubResource("BoxMesh_beam_v")
+surface_material_override/0 = SubResource("StandardMaterial3D_beam")
 
 [node name="Roof" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
 mesh = SubResource("PrismMesh_roof")
-surface_material_override/0 = SubResource("StandardMaterial3D_thatch")
+surface_material_override/0 = SubResource("StandardMaterial3D_shingles")
 
-[node name="Sign" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 1.25)
-mesh = SubResource("BoxMesh_sign")
-surface_material_override/0 = SubResource("StandardMaterial3D_bow_sign")
+[node name="Door" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 1.22)
+mesh = SubResource("BoxMesh_door")
+surface_material_override/0 = SubResource("StandardMaterial3D_beam")
 
-[node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+[node name="ArcheryTarget" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.9, 0.7, 0.8)
+mesh = SubResource("CylinderMesh_target")
+surface_material_override/0 = SubResource("StandardMaterial3D_straw")
+
+[node name="Bullseye" type="MeshInstance3D" parent="Visuals/ArcheryTarget"]
+transform = Transform3D(0.5, 0, 0, 0, 1.1, 0, 0, 0, 0.5, 0, 0.05, 0)
+mesh = SubResource("CylinderMesh_target")
+surface_material_override/0 = SubResource("StandardMaterial3D_target_red")
+
+[node name="SignLabel" type="Label3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 1.42)
 billboard = 1
 double_sided = false
-text = "🏹 Casa dos Arqueiros"
-font_size = 72
-outline_size = 20
+text = "🏹 GUILDA DOS ARQUEIROS"
+font_size = 54
+outline_size = 16
 outline_modulate = Color(0, 0, 0, 0.95)
-modulate = Color(1.0, 0.9, 0.35, 1)
+modulate = Color(1.0, 0.95, 0.8, 1)
 
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+billboard = 1
+double_sided = false
+text = "🏹 Treinando Arqueiro: 16 s"
+font_size = 52
+outline_size = 14
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(1.0, 0.92, 0.40, 1)

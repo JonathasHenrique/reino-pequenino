@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/village/VillageHUD.gd" id="1_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/VirtualJoystick.tscn" id="2_joy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar"]
 bg_color = Color(0.18, 0.12, 0.08, 0.85)
@@ -27,6 +28,8 @@ corner_radius_bottom_left = 14
 
 [node name="VillageHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
+
+[node name="VirtualJoystick" parent="." instance=ExtResource("2_joy")]
 
 [node name="TopBar" type="PanelContainer" parent="."]
 anchors_preset = 10

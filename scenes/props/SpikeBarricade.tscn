@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=3]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_barricade"]
+size = Vector3(2.6, 1.4, 1.4)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_log"]
+top_radius = 0.04
+bottom_radius = 0.14
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.48, 0.32, 0.18, 1)
+roughness = 0.88
+
+[sub_resource type="BoxMesh" id="BoxMesh_beam"]
+size = Vector3(2.5, 0.16, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dark_wood"]
+albedo_color = Color(0.36, 0.22, 0.12, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_rope"]
+inner_radius = 0.12
+outer_radius = 0.18
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rope"]
+albedo_color = Color(0.72, 0.62, 0.42, 1)
+
+[node name="SpikeBarricade" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_barricade")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="CrossLog1" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, -0.8, 0.7, 0)
+mesh = SubResource("CylinderMesh_log")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="CrossLog2" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, -0.8, 0.7, 0)
+mesh = SubResource("CylinderMesh_log")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="CrossLog3" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, 0.8, 0.7, 0)
+mesh = SubResource("CylinderMesh_log")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="CrossLog4" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 0.8, 0.7, 0)
+mesh = SubResource("CylinderMesh_log")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="CenterBeam" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_beam")
+surface_material_override/0 = SubResource("StandardMaterial3D_dark_wood")
+
+[node name="Rope1" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.7, 0)
+mesh = SubResource("TorusMesh_rope")
+surface_material_override/0 = SubResource("StandardMaterial3D_rope")
+
+[node name="Rope2" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.7, 0)
+mesh = SubResource("TorusMesh_rope")
+surface_material_override/0 = SubResource("StandardMaterial3D_rope")

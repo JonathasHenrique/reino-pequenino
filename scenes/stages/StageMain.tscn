@@ -18,6 +18,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/FlowerPatch.tscn" id="18_flower"]
 [ext_resource type="PackedScene" path="res://scenes/props/WoodenFence.tscn" id="19_fence"]
 [ext_resource type="Shader" path="res://assets/shaders/ground.gdshader" id="20_shader"]
+[ext_resource type="PackedScene" path="res://scenes/props/CliffWall.tscn" id="21_cliff"]
+[ext_resource type="PackedScene" path="res://scenes/props/SpikeBarricade.tscn" id="22_barricade"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 size = Vector2(90, 90)
@@ -35,9 +37,9 @@ size = Vector3(20.0, 0.04, 18.0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_camp"]
 shader = ExtResource("20_shader")
-shader_parameter/color_a = Color(0.42, 0.76, 0.32, 1)
-shader_parameter/color_b = Color(0.35, 0.68, 0.26, 1)
-shader_parameter/speck_color = Color(0.95, 0.85, 0.35, 1)
+shader_parameter/color_a = Color(0.82, 0.72, 0.54, 1)
+shader_parameter/color_b = Color(0.72, 0.60, 0.44, 1)
+shader_parameter/speck_color = Color(0.92, 0.84, 0.68, 1)
 shader_parameter/noise_scale = 0.25
 shader_parameter/speck_amount = 0.15
 
@@ -179,6 +181,39 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -7.5, 
 
 [node name="CampBackFence5" parent="DioramaScenery" instance=ExtResource("19_fence")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -7.5, 0, 2.0)
+
+[node name="Cliff1" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -12)
+
+[node name="Cliff2" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -6)
+
+[node name="Cliff3" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 0)
+
+[node name="Cliff4" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 6)
+
+[node name="Cliff5" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 12)
+
+[node name="CliffNW" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -11, 0, -16)
+
+[node name="CliffSW" parent="DioramaScenery" instance=ExtResource("21_cliff")]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -11, 0, 16)
+
+[node name="Spike1" parent="DioramaScenery" instance=ExtResource("22_barricade")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 3.4)
+
+[node name="Spike2" parent="DioramaScenery" instance=ExtResource("22_barricade")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -3.4)
+
+[node name="Spike3" parent="DioramaScenery" instance=ExtResource("22_barricade")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 18, 0, 3.8)
+
+[node name="Spike4" parent="DioramaScenery" instance=ExtResource("22_barricade")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 3.4, 0, 14)
 
 [node name="MerchantCounter" parent="." instance=ExtResource("14_merch")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 11.0, 0, -1.0)

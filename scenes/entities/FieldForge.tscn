@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=14 format=3]
 
 [sub_resource type="GDScript" id="GDScript_forge"]
 script/source = "extends StaticBody3D
@@ -12,43 +12,68 @@ func _ready() -> void:
 func _on_troop_entered(body: Node3D) -> void:
 	if body.is_in_group(\"troops\") and body.get(\"base_damage\"):
 		body.base_damage = int(body.base_damage * 1.3)
+		Art.pop_in(body)
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_col"]
-size = Vector3(2.4, 2.2, 2.4)
+size = Vector3(2.6, 2.0, 2.6)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_buff"]
 radius = 12.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_furnace"]
-size = Vector3(1.8, 1.4, 1.6)
+[sub_resource type="CylinderMesh" id="CylinderMesh_crucible"]
+top_radius = 0.75
+bottom_radius = 0.60
+height = 1.0
+radial_segments = 12
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
-albedo_color = Color(0.38, 0.4, 0.44, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crucible_stone"]
+albedo_color = Color(0.30, 0.32, 0.35, 1)
+roughness = 0.95
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lava"]
+top_radius = 0.65
+bottom_radius = 0.50
+height = 0.2
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_molten_gold"]
+albedo_color = Color(1.0, 0.45, 0.05, 1)
+emission_enabled = true
+emission = Color(1.0, 0.60, 0.1, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_stump"]
+top_radius = 0.42
+bottom_radius = 0.48
+height = 0.7
+radial_segments = 10
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood_stump"]
+albedo_color = Color(0.42, 0.28, 0.16, 1)
 roughness = 0.9
 
-[sub_resource type="BoxMesh" id="BoxMesh_fire"]
-size = Vector3(0.9, 0.5, 0.6)
+[sub_resource type="BoxMesh" id="BoxMesh_anvil_body"]
+size = Vector3(0.7, 0.35, 0.32)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fire"]
-albedo_color = Color(1.0, 0.45, 0.1, 1)
-emission_enabled = true
-emission = Color(1.0, 0.4, 0.05, 1)
-emission_energy_multiplier = 2.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_anvil_iron"]
+albedo_color = Color(0.22, 0.24, 0.28, 1)
+metallic = 0.85
+roughness = 0.35
 
-[sub_resource type="BoxMesh" id="BoxMesh_anvil"]
-size = Vector3(0.8, 0.6, 0.4)
+[sub_resource type="BoxMesh" id="BoxMesh_horn"]
+size = Vector3(0.3, 0.18, 0.18)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iron"]
-albedo_color = Color(0.25, 0.28, 0.32, 1)
-metallic = 0.8
-roughness = 0.3
+[sub_resource type="OmniLight3D" id="OmniLight3D_glow"]
+light_color = Color(1.0, 0.65, 0.2, 1)
+light_energy = 2.0
+omni_range = 4.5
 
 [node name="FieldForge" type="StaticBody3D"]
 script = SubResource("GDScript_forge")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
 shape = SubResource("BoxShape3D_col")
 
 [node name="BuffArea" type="Area3D" parent="."]
@@ -58,28 +83,52 @@ shape = SubResource("SphereShape3D_buff")
 
 [node name="Visuals" type="Node3D" parent="."]
 
-[node name="Furnace" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-mesh = SubResource("BoxMesh_furnace")
-surface_material_override/0 = SubResource("StandardMaterial3D_stone")
+[node name="Crucible" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.5, 0)
+mesh = SubResource("CylinderMesh_crucible")
+surface_material_override/0 = SubResource("StandardMaterial3D_crucible_stone")
 
-[node name="Fire" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.6)
-mesh = SubResource("BoxMesh_fire")
-surface_material_override/0 = SubResource("StandardMaterial3D_fire")
+[node name="MoltenIron" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.95, 0)
+mesh = SubResource("CylinderMesh_lava")
+surface_material_override/0 = SubResource("StandardMaterial3D_molten_gold")
+
+[node name="LavaLight" type="OmniLight3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 1.3, 0)
+light_color = Color(1, 0.6, 0.15, 1)
+light_energy = 2.4
+omni_range = 5.0
+
+[node name="TreeStump" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.35, 0)
+mesh = SubResource("CylinderMesh_stump")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood_stump")
 
 [node name="Anvil" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 1.3)
-mesh = SubResource("BoxMesh_anvil")
-surface_material_override/0 = SubResource("StandardMaterial3D_iron")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.82, 0)
+mesh = SubResource("BoxMesh_anvil_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_anvil_iron")
+
+[node name="AnvilHorn" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.85, 0)
+mesh = SubResource("BoxMesh_horn")
+surface_material_override/0 = SubResource("StandardMaterial3D_anvil_iron")
+
+[node name="FloorChevrons" type="Label3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.05, 1.2)
+double_sided = false
+text = "»»» +30% DANO »»»"
+font_size = 52
+outline_size = 14
+outline_modulate = Color(0, 0, 0, 0.9)
+modulate = Color(1.0, 0.65, 0.15, 1)
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
 billboard = 1
 double_sided = false
-text = "⚒️ FERRARIA DE CAMPO\n(+30% Dano de Flechas)"
-font_size = 72
-outline_size = 20
+text = "⚒️ FERRARIA (+30% Dano)"
+font_size = 56
+outline_size = 16
 outline_modulate = Color(0, 0, 0, 0.95)
-modulate = Color(1.0, 0.85, 0.3, 1)
-
+modulate = Color(1.0, 0.82, 0.35, 1)

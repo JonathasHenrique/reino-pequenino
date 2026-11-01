@@ -53,6 +53,11 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 	
+	# Suporte a teclado (WASD / Setas) caso esteja no PC ou controle físico
+	var key_input = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	if key_input.length_squared() > 0.01:
+		set_input_direction(key_input)
+	
 	if move_direction.length_squared() > 0.01:
 		velocity.x = move_direction.x * move_speed
 		velocity.z = move_direction.z * move_speed

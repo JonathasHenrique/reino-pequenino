@@ -1,61 +1,124 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/PurchasePad.gd" id="1_pad"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pad"]
-size = Vector3(2.4, 0.6, 2.4)
-
-[sub_resource type="BoxMesh" id="BoxMesh_base"]
-size = Vector3(2.5, 0.12, 2.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
-albedo_color = Color(0.32, 0.58, 0.32, 1)
-roughness = 0.7
+size = Vector3(2.5, 0.8, 2.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_rim"]
-size = Vector3(2.7, 0.08, 2.7)
+size = Vector3(2.5, 0.04, 2.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rim"]
-albedo_color = Color(0.55, 0.42, 0.28, 1)
+albedo_color = Color(0.20, 0.22, 0.25, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+size = Vector3(2.35, 0.05, 2.35)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tile"]
+albedo_color = Color(0.12, 0.45, 0.75, 0.85)
+transparency = 1
+roughness = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_fill"]
-size = Vector3(2.2, 0.15, 2.2)
+size = Vector3(2.3, 0.06, 2.3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold"]
-albedo_color = Color(1.0, 0.82, 0.1, 1)
+albedo_color = Color(1.0, 0.82, 0.15, 1)
 emission_enabled = true
-emission = Color(0.8, 0.65, 0.1, 1)
-emission_energy_multiplier = 0.5
+emission = Color(1.0, 0.75, 0.1, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_corner"]
+size = Vector3(0.5, 0.06, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bracket"]
+albedo_color = Color(1.0, 1.0, 1.0, 0.9)
+emission_enabled = true
+emission = Color(1.0, 1.0, 1.0, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="QuadMesh" id="QuadMesh_icon"]
+size = Vector2(1.2, 1.2)
 
 [node name="PurchasePad" type="Area3D"]
 script = ExtResource("1_pad")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 shape = SubResource("BoxShape3D_pad")
 
 [node name="RimMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 mesh = SubResource("BoxMesh_rim")
 surface_material_override/0 = SubResource("StandardMaterial3D_rim")
 
 [node name="BaseMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
 mesh = SubResource("BoxMesh_base")
-surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+surface_material_override/0 = SubResource("StandardMaterial3D_tile")
 
 [node name="FillProgress" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.01, 0, 0, 0, 1, 0, 0, 0, 0.01, 0, 0.1, 0)
+transform = Transform3D(0.01, 0, 0, 0, 1, 0, 0, 0, 0.01, 0, 0.045, 0)
 mesh = SubResource("BoxMesh_fill")
 surface_material_override/0 = SubResource("StandardMaterial3D_gold")
 
+[node name="CornerBrackets" type="Node3D" parent="."]
+
+[node name="C1_X" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.05, -1.1)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C1_Z" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.1, 0.05, -0.9)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C2_X" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.05, -1.1)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C2_Z" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.1, 0.05, -0.9)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C3_X" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.05, 1.1)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C3_Z" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.1, 0.05, 0.9)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C4_X" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.05, 1.1)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="C4_Z" type="MeshInstance3D" parent="CornerBrackets"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.1, 0.05, 0.9)
+mesh = SubResource("BoxMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
+
+[node name="FloorIcon" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.05, 0)
+double_sided = false
+text = "🏹"
+font_size = 80
+outline_size = 18
+outline_modulate = Color(0, 0, 0, 0.9)
+
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 billboard = 1
 double_sided = false
-text = "🏹\n🪙 5"
-font_size = 78
-outline_size = 22
-outline_modulate = Color(0, 0, 0, 0.95)
-modulate = Color(1, 0.96, 0.75, 1)
-
+text = "🪙 5"
+font_size = 62
+outline_size = 18
+outline_modulate = Color(0.10, 0.08, 0.05, 0.95)
+modulate = Color(1.0, 0.96, 0.70, 1)
