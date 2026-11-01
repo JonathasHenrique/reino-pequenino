@@ -82,3 +82,4 @@ font_size = 72
 outline_size = 20
 outline_modulate = Color(0, 0, 0, 0.95)
 modulate = Color(1.0, 0.9, 0.35, 1)
+

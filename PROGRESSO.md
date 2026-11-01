@@ -148,3 +148,38 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 - Suíte integral de testes com 51 cenas e arquivos de dados: 100% aprovado.
 - Teste de compilação e execução real em motor Godot 4.3 headless (60 frames em `StageMain.tscn` e `Village.tscn`): 0 erros, saída limpa.
 - Integração contínua (CI) no GitHub Actions: compilação do APK do Android validada com sucesso.
+
+---
+
+## [Etapa 11] Fim da Poluição Visual, Limites de Compra, Catapulta 2.0 & Evolução da Vila
+**Data:** 1 de Novembro de 2026
+
+### O que foi feito:
+1. **Economia de Campo Ajustada (Somente Capacetes):**
+   - Inimigos comuns abatidos agora dropam **exclusivamente Capacetes de Bruma (`SpoilLoot`)**. O jogador precisa recolhê-los e levar ao Mercador Tobias para converter em moedas de ouro.
+   - Moedas em campo são obtidas apenas com Tobias e na destruição final do Totem como recompensa comemorativa.
+2. **Fim da Poluição Visual de Textos:**
+   - Remoção completa dos rótulos de texto flutuantes gigantes individuais (`🪵 220/220`) sobre cada pedaço de cerca.
+   - Implementação do componente dinâmico `HealthBar3D`: as barras de vida ficam 100% ocultas com vida cheia (deixando o diorama limpo e bonito) e só aparecem com gradiente verde/amarelo/vermelho quando uma estrutura sofre dano.
+3. **Plataformas de Compra com Limites e Feedback Claro:**
+   - Limites rígidos aplicados: Arqueiros (máx. 10), Torres (máx. 3), Muros (máx. 8), Guilda (máx. 1), Ferraria (máx. 1).
+   - Indicação em tempo real de contagem (ex: `🏹 ARQUEIRO (3/10)` e `(COMPLETO)` ao atingir o limite, impedindo desperdício de moedas).
+   - Quando o muro de 8 paliçadas é completado e sofre dano, a plataforma muda automaticamente para `🛠️ REPARAR MUROS (🪙 10)`.
+4. **Desafio 10 (A Catapulta do Vale) Totalmente Reformulado:**
+   - Reconstrução completa da física 2D: agora utiliza velocidade direta com impulso potente (12.5x), arremesso em arco alto sem falhas e câmera com tremor dinâmico nos impactos.
+   - Gráficos no estilo arcade cartoon: cenário com colinas verdes, nuvens fofas, estilingue de madeira em Y com elástico duplo animado que estica até a pedra, mira parabólica tracejada e fortaleza de blocos empilhados com destruição satisfatória.
+5. **Dificuldade e Ritmo de Invasão (Estilo Plants vs Zombies):**
+   - Ondas do Mundo 1 rebalanceadas para 3 a 4 ondas progressivas por fase, com invasões vindas do Leste e do Norte.
+   - O Totem permanece invulnerável durante o ataque; ao vencer a última onda, a blindagem mágica quebra com confetes e poeira para o assalto final.
+6. **Evolução Visual das Casas da Vila (Estilo Clash of Clans):**
+   - Cada edifício agora se transforma visualmente em 3D conforme sobe de nível:
+     - Nível 1: Cabana de madeira com telhado rústico.
+     - Nível 2: Casa de alvenaria e pedra sólida, telhado vermelho e chaminé.
+     - Nível 3+: Castelo fortificado com torreões de canto, ameias de fortaleza e estandarte com brasão dourado.
+   - Placa de informações transparente detalhando o benefício exato do nível atual e o bônus da próxima melhoria.
+7. **Shader de Chão Procedural Diorama:**
+   - Criação de `assets/shaders/ground.gdshader` com grama estilizada multitonal, pequenos detalhes de pedrinhas/flores em coordenadas de mundo e sombras suaves.
+
+### O que foi testado:
+- Suíte integral de testes com 51 cenas e dados: 100% aprovado (`tests/test_runner.py`).
+- Execução headless no Godot 4.3 de todas as cenas centrais (`StageMain.tscn`, `Village.tscn`, `Challenge10_Catapult.tscn`, `MainMenu.tscn`): 0 erros de GDScript, loop fluído.

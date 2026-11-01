@@ -53,3 +53,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_stem")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.38, 0.35)
 mesh = SubResource("SphereMesh_petal_yellow")
 surface_material_override/0 = SubResource("StandardMaterial3D_yellow")
+

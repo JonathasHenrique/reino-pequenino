@@ -33,3 +33,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_rock")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 mesh = SubResource("BoxMesh_moss")
 surface_material_override/0 = SubResource("StandardMaterial3D_moss")
+

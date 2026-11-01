@@ -12,13 +12,18 @@
 [ext_resource type="PackedScene" path="res://scenes/props/Rock.tscn" id="10_rock"]
 [ext_resource type="PackedScene" path="res://scenes/props/FlowerPatch.tscn" id="11_flower"]
 [ext_resource type="PackedScene" path="res://scenes/props/WoodenFence.tscn" id="12_fence"]
+[ext_resource type="Shader" path="res://assets/shaders/ground.gdshader" id="13_shader"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 size = Vector2(80, 80)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_village_grass"]
-albedo_color = Color(0.38, 0.66, 0.25, 1)
-roughness = 0.85
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_village_grass"]
+shader = ExtResource("13_shader")
+shader_parameter/color_a = Color(0.44, 0.70, 0.28, 1)
+shader_parameter/color_b = Color(0.36, 0.62, 0.22, 1)
+shader_parameter/speck_color = Color(0.60, 0.82, 0.38, 1)
+shader_parameter/noise_scale = 0.20
+shader_parameter/speck_amount = 0.14
 
 [sub_resource type="BoxMesh" id="BoxMesh_plaza"]
 size = Vector3(14, 0.05, 14)
@@ -70,7 +75,7 @@ shape = SubResource("BoxShape3D_floor")
 
 [node name="Grass" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("PlaneMesh_ground")
-surface_material_override/0 = SubResource("StandardMaterial3D_village_grass")
+surface_material_override/0 = SubResource("ShaderMaterial_village_grass")
 
 [node name="PlazaCenter" type="MeshInstance3D" parent="Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)

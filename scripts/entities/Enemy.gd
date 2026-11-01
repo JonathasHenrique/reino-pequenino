@@ -121,7 +121,7 @@ func _die() -> void:
 	
 	AudioManager.play_sfx("puff")
 	_spawn_puff_effect()
-	_drop_coins()
+	# Inimigo solta APENAS o capacete de bruma (o Rei deve levar ao Mercador Tobias para converter em moedas)
 	_drop_spoils()
 	queue_free()
 

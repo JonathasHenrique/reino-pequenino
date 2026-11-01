@@ -40,3 +40,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_helmet_red")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0.18)
 mesh = SubResource("BoxMesh_visor")
 surface_material_override/0 = SubResource("StandardMaterial3D_iron")
+

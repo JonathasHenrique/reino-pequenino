@@ -49,3 +49,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_leaves")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
 mesh = SubResource("SphereMesh_leaves_top")
 surface_material_override/0 = SubResource("StandardMaterial3D_leaves_light")
+

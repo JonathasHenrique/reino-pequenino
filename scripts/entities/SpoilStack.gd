@@ -44,3 +44,4 @@ func _on_spoils_changed(new_amount: int) -> void:
 	while mesh_instances.size() > target_render:
 		var last = mesh_instances.pop_back()
 		last.queue_free()
+

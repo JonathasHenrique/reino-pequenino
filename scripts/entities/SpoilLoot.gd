@@ -50,3 +50,4 @@ func _collect() -> void:
 		fn.setup(value, Color(1.0, 0.4, 0.4))
 		
 	queue_free()
+

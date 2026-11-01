@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
 	for enemy in enemies:
 		if ind_idx >= max_indicators:
 			break
-		if not is_instance_valid(enemy) or not enemy.is_alive():
+		if not is_instance_valid(enemy) or enemy.is_in_group("totems") or not enemy.has_method("is_alive") or not enemy.is_alive():
 			continue
 			
 		var enemy_pos = enemy.global_position

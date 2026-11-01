@@ -1,23 +1,30 @@
 {
   "stage_1": {
     "name": "O Despertar no Vale",
-    "total_waves": 2,
+    "total_waves": 3,
     "prep_time_seconds": 12.0,
     "waves": [
       {
         "wave_index": 1,
         "enemies": [
-          {"type": "misty_runner", "count": 4, "interval": 1.5, "spawn_point": "east"}
+          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "east"}
         ]
       },
       {
         "wave_index": 2,
         "enemies": [
-          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "east"}
+          {"type": "misty_runner", "count": 10, "interval": 1.0, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "east"},
+          {"type": "misty_runner", "count": 6, "interval": 1.0, "spawn_point": "north"}
         ]
       }
     ],
-    "totem_hp": 120
+    "totem_hp": 140
   },
   "stage_2": {
     "name": "Caminho dos Girassóis",
@@ -27,51 +34,54 @@
       {
         "wave_index": 1,
         "enemies": [
-          {"type": "misty_runner", "count": 5, "interval": 1.4, "spawn_point": "east"}
+          {"type": "misty_runner", "count": 8, "interval": 1.1, "spawn_point": "east"}
         ]
       },
       {
         "wave_index": 2,
         "enemies": [
-          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "north"}
+          {"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "north"},
+          {"type": "misty_squire", "count": 2, "interval": 2.2, "spawn_point": "east"}
         ]
       },
       {
         "wave_index": 3,
         "enemies": [
-          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "east"}
-        ]
-      }
-    ],
-    "totem_hp": 150
-  },
-  "stage_3": {
-    "name": "A Marcha das Panelas",
-    "total_waves": 3,
-    "prep_time_seconds": 10.0,
-    "waves": [
-      {
-        "wave_index": 1,
-        "enemies": [
-          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "east"},
-          {"type": "misty_squire", "count": 2, "interval": 2.0, "spawn_point": "east"}
-        ]
-      },
-      {
-        "wave_index": 2,
-        "enemies": [
-          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "north"}
-        ]
-      },
-      {
-        "wave_index": 3,
-        "enemies": [
-          {"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "east"},
+          {"type": "misty_runner", "count": 14, "interval": 0.7, "spawn_point": "east"},
           {"type": "misty_squire", "count": 3, "interval": 1.8, "spawn_point": "north"}
         ]
       }
     ],
     "totem_hp": 180
+  },
+  "stage_3": {
+    "name": "A Marcha das Panelas",
+    "total_waves": 3,
+    "prep_time_seconds": 9.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 3, "interval": 1.8, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "north"},
+          {"type": "misty_squire", "count": 4, "interval": 1.6, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 16, "interval": 0.65, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 5, "interval": 1.4, "spawn_point": "north"}
+        ]
+      }
+    ],
+    "totem_hp": 220
   },
   "stage_4": {
     "name": "Flechas de Carvão",
@@ -81,187 +91,213 @@
       {
         "wave_index": 1,
         "enemies": [
-          {"type": "misty_runner", "count": 6, "interval": 1.2, "spawn_point": "east"},
-          {"type": "misty_archer", "count": 3, "interval": 1.8, "spawn_point": "east"}
+          {"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "east"},
+          {"type": "misty_archer", "count": 3, "interval": 1.6, "spawn_point": "east"}
         ]
       },
       {
         "wave_index": 2,
         "enemies": [
-          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "north"},
-          {"type": "misty_archer", "count": 3, "interval": 1.5, "spawn_point": "north"}
+          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "north"},
+          {"type": "misty_archer", "count": 4, "interval": 1.4, "spawn_point": "north"},
+          {"type": "misty_squire", "count": 3, "interval": 1.8, "spawn_point": "east"}
         ]
       },
       {
         "wave_index": 3,
         "enemies": [
-          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "east"},
+          {"type": "misty_runner", "count": 18, "interval": 0.6, "spawn_point": "east"},
+          {"type": "misty_archer", "count": 6, "interval": 1.2, "spawn_point": "east"},
           {"type": "misty_squire", "count": 4, "interval": 1.5, "spawn_point": "north"}
-        ]
-      }
-    ],
-    "totem_hp": 220
-  },
-  "stage_5": {
-    "name": "A Lança de Freixo",
-    "total_waves": 3,
-    "prep_time_seconds": 9.0,
-    "unlocks_troop": "spearman",
-    "waves": [
-      {
-        "wave_index": 1,
-        "enemies": [
-          {"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "east"},
-          {"type": "misty_squire", "count": 3, "interval": 1.6, "spawn_point": "east"}
-        ]
-      },
-      {
-        "wave_index": 2,
-        "enemies": [
-          {"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "north"},
-          {"type": "misty_archer", "count": 4, "interval": 1.4, "spawn_point": "north"}
-        ]
-      },
-      {
-        "wave_index": 3,
-        "enemies": [
-          {"type": "misty_runner", "count": 14, "interval": 0.8, "spawn_point": "east"},
-          {"type": "misty_squire", "count": 5, "interval": 1.2, "spawn_point": "north"}
         ]
       }
     ],
     "totem_hp": 260
   },
-  "stage_6": {
-    "name": "Barreiras do Vale",
-    "total_waves": 4,
-    "prep_time_seconds": 8.0,
-    "waves": [
-      {
-        "wave_index": 1,
-        "enemies": [{"type": "misty_runner", "count": 8, "interval": 1.0, "spawn_point": "east"}]
-      },
-      {
-        "wave_index": 2,
-        "enemies": [{"type": "misty_squire", "count": 4, "interval": 1.5, "spawn_point": "north"}]
-      },
-      {
-        "wave_index": 3,
-        "enemies": [
-          {"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "east"},
-          {"type": "misty_archer", "count": 4, "interval": 1.3, "spawn_point": "north"}
-        ]
-      },
-      {
-        "wave_index": 4,
-        "enemies": [
-          {"type": "misty_runner", "count": 15, "interval": 0.7, "spawn_point": "east"},
-          {"type": "misty_squire", "count": 6, "interval": 1.0, "spawn_point": "east"}
-        ]
-      }
-    ],
-    "totem_hp": 300
-  },
-  "stage_7": {
-    "name": "Sombras no Céu",
+  "stage_5": {
+    "name": "Asas na Neblina",
     "total_waves": 4,
     "prep_time_seconds": 8.0,
     "waves": [
       {
         "wave_index": 1,
         "enemies": [
-          {"type": "misty_runner", "count": 6, "interval": 1.0, "spawn_point": "east"},
+          {"type": "misty_runner", "count": 8, "interval": 0.9, "spawn_point": "east"},
           {"type": "misty_crow", "count": 4, "interval": 1.5, "spawn_point": "north"}
         ]
       },
       {
         "wave_index": 2,
         "enemies": [
-          {"type": "misty_crow", "count": 6, "interval": 1.2, "spawn_point": "east"},
-          {"type": "misty_squire", "count": 4, "interval": 1.4, "spawn_point": "north"}
+          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "north"},
+          {"type": "misty_crow", "count": 6, "interval": 1.2, "spawn_point": "east"}
         ]
       },
       {
         "wave_index": 3,
         "enemies": [
-          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "east"},
-          {"type": "misty_archer", "count": 5, "interval": 1.2, "spawn_point": "north"}
+          {"type": "misty_squire", "count": 5, "interval": 1.5, "spawn_point": "east"},
+          {"type": "misty_archer", "count": 5, "interval": 1.4, "spawn_point": "north"}
         ]
       },
       {
         "wave_index": 4,
         "enemies": [
+          {"type": "misty_runner", "count": 20, "interval": 0.55, "spawn_point": "east"},
           {"type": "misty_crow", "count": 8, "interval": 1.0, "spawn_point": "north"},
-          {"type": "misty_runner", "count": 14, "interval": 0.7, "spawn_point": "east"}
+          {"type": "misty_squire", "count": 6, "interval": 1.3, "spawn_point": "east"}
         ]
       }
     ],
-    "totem_hp": 340
+    "totem_hp": 300
   },
-  "stage_8": {
-    "name": "O Cerco dos Girassóis",
+  "stage_6": {
+    "name": "O Moinho Trancado",
     "total_waves": 4,
     "prep_time_seconds": 8.0,
     "waves": [
       {
         "wave_index": 1,
-        "enemies": [{"type": "misty_runner", "count": 10, "interval": 0.9, "spawn_point": "east"}]
-      },
-      {
-        "wave_index": 2,
         "enemies": [
-          {"type": "misty_squire", "count": 6, "interval": 1.2, "spawn_point": "north"},
-          {"type": "misty_crow", "count": 5, "interval": 1.3, "spawn_point": "east"}
+          {"type": "misty_runner", "count": 10, "interval": 0.85, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 3, "interval": 1.6, "spawn_point": "east"}
         ]
-      },
-      {
-        "wave_index": 3,
-        "enemies": [
-          {"type": "misty_runner", "count": 14, "interval": 0.7, "spawn_point": "east"},
-          {"type": "misty_archer", "count": 6, "interval": 1.1, "spawn_point": "north"}
-        ]
-      },
-      {
-        "wave_index": 4,
-        "enemies": [
-          {"type": "misty_crow", "count": 8, "interval": 0.9, "spawn_point": "east"},
-          {"type": "misty_squire", "count": 7, "interval": 1.0, "spawn_point": "north"}
-        ]
-      }
-    ],
-    "totem_hp": 380
-  },
-  "stage_9": {
-    "name": "O Gigante da Bruma",
-    "total_waves": 4,
-    "prep_time_seconds": 10.0,
-    "waves": [
-      {
-        "wave_index": 1,
-        "enemies": [{"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "east"}]
       },
       {
         "wave_index": 2,
         "enemies": [
           {"type": "misty_crow", "count": 6, "interval": 1.2, "spawn_point": "north"},
-          {"type": "misty_squire", "count": 6, "interval": 1.1, "spawn_point": "east"}
+          {"type": "misty_archer", "count": 5, "interval": 1.3, "spawn_point": "north"}
         ]
       },
       {
         "wave_index": 3,
         "enemies": [
-          {"type": "misty_archer", "count": 6, "interval": 1.0, "spawn_point": "east"},
-          {"type": "misty_runner", "count": 16, "interval": 0.6, "spawn_point": "north"}
+          {"type": "misty_runner", "count": 15, "interval": 0.7, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 5, "interval": 1.4, "spawn_point": "north"}
         ]
       },
       {
         "wave_index": 4,
         "enemies": [
-          {"type": "misty_giant", "count": 1, "interval": 0.1, "spawn_point": "east"},
-          {"type": "misty_runner", "count": 10, "interval": 0.8, "spawn_point": "north"}
+          {"type": "misty_runner", "count": 22, "interval": 0.5, "spawn_point": "east"},
+          {"type": "misty_archer", "count": 7, "interval": 1.1, "spawn_point": "north"},
+          {"type": "misty_crow", "count": 8, "interval": 0.9, "spawn_point": "east"}
         ]
       }
     ],
-    "totem_hp": 450
+    "totem_hp": 340
+  },
+  "stage_7": {
+    "name": "Bruma Cerrada",
+    "total_waves": 4,
+    "prep_time_seconds": 8.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 4, "interval": 1.5, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_archer", "count": 6, "interval": 1.2, "spawn_point": "north"},
+          {"type": "misty_crow", "count": 7, "interval": 1.1, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 18, "interval": 0.65, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 6, "interval": 1.3, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 4,
+        "enemies": [
+          {"type": "misty_runner", "count": 24, "interval": 0.5, "spawn_point": "north"},
+          {"type": "misty_squire", "count": 8, "interval": 1.1, "spawn_point": "east"},
+          {"type": "misty_crow", "count": 10, "interval": 0.8, "spawn_point": "north"}
+        ]
+      }
+    ],
+    "totem_hp": 380
+  },
+  "stage_8": {
+    "name": "Passo dos Rochedos",
+    "total_waves": 4,
+    "prep_time_seconds": 8.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 14, "interval": 0.75, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 5, "interval": 1.4, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_archer", "count": 8, "interval": 1.1, "spawn_point": "north"},
+          {"type": "misty_crow", "count": 8, "interval": 1.0, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 20, "interval": 0.6, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 8, "interval": 1.2, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 4,
+        "enemies": [
+          {"type": "misty_runner", "count": 28, "interval": 0.45, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 10, "interval": 1.0, "spawn_point": "north"},
+          {"type": "misty_archer", "count": 8, "interval": 0.9, "spawn_point": "east"}
+        ]
+      }
+    ],
+    "totem_hp": 420
+  },
+  "stage_9": {
+    "name": "A Sombra do Gigante",
+    "total_waves": 4,
+    "prep_time_seconds": 8.0,
+    "waves": [
+      {
+        "wave_index": 1,
+        "enemies": [
+          {"type": "misty_runner", "count": 12, "interval": 0.8, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 6, "interval": 1.3, "spawn_point": "east"}
+        ]
+      },
+      {
+        "wave_index": 2,
+        "enemies": [
+          {"type": "misty_archer", "count": 8, "interval": 1.1, "spawn_point": "north"},
+          {"type": "misty_crow", "count": 10, "interval": 0.9, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 3,
+        "enemies": [
+          {"type": "misty_runner", "count": 22, "interval": 0.55, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 10, "interval": 1.1, "spawn_point": "north"}
+        ]
+      },
+      {
+        "wave_index": 4,
+        "enemies": [
+          {"type": "misty_giant", "count": 1, "interval": 2.0, "spawn_point": "east"},
+          {"type": "misty_runner", "count": 25, "interval": 0.5, "spawn_point": "east"},
+          {"type": "misty_squire", "count": 8, "interval": 1.0, "spawn_point": "north"},
+          {"type": "misty_archer", "count": 8, "interval": 0.9, "spawn_point": "north"}
+        ]
+      }
+    ],
+    "totem_hp": 500
   }
 }

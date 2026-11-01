@@ -1,7 +1,7 @@
 extends Node3D
 
 # StageMain.gd - Controlador mestre do ciclo de fase de Reino Pequenino
-# Gerencia ondas, totens, plataformas de construção e fluxo de vitória/derrota
+# Gerencia ondas, totens, plataformas de construção com limites claros e fluxo de vitória/derrota
 
 @export var stage_id: int = 1
 
@@ -9,20 +9,47 @@ extends Node3D
 @onready var camera: Camera3D = $IsometricCamera
 @onready var totem: CharacterBody3D = $MistTotem
 @onready var wave_manager: Node = $WaveManager
+
 @onready var archer_pad: Area3D = $PurchasePad_Archer
 @onready var tower_pad: Area3D = $PurchasePad_Tower
 @onready var palisade_pad: Area3D = $PurchasePad_Palisade
+@onready var barracks_pad: Area3D = $PurchasePad_Barracks
+@onready var forge_pad: Area3D = $PurchasePad_Forge
 
 @onready var east_spawn: Marker3D = $Spawners/EastSpawn
 @onready var north_spawn: Marker3D = $Spawners/NorthSpawn
 
+const MAX_ARCHERS: int = 10
+const MAX_TOWERS: int = 3
+const MAX_PALISADES: int = 8
+
+var palisade_slots: Array[Dictionary] = [
+	{"pos": Vector3(12.0, 0, -1.8), "rot_y": 0.0},
+	{"pos": Vector3(12.0, 0, 1.8), "rot_y": 0.0},
+	{"pos": Vector3(10.2, 0, 5.2), "rot_y": 0.785},
+	{"pos": Vector3(7.0, 0, 8.5), "rot_y": 1.571},
+	{"pos": Vector3(3.2, 0, 10.5), "rot_y": 1.571},
+	{"pos": Vector3(-0.6, 0, 10.5), "rot_y": 1.571},
+	{"pos": Vector3(12.0, 0, -5.4), "rot_y": 0.0},
+	{"pos": Vector3(9.2, 0, -8.8), "rot_y": -0.785}
+]
+var active_palisades: Array = []
+
+var tower_slots: Array[Vector3] = [
+	Vector3(12.0, 0, -3.8),
+	Vector3(8.5, 0, 7.0),
+	Vector3(1.2, 0, 10.5)
+]
+var active_towers: Array = []
+var barracks_built: bool = false
+var forge_built: bool = false
+
 func _ready() -> void:
-	# CORREÇÃO: a fase vem do GameState (definida pelo menu/vitória), não do valor fixo da cena
 	stage_id = GameState.current_stage
 	GameState.start_stage(stage_id)
 	AudioManager.play_music("battle")
 	
-	# O Totem fica protegido pela Bruma até a última onda ser vencida
+	# Totem protegido até o final de todas as ondas
 	if totem and wave_manager:
 		wave_manager.all_waves_spawned.connect(totem.remove_shield)
 	
@@ -40,11 +67,42 @@ func _ready() -> void:
 		tower_pad.purchase_completed.connect(_on_purchase_completed)
 	if palisade_pad:
 		palisade_pad.purchase_completed.connect(_on_purchase_completed)
+	if barracks_pad:
+		barracks_pad.purchase_completed.connect(_on_purchase_completed)
+	if forge_pad:
+		forge_pad.purchase_completed.connect(_on_purchase_completed)
 		
+	GameState.troop_count_changed.connect(func(_c): _update_pad_statuses())
+	_update_pad_statuses()
 	_trigger_stage_tutorial_if_needed()
 
+func _update_pad_statuses() -> void:
+	active_towers = active_towers.filter(func(t): return is_instance_valid(t))
+	active_palisades = active_palisades.filter(func(p): return is_instance_valid(p))
+	
+	if archer_pad:
+		archer_pad.set_status(GameState.active_troops.size(), MAX_ARCHERS)
+		
+	if tower_pad:
+		tower_pad.set_status(active_towers.size(), MAX_TOWERS)
+		
+	if palisade_pad:
+		var has_damaged = false
+		for p in active_palisades:
+			if is_instance_valid(p) and p.current_hp < p.max_hp:
+				has_damaged = true
+				break
+		var count = active_palisades.size()
+		var is_repair = (count >= MAX_PALISADES and has_damaged)
+		palisade_pad.set_status(count, MAX_PALISADES, is_repair, 10)
+		
+	if barracks_pad:
+		barracks_pad.set_status(1 if barracks_built else 0, 1)
+		
+	if forge_pad:
+		forge_pad.set_status(1 if forge_built else 0, 1)
+
 func _trigger_stage_tutorial_if_needed() -> void:
-	# Dicas da Dona Zenaide nas fases 1 a 3
 	var tutorial_lines: Array[Dictionary] = []
 	match stage_id:
 		1:
@@ -52,7 +110,12 @@ func _trigger_stage_tutorial_if_needed() -> void:
 				{
 					"speaker": "Dona Zenaide",
 					"icon": "👵",
-					"text": "Teodoro! Os inimigos derrotados derrubam Capacetes e Sucatas de batalha. Atraia-os e leve ao balcão do Mercador Tobias para trocar por muitas moedas de ouro!"
+					"text": "Teodoro, preste atenção! Os monstros agora só soltam CAPACETES. Colete-os e corra até o Tobias no balcão para trocar por moedas!"
+				},
+				{
+					"speaker": "Dona Zenaide",
+					"icon": "👵",
+					"text": "Com as moedas ganhas, construa suas paliçadas para fechar o acampamento e contrate seus arqueiros antes da horda chegar!"
 				}
 			]
 		2:
@@ -60,7 +123,7 @@ func _trigger_stage_tutorial_if_needed() -> void:
 				{
 					"speaker": "Dona Zenaide",
 					"icon": "👵",
-					"text": "Use as moedas ganhas do Mercador para construir torres na muralha e contratar mais arqueiros. Arqueiro nenhum trabalha de graça no meu reino!"
+					"text": "Agora os inimigos vêm em maior número! Suba arqueiros nas Torres de Vigia para atirarem com maior alcance e mais dano."
 				}
 			]
 		3:
@@ -68,7 +131,7 @@ func _trigger_stage_tutorial_if_needed() -> void:
 				{
 					"speaker": "Dona Zenaide",
 					"icon": "👵",
-					"text": "Lá vêm os Brumosos mais cascas-grossas com tampas de barril. Construa paliçadas e mande seus arqueiros derrubarem o Totem de Bruma!"
+					"text": "Brumosos com tampas de barril e arqueiros de carvão à vista! Use a Ferraria de Campo para aumentar o dano de todo o exército."
 				}
 			]
 			
@@ -91,83 +154,78 @@ func _on_purchase_completed(pad_type: String) -> void:
 			_spawn_barracks()
 		"build_forge":
 			_spawn_forge()
+	_update_pad_statuses()
 
 func _spawn_barracks() -> void:
+	if barracks_built:
+		return
+	barracks_built = true
 	var scene = load("res://scenes/entities/FieldBarracks.tscn")
 	if scene:
 		var b = scene.instantiate()
 		add_child(b)
 		b.global_position = Vector3(1.5, 0, -4.8)
-		AudioManager.play_sfx("build")
+		Art.pop_in(b)
+		Art.dust_puff(self, b.global_position, 18)
 
 func _spawn_forge() -> void:
+	if forge_built:
+		return
+	forge_built = true
 	var scene = load("res://scenes/entities/FieldForge.tscn")
 	if scene:
 		var f = scene.instantiate()
 		add_child(f)
 		f.global_position = Vector3(5.5, 0, 4.2)
-		AudioManager.play_sfx("build")
-
-var palisade_slots: Array[Dictionary] = [
-	{"pos": Vector3(12.0, 0, -1.8), "rot_y": 0.0},
-	{"pos": Vector3(12.0, 0, 1.8), "rot_y": 0.0},
-	{"pos": Vector3(10.2, 0, 5.2), "rot_y": 0.785},
-	{"pos": Vector3(7.0, 0, 8.5), "rot_y": 1.571},
-	{"pos": Vector3(3.2, 0, 10.5), "rot_y": 1.571},
-	{"pos": Vector3(-0.6, 0, 10.5), "rot_y": 1.571},
-	{"pos": Vector3(12.0, 0, -5.4), "rot_y": 0.0},
-	{"pos": Vector3(9.2, 0, -8.8), "rot_y": -0.785}
-]
-var active_palisades: Array = []
-
-var tower_slots: Array[Vector3] = [
-	Vector3(12.0, 0, -3.8),
-	Vector3(8.5, 0, 7.0),
-	Vector3(1.2, 0, 10.5)
-]
-var active_towers: Array = []
+		Art.pop_in(f)
+		Art.dust_puff(self, f.global_position, 18)
 
 func _spawn_archer() -> void:
+	if GameState.active_troops.size() >= MAX_ARCHERS:
+		return
 	var scene = load("res://scenes/entities/Archer.tscn")
 	if scene:
 		var a = scene.instantiate()
 		add_child(a)
 		a.global_position = archer_pad.global_position + Vector3(randf_range(-0.4, 0.4), 0, randf_range(-0.4, 0.4))
+		Art.pop_in(a)
 
 func _spawn_tower() -> void:
-	# Limpa referências a torres destruídas
 	active_towers = active_towers.filter(func(t): return is_instance_valid(t))
+	if active_towers.size() >= MAX_TOWERS:
+		return
+		
 	var scene = load("res://scenes/entities/ArcherTower.tscn")
 	if not scene:
 		return
 		
-	var target_pos = tower_pad.global_position + Vector3(0, 0, -2.5)
-	if active_towers.size() < tower_slots.size():
-		target_pos = tower_slots[active_towers.size()]
-		
+	var target_pos = tower_slots[active_towers.size()]
 	var t = scene.instantiate()
 	add_child(t)
 	t.global_position = target_pos
 	active_towers.append(t)
+	Art.pop_in(t)
+	Art.dust_puff(self, target_pos, 16)
 
 func _spawn_palisade() -> void:
-	# Filtra apenas paliçadas ainda vivas
 	active_palisades = active_palisades.filter(func(p): return is_instance_valid(p))
 	var scene = load("res://scenes/entities/Palisade.tscn")
 	if not scene:
 		return
 		
-	if active_palisades.size() < palisade_slots.size():
+	if active_palisades.size() < MAX_PALISADES:
 		var slot = palisade_slots[active_palisades.size()]
 		var p = scene.instantiate()
 		add_child(p)
 		p.global_position = slot.pos
 		p.rotation.y = slot.rot_y
 		active_palisades.append(p)
+		Art.pop_in(p)
+		Art.dust_puff(self, slot.pos, 10)
 	else:
-		# Se o muro estiver completo, repara todas as paliçadas danificadas!
+		# Repara todas as paliçadas danificadas!
 		for p in active_palisades:
-			if is_instance_valid(p) and p.has_method("_update_ui"):
-				p.current_hp = p.max_hp
-				p._update_ui()
+			if is_instance_valid(p) and p.has_method("repair_fully"):
+				p.repair_fully()
 		AudioManager.play_sfx("hero_skill")
+		Art.dust_puff(self, palisade_pad.global_position, 12)
