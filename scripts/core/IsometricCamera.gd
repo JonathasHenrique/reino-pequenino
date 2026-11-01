@@ -4,8 +4,8 @@ extends Camera3D
 
 @export var target_path: NodePath
 @export var follow_speed: float = 6.0
-@export var camera_distance: float = 24.0
-@export var elevation_angle_deg: float = 50.0
+@export var camera_distance: float = 17.5
+@export var elevation_angle_deg: float = 48.0
 @export var rotation_y_deg: float = 45.0
 
 var target_node: Node3D = null

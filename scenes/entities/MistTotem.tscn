@@ -45,15 +45,15 @@ mesh = SubResource("SphereMesh_orb")
 surface_material_override/0 = SubResource("StandardMaterial3D_mist_glow")
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
 billboard = 1
 double_sided = false
-text = "🛡️ BRUMA PROTETORA!\n(Derrote as ondas primeiro)"
-font_size = 56
-outline_size = 18
-outline_modulate = Color(0.08, 0.06, 0.04, 1)
-fixed_size = true
-pixel_size = 0.00095
+text = "🛡️ Bruma Protetora"
+font_size = 40
+outline_size = 12
+outline_modulate = Color(0, 0, 0, 0.95)
+modulate = Color(0.9, 0.95, 1.0, 1)
+pixel_size = 0.005
 render_priority = 6
 outline_render_priority = 5
 

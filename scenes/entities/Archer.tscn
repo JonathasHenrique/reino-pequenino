@@ -114,6 +114,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 mesh = SubResource("SphereMesh_head")
 surface_material_override/0 = SubResource("StandardMaterial3D_skin")
 
+[node name="EyeL" type="MeshInstance3D" parent="Visuals/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09, 0.04, 0.21)
+mesh = SubResource("CylinderMesh_arrow_shaft")
+surface_material_override/0 = SubResource("StandardMaterial3D_boots")
+
+[node name="EyeR" type="MeshInstance3D" parent="Visuals/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, 0.04, 0.21)
+mesh = SubResource("CylinderMesh_arrow_shaft")
+surface_material_override/0 = SubResource("StandardMaterial3D_boots")
+
 [node name="Cap" type="MeshInstance3D" parent="Visuals/Head"]
 transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0.22, -0.05)
 mesh = SubResource("CylinderMesh_cap")

@@ -23,7 +23,6 @@ var max_items: int = 0
 var is_repair_mode: bool = false
 
 @onready var cost_label_3d: Label3D = $Label3D
-@onready var header_label: Label3D = get_node_or_null("HeaderLabel")
 @onready var fill_mesh: MeshInstance3D = $FillProgress
 @onready var base_mesh: MeshInstance3D = $BaseMesh
 @onready var emblems: Node3D = get_node_or_null("Emblems")
@@ -64,7 +63,7 @@ func _setup_pad_visuals() -> void:
 		mat.albedo_color = col
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		mat.roughness = 0.6
-		base_mesh.set_surface_override_material(0, mat)
+		base_mesh.material_override = mat
 
 func set_status(current_count: int, max_count: int, is_repair: bool = false, repair_cost: int = 10) -> void:
 	current_items = current_count
@@ -113,38 +112,22 @@ func _finalize_purchase() -> void:
 	purchase_completed.emit(pad_type)
 
 func _update_ui() -> void:
-	var type_name = "ARQUEIRO"
+	if not cost_label_3d:
+		return
+		
 	var type_icon = "🏹"
 	match pad_type:
 		"build_tower":
-			type_name = "TORRE DE VIGIA"
 			type_icon = "🗼"
 		"build_palisade":
-			type_name = "MURO PALIÇADA"
 			type_icon = "🪵"
 		"build_barracks":
-			type_name = "GUILDA DOS ARQUEIROS"
 			type_icon = "🏛️"
 		"build_forge":
-			type_name = "FERRARIA DE CAMPO"
 			type_icon = "⚒️"
 			
-	if header_label:
-		if is_repair_mode:
-			header_label.text = "🛠️ REPARAR %s (%d/%d)" % [type_name, current_items, max_items]
-			header_label.modulate = Color(1.0, 0.85, 0.3)
-		elif max_items > 0:
-			header_label.text = "%s %s (%d/%d)" % [type_icon, type_name, current_items, max_items]
-			header_label.modulate = Color(1.0, 0.95, 0.85)
-		else:
-			header_label.text = "%s %s" % [type_icon, type_name]
-			header_label.modulate = Color(1.0, 0.95, 0.85)
-			
-	if not cost_label_3d:
-		return
-			
 	if is_locked:
-		cost_label_3d.text = "✔️ CONCLUÍDO (MÁXIMO)"
+		cost_label_3d.text = "%s ✔️ MÁXIMO" % type_icon
 		cost_label_3d.modulate = Color(0.55, 1.0, 0.55)
 		if fill_mesh:
 			fill_mesh.scale.x = 1.0
@@ -152,14 +135,20 @@ func _update_ui() -> void:
 		return
 		
 	if is_repair_mode:
-		cost_label_3d.text = "🪙 %d / %d Moedas" % [current_paid, current_cost]
+		if current_paid > 0:
+			cost_label_3d.text = "🛠️ 🪙 %d/%d" % [current_paid, current_cost]
+		else:
+			cost_label_3d.text = "🛠️ 🪙 %d" % current_cost
 		cost_label_3d.modulate = Color(1.0, 0.85, 0.3)
 	else:
 		if current_paid > 0:
-			cost_label_3d.text = "🪙 %d / %d Moedas" % [current_paid, current_cost]
+			cost_label_3d.text = "%s 🪙 %d/%d" % [type_icon, current_paid, current_cost]
 		else:
-			cost_label_3d.text = "🪙 %d Moedas" % current_cost
-		cost_label_3d.modulate = Color(1.0, 0.92, 0.35)
+			if max_items > 0:
+				cost_label_3d.text = "%s 🪙 %d (%d/%d)" % [type_icon, current_cost, current_items, max_items]
+			else:
+				cost_label_3d.text = "%s 🪙 %d" % [type_icon, current_cost]
+		cost_label_3d.modulate = Color(1.0, 0.95, 0.70)
 	
 	if fill_mesh:
 		var ratio = float(current_paid) / float(maxi(1, current_cost))
