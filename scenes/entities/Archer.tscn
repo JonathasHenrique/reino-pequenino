@@ -1,52 +1,76 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/FollowerTroop.gd" id="1_archer"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_archer"]
-radius = 0.35
-height = 1.2
+radius = 0.38
+height = 1.3
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
-radius = 0.28
-height = 0.8
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+size = Vector3(0.52, 0.58, 0.42)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tunic"]
-albedo_color = Color(0.2, 0.52, 0.82, 1)
+albedo_color = Color(0.18, 0.48, 0.82, 1)
 roughness = 0.7
 
 [sub_resource type="BoxMesh" id="BoxMesh_belt"]
-size = Vector3(0.62, 0.12, 0.62)
+size = Vector3(0.54, 0.10, 0.44)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leather"]
 albedo_color = Color(0.38, 0.24, 0.14, 1)
+roughness = 0.8
 
 [sub_resource type="SphereMesh" id="SphereMesh_head"]
-radius = 0.22
-height = 0.44
+radius = 0.24
+height = 0.48
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skin"]
 albedo_color = Color(1.0, 0.88, 0.76, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_cap"]
-top_radius = 0.0
+top_radius = 0.02
 bottom_radius = 0.28
-height = 0.3
+height = 0.32
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cap"]
-albedo_color = Color(0.24, 0.56, 0.32, 1)
+albedo_color = Color(0.22, 0.55, 0.30, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_feather"]
-size = Vector3(0.04, 0.25, 0.08)
+size = Vector3(0.04, 0.26, 0.08)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_feather"]
-albedo_color = Color(0.9, 0.2, 0.2, 1)
+albedo_color = Color(0.92, 0.20, 0.20, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_quiver"]
+top_radius = 0.10
+bottom_radius = 0.08
+height = 0.55
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_arrow_shaft"]
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.45
 
 [sub_resource type="TorusMesh" id="TorusMesh_bow"]
-inner_radius = 0.3
-outer_radius = 0.35
+inner_radius = 0.30
+outer_radius = 0.36
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bow"]
-albedo_color = Color(0.5, 0.32, 0.18, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.48, 0.30, 0.16, 1)
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_arm"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.38
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_leg"]
+top_radius = 0.08
+bottom_radius = 0.08
+height = 0.45
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boots"]
+albedo_color = Color(0.24, 0.16, 0.10, 1)
 
 [node name="Archer" type="CharacterBody3D" groups=["troops"]]
 script = ExtResource("1_archer")
@@ -55,37 +79,72 @@ attack_range = 9.0
 base_damage = 12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("CapsuleShape3D_archer")
 
 [node name="Visuals" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("CapsuleMesh_body")
+[node name="Torso" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
+mesh = SubResource("BoxMesh_torso")
 surface_material_override/0 = SubResource("StandardMaterial3D_tunic")
 
-[node name="Belt" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+[node name="Belt" type="MeshInstance3D" parent="Visuals/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 mesh = SubResource("BoxMesh_belt")
 surface_material_override/0 = SubResource("StandardMaterial3D_leather")
 
+[node name="Quiver" type="MeshInstance3D" parent="Visuals/Torso"]
+transform = Transform3D(0.965926, 0, 0.258819, 0.0669873, 0.965926, -0.25, -0.25, 0.258819, 0.933013, 0.15, 0.15, -0.25)
+mesh = SubResource("CylinderMesh_quiver")
+surface_material_override/0 = SubResource("StandardMaterial3D_leather")
+
+[node name="Arrow1" type="MeshInstance3D" parent="Visuals/Torso/Quiver"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0)
+mesh = SubResource("CylinderMesh_arrow_shaft")
+surface_material_override/0 = SubResource("StandardMaterial3D_feather")
+
+[node name="Arrow2" type="MeshInstance3D" parent="Visuals/Torso/Quiver"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 0.30, 0.04)
+mesh = SubResource("CylinderMesh_arrow_shaft")
+surface_material_override/0 = SubResource("StandardMaterial3D_feather")
+
 [node name="Head" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 mesh = SubResource("SphereMesh_head")
 surface_material_override/0 = SubResource("StandardMaterial3D_skin")
 
-[node name="Cap" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+[node name="Cap" type="MeshInstance3D" parent="Visuals/Head"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0.22, -0.05)
 mesh = SubResource("CylinderMesh_cap")
 surface_material_override/0 = SubResource("StandardMaterial3D_cap")
 
-[node name="Feather" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 0.18, 1.25, 0)
+[node name="Feather" type="MeshInstance3D" parent="Visuals/Head/Cap"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0.18, 0.18, 0)
 mesh = SubResource("BoxMesh_feather")
 surface_material_override/0 = SubResource("StandardMaterial3D_feather")
 
-[node name="Bow" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0.3, 0.5, 0.2)
+[node name="ArmL" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.32, 0.60, 0.15)
+mesh = SubResource("CylinderMesh_arm")
+surface_material_override/0 = SubResource("StandardMaterial3D_tunic")
+
+[node name="Bow" type="MeshInstance3D" parent="Visuals/ArmL"]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0.22)
 mesh = SubResource("TorusMesh_bow")
-surface_material_override/0 = SubResource("StandardMaterial3D_bow")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="ArmR" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 0.32, 0.55, 0)
+mesh = SubResource("CylinderMesh_arm")
+surface_material_override/0 = SubResource("StandardMaterial3D_tunic")
+
+[node name="LegL" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16, 0.22, 0)
+mesh = SubResource("CylinderMesh_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_boots")
+
+[node name="LegR" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0.22, 0)
+mesh = SubResource("CylinderMesh_leg")
+surface_material_override/0 = SubResource("StandardMaterial3D_boots")

@@ -67,3 +67,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_rope")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.7, 0)
 mesh = SubResource("TorusMesh_rope")
 surface_material_override/0 = SubResource("StandardMaterial3D_rope")
+

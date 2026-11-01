@@ -49,7 +49,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
 billboard = 1
 double_sided = false
 text = "🛡️ BRUMA PROTETORA!\n(Derrote as ondas primeiro)"
-font_size = 74
-outline_size = 20
-outline_modulate = Color(0, 0, 0, 0.95)
+font_size = 56
+outline_size = 18
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+fixed_size = true
+pixel_size = 0.00095
+render_priority = 6
+outline_render_priority = 5
 

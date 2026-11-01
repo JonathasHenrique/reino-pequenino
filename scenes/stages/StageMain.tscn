@@ -233,27 +233,27 @@ camera_distance = 26.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 0)
 
 [node name="PurchasePad_Archer" parent="." instance=ExtResource("5_pad")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0, 0.0)
 pad_type = "recruit_archer"
 base_cost = 5
 
 [node name="PurchasePad_Tower" parent="." instance=ExtResource("5_pad")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.0, 0, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 0, -5.0)
 pad_type = "build_tower"
 base_cost = 15
 
 [node name="PurchasePad_Palisade" parent="." instance=ExtResource("5_pad")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 0, 5.0)
 pad_type = "build_palisade"
 base_cost = 8
 
 [node name="PurchasePad_Barracks" parent="." instance=ExtResource("5_pad")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, -4.5)
 pad_type = "build_barracks"
 base_cost = 20
 
 [node name="PurchasePad_Forge" parent="." instance=ExtResource("5_pad")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 4.5)
 pad_type = "build_forge"
 base_cost = 25
 

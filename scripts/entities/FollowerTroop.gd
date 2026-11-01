@@ -15,6 +15,7 @@ var is_mounted_on_tower: bool = false
 var mounted_tower_node: Node3D = null
 var attack_cooldown: float = 0.0
 var current_target: Node3D = null
+var walk_time: float = 0.0
 
 @onready var visuals: Node3D = $Visuals
 
@@ -59,11 +60,18 @@ func _handle_formation_movement(delta: float) -> void:
 		var dir = to_target.normalized()
 		velocity = dir * move_speed
 		
+		# Animação de caminhada com balanço fofo
+		walk_time += delta * 14.0
+		visuals.position.y = abs(sin(walk_time)) * 0.10
+		visuals.rotation.z = sin(walk_time) * 0.08
+		
 		# Rotação para a direção do movimento
 		var target_rot = atan2(-dir.x, -dir.z)
 		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 10.0 * delta)
 	else:
 		velocity = Vector3.ZERO
+		visuals.position.y = lerp(visuals.position.y, 0.0, 10.0 * delta)
+		visuals.rotation.z = lerp(visuals.rotation.z, 0.0, 10.0 * delta)
 		
 	move_and_slide()
 

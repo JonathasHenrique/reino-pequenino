@@ -164,7 +164,7 @@ func _spawn_barracks() -> void:
 	if scene:
 		var b = scene.instantiate()
 		add_child(b)
-		b.global_position = Vector3(1.5, 0, -4.8)
+		b.global_position = Vector3(-4.5, 0, -4.5)
 		Art.pop_in(b)
 		Art.dust_puff(self, b.global_position, 18)
 
@@ -176,8 +176,9 @@ func _spawn_forge() -> void:
 	if scene:
 		var f = scene.instantiate()
 		add_child(f)
-		f.global_position = Vector3(5.5, 0, 4.2)
+		f.global_position = Vector3(-4.5, 0, 4.5)
 		Art.pop_in(f)
+		Art.dust_puff(self, f.global_position, 18)
 		Art.dust_puff(self, f.global_position, 18)
 
 func _spawn_archer() -> void:

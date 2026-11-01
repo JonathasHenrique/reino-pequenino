@@ -10,6 +10,7 @@ extends CharacterBody3D
 
 var move_direction: Vector3 = Vector3.ZERO
 var input_vector: Vector2 = Vector2.ZERO
+var trot_time: float = 0.0
 
 @onready var coin_stack: Node3D = $CoinStack
 @onready var magnet_area: Area3D = $MagnetArea
@@ -62,12 +63,19 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_direction.x * move_speed
 		velocity.z = move_direction.z * move_speed
 		
+		# Animação procedural de trote galante do cavalo Biscoito
+		trot_time += delta * 15.0
+		visuals.position.y = abs(sin(trot_time)) * 0.12
+		visuals.rotation.x = sin(trot_time) * 0.05
+		
 		# Rotação suave do personagem na direção do movimento
 		var target_angle = atan2(-move_direction.x, -move_direction.z)
 		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_angle, rotation_speed * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, move_speed * 8.0 * delta)
 		velocity.z = move_toward(velocity.z, 0, move_speed * 8.0 * delta)
+		visuals.position.y = lerp(visuals.position.y, 0.0, 10.0 * delta)
+		visuals.rotation.x = lerp(visuals.rotation.x, 0.0, 10.0 * delta)
 	
 	move_and_slide()
 	

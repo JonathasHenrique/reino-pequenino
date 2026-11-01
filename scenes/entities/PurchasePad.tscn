@@ -1,27 +1,27 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/PurchasePad.gd" id="1_pad"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pad"]
-size = Vector3(2.5, 0.8, 2.5)
+size = Vector3(3.6, 1.0, 3.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_rim"]
-size = Vector3(2.5, 0.04, 2.5)
+size = Vector3(3.6, 0.04, 3.6)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rim"]
-albedo_color = Color(0.20, 0.22, 0.25, 1)
+albedo_color = Color(0.22, 0.20, 0.18, 1)
 roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_base"]
-size = Vector3(2.35, 0.05, 2.35)
+size = Vector3(3.4, 0.05, 3.4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tile"]
-albedo_color = Color(0.12, 0.45, 0.75, 0.85)
+albedo_color = Color(0.15, 0.48, 0.85, 0.85)
 transparency = 1
 roughness = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_fill"]
-size = Vector3(2.3, 0.06, 2.3)
+size = Vector3(3.3, 0.06, 3.3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold"]
 albedo_color = Color(1.0, 0.82, 0.15, 1)
@@ -30,22 +30,54 @@ emission = Color(1.0, 0.75, 0.1, 1)
 emission_energy_multiplier = 0.8
 
 [sub_resource type="BoxMesh" id="BoxMesh_corner"]
-size = Vector3(0.5, 0.06, 0.12)
+size = Vector3(0.7, 0.06, 0.14)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bracket"]
-albedo_color = Color(1.0, 1.0, 1.0, 0.9)
+albedo_color = Color(1.0, 1.0, 1.0, 0.95)
 emission_enabled = true
 emission = Color(1.0, 1.0, 1.0, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_bow"]
+inner_radius = 0.45
+outer_radius = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold_emblem"]
+albedo_color = Color(1.0, 0.84, 0.18, 1)
+metallic = 0.6
+roughness = 0.3
+emission_enabled = true
+emission = Color(1.0, 0.8, 0.1, 1)
 emission_energy_multiplier = 0.4
 
-[sub_resource type="QuadMesh" id="QuadMesh_icon"]
-size = Vector2(1.2, 1.2)
+[sub_resource type="CylinderMesh" id="CylinderMesh_mini_turret"]
+top_radius = 0.28
+bottom_radius = 0.38
+height = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.55, 0.55, 0.55, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mini_log"]
+top_radius = 0.08
+bottom_radius = 0.14
+height = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.48, 0.32, 0.18, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mini_anvil"]
+size = Vector3(0.55, 0.30, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iron"]
+albedo_color = Color(0.28, 0.30, 0.35, 1)
+metallic = 0.8
 
 [node name="PurchasePad" type="Area3D"]
 script = ExtResource("1_pad")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_pad")
 
 [node name="RimMesh" type="MeshInstance3D" parent="."]
@@ -66,59 +98,95 @@ surface_material_override/0 = SubResource("StandardMaterial3D_gold")
 [node name="CornerBrackets" type="Node3D" parent="."]
 
 [node name="C1_X" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.05, -1.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.05, -1.6)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C1_Z" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.1, 0.05, -0.9)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.6, 0.05, -1.3)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C2_X" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.05, -1.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 0.05, -1.6)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C2_Z" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.1, 0.05, -0.9)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.6, 0.05, -1.3)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C3_X" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.05, 1.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 0.05, 1.6)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C3_Z" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.1, 0.05, 0.9)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.6, 0.05, 1.3)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C4_X" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.05, 1.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 0.05, 1.6)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
 [node name="C4_Z" type="MeshInstance3D" parent="CornerBrackets"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.1, 0.05, 0.9)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.6, 0.05, 1.3)
 mesh = SubResource("BoxMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_bracket")
 
-[node name="FloorIcon" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.05, 0)
+[node name="Emblems" type="Node3D" parent="."]
+
+[node name="BowEmblem" type="MeshInstance3D" parent="Emblems"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.15, 0)
+visible = false
+mesh = SubResource("TorusMesh_bow")
+surface_material_override/0 = SubResource("StandardMaterial3D_gold_emblem")
+
+[node name="TowerEmblem" type="MeshInstance3D" parent="Emblems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+visible = false
+mesh = SubResource("CylinderMesh_mini_turret")
+surface_material_override/0 = SubResource("StandardMaterial3D_stone")
+
+[node name="PalisadeEmblem" type="MeshInstance3D" parent="Emblems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+visible = false
+mesh = SubResource("CylinderMesh_mini_log")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="ForgeEmblem" type="MeshInstance3D" parent="Emblems"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.20, 0)
+visible = false
+mesh = SubResource("BoxMesh_mini_anvil")
+surface_material_override/0 = SubResource("StandardMaterial3D_iron")
+
+[node name="HeaderLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+billboard = 1
 double_sided = false
-text = "🏹"
-font_size = 80
+text = "🏹 RECRUTAR ARQUEIRO"
+font_size = 58
 outline_size = 18
-outline_modulate = Color(0, 0, 0, 0.9)
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+modulate = Color(1.0, 0.95, 0.85, 1)
+fixed_size = true
+pixel_size = 0.00095
+render_priority = 6
+outline_render_priority = 5
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.80, 0)
 billboard = 1
 double_sided = false
 text = "🪙 5"
-font_size = 62
-outline_size = 18
-outline_modulate = Color(0.10, 0.08, 0.05, 0.95)
-modulate = Color(1.0, 0.96, 0.70, 1)
+font_size = 64
+outline_size = 20
+outline_modulate = Color(0.08, 0.06, 0.04, 1)
+modulate = Color(1.0, 0.88, 0.25, 1)
+fixed_size = true
+pixel_size = 0.001
+render_priority = 6
+outline_render_priority = 5

@@ -1,14 +1,14 @@
 extends Area3D
 
-# PurchasePad.gd - Plataforma de Compra no Chão estilo Kingshot / Clash of Clans
-# Decalque no piso com ícone stencil, cantos iluminados e badge de custo flutuante
+# PurchasePad.gd - Plataforma de Compra Ampla e Legível (Estilo Kingshot / Clash of Clans)
+# Emblema 3D estilizado, título fixo em tela e custo em moedas de fácil visualização
 
 signal purchase_completed(pad_type: String)
 
 @export var pad_type: String = "recruit_archer"
 @export var base_cost: int = 5
 @export var cost_increment_per_purchase: int = 1
-@export var spend_interval: float = 0.09 # Gasto dinâmico e responsivo
+@export var spend_interval: float = 0.09
 
 var current_cost: int = 5
 var current_paid: int = 0
@@ -23,9 +23,10 @@ var max_items: int = 0
 var is_repair_mode: bool = false
 
 @onready var cost_label_3d: Label3D = $Label3D
-@onready var floor_icon: Label3D = get_node_or_null("FloorIcon")
+@onready var header_label: Label3D = get_node_or_null("HeaderLabel")
 @onready var fill_mesh: MeshInstance3D = $FillProgress
 @onready var base_mesh: MeshInstance3D = $BaseMesh
+@onready var emblems: Node3D = get_node_or_null("Emblems")
 
 func _ready() -> void:
 	current_cost = base_cost
@@ -35,24 +36,28 @@ func _ready() -> void:
 	body_exited.connect(_on_body_exited)
 
 func _setup_pad_visuals() -> void:
-	var icon = "🏹"
 	var col = Color(0.15, 0.48, 0.85, 0.85)
+	
+	if emblems:
+		var bow = emblems.get_node_or_null("BowEmblem")
+		var tower = emblems.get_node_or_null("TowerEmblem")
+		var palisade = emblems.get_node_or_null("PalisadeEmblem")
+		var forge = emblems.get_node_or_null("ForgeEmblem")
+		
+		if bow: bow.visible = (pad_type == "recruit_archer")
+		if tower: tower.visible = (pad_type == "build_tower")
+		if palisade: palisade.visible = (pad_type == "build_palisade")
+		if forge: forge.visible = (pad_type == "build_forge")
+	
 	match pad_type:
 		"build_tower":
-			icon = "🗼"
 			col = Color(0.85, 0.50, 0.15, 0.85)
 		"build_palisade":
-			icon = "🪵"
 			col = Color(0.28, 0.58, 0.28, 0.85)
 		"build_barracks":
-			icon = "🏛️"
 			col = Color(0.42, 0.28, 0.72, 0.85)
 		"build_forge":
-			icon = "⚒️"
 			col = Color(0.78, 0.28, 0.16, 0.85)
-			
-	if floor_icon:
-		floor_icon.text = icon
 		
 	if base_mesh:
 		var mat = StandardMaterial3D.new()
@@ -108,26 +113,53 @@ func _finalize_purchase() -> void:
 	purchase_completed.emit(pad_type)
 
 func _update_ui() -> void:
+	var type_name = "ARQUEIRO"
+	var type_icon = "🏹"
+	match pad_type:
+		"build_tower":
+			type_name = "TORRE DE VIGIA"
+			type_icon = "🗼"
+		"build_palisade":
+			type_name = "MURO PALIÇADA"
+			type_icon = "🪵"
+		"build_barracks":
+			type_name = "GUILDA DOS ARQUEIROS"
+			type_icon = "🏛️"
+		"build_forge":
+			type_name = "FERRARIA DE CAMPO"
+			type_icon = "⚒️"
+			
+	if header_label:
+		if is_repair_mode:
+			header_label.text = "🛠️ REPARAR %s (%d/%d)" % [type_name, current_items, max_items]
+			header_label.modulate = Color(1.0, 0.85, 0.3)
+		elif max_items > 0:
+			header_label.text = "%s %s (%d/%d)" % [type_icon, type_name, current_items, max_items]
+			header_label.modulate = Color(1.0, 0.95, 0.85)
+		else:
+			header_label.text = "%s %s" % [type_icon, type_name]
+			header_label.modulate = Color(1.0, 0.95, 0.85)
+			
 	if not cost_label_3d:
 		return
 			
 	if is_locked:
-		cost_label_3d.text = "✔️ MÁXIMO"
-		cost_label_3d.modulate = Color(0.6, 1.0, 0.6)
+		cost_label_3d.text = "✔️ CONCLUÍDO (MÁXIMO)"
+		cost_label_3d.modulate = Color(0.55, 1.0, 0.55)
 		if fill_mesh:
 			fill_mesh.scale.x = 1.0
 			fill_mesh.scale.z = 1.0
 		return
 		
 	if is_repair_mode:
-		cost_label_3d.text = "🛠️ REPARAR (🪙 %d/%d)" % [current_paid, current_cost]
-		cost_label_3d.modulate = Color(1.0, 0.78, 0.28)
+		cost_label_3d.text = "🪙 %d / %d Moedas" % [current_paid, current_cost]
+		cost_label_3d.modulate = Color(1.0, 0.85, 0.3)
 	else:
 		if current_paid > 0:
-			cost_label_3d.text = "🪙 %d / %d" % [current_paid, current_cost]
+			cost_label_3d.text = "🪙 %d / %d Moedas" % [current_paid, current_cost]
 		else:
-			cost_label_3d.text = "🪙 %d" % current_cost
-		cost_label_3d.modulate = Color(1.0, 0.95, 0.65)
+			cost_label_3d.text = "🪙 %d Moedas" % current_cost
+		cost_label_3d.modulate = Color(1.0, 0.92, 0.35)
 	
 	if fill_mesh:
 		var ratio = float(current_paid) / float(maxi(1, current_cost))
