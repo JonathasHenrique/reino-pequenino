@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene load_steps=34 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/StageMain.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/core/IsometricCamera.gd" id="2_cam"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/CliffWall.tscn" id="21_cliff"]
 [ext_resource type="PackedScene" path="res://scenes/props/SpikeBarricade.tscn" id="22_barricade"]
 [ext_resource type="PackedScene" path="res://scenes/props/DioramaIslandSlab.tscn" id="23_slab"]
+[ext_resource type="Script" path="res://scripts/props/MeadowFlowers.gd" id="24_meadow"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 size = Vector2(90, 90)
@@ -126,12 +127,12 @@ mesh = SubResource("BoxMesh_camp_grass")
 surface_material_override/0 = SubResource("ShaderMaterial_camp")
 
 [node name="PathEast" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.06, 0)
 mesh = SubResource("BoxMesh_path_main")
 surface_material_override/0 = SubResource("ShaderMaterial_dirt")
 
 [node name="PathNorth" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.02, 15)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.06, 15)
 mesh = SubResource("BoxMesh_path_main")
 surface_material_override/0 = SubResource("ShaderMaterial_dirt")
 
@@ -154,6 +155,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 3, 0)
 shape = SubResource("BoxShape3D_wall_v")
 
 [node name="DioramaScenery" type="Node3D" parent="."]
+
+[node name="MeadowFlowers" type="MultiMeshInstance3D" parent="DioramaScenery"]
+script = ExtResource("24_meadow")
 
 [node name="Tree1" parent="DioramaScenery" instance=ExtResource("15_tree")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, -22)
