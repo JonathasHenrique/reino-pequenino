@@ -133,9 +133,8 @@ func _finalize_purchase() -> void:
 func _update_ui() -> void:
 	if not cost_label_3d:
 		return
-	var type_icon := _get_pad_label()
 	if tutorial_locked:
-		cost_label_3d.text = "%s  %d" % [type_icon, current_cost]
+		cost_label_3d.text = str(current_cost)
 		cost_label_3d.modulate = Color(0.62, 0.66, 0.70, 0.92)
 		if fill_mesh:
 			fill_mesh.scale.x = 0.01
@@ -143,7 +142,7 @@ func _update_ui() -> void:
 		return
 		
 	if is_locked:
-		cost_label_3d.text = "%s  MÁXIMO" % type_icon
+		cost_label_3d.text = "MAX"
 		cost_label_3d.modulate = Color(0.55, 1.0, 0.55)
 		if fill_mesh:
 			fill_mesh.scale.x = 1.0
@@ -152,18 +151,15 @@ func _update_ui() -> void:
 		
 	if is_repair_mode:
 		if current_paid > 0:
-			cost_label_3d.text = "FERRARIA  %d/%d" % [current_paid, current_cost]
+			cost_label_3d.text = "%d/%d" % [current_paid, current_cost]
 		else:
-			cost_label_3d.text = "FERRARIA  %d" % current_cost
+			cost_label_3d.text = str(current_cost)
 		cost_label_3d.modulate = Color(1.0, 0.85, 0.3)
 	else:
 		if current_paid > 0:
-			cost_label_3d.text = "%s  %d/%d" % [type_icon, current_paid, current_cost]
+			cost_label_3d.text = "%d/%d" % [current_paid, current_cost]
 		else:
-			if max_items > 0:
-				cost_label_3d.text = "%s  %d (%d/%d)" % [type_icon, current_cost, current_items, max_items]
-			else:
-				cost_label_3d.text = "%s  %d" % [type_icon, current_cost]
+			cost_label_3d.text = str(current_cost)
 				
 		var needed = current_cost - current_paid
 		var can_afford = GameState.stage_coins >= needed
@@ -178,18 +174,6 @@ func _update_ui() -> void:
 		var ratio = float(current_paid) / float(maxi(1, current_cost))
 		fill_mesh.scale.x = clampf(ratio, 0.01, 1.0)
 		fill_mesh.scale.z = clampf(ratio, 0.01, 1.0)
-
-func _get_pad_label() -> String:
-	match pad_type:
-		"build_tower":
-			return "TORRE"
-		"build_palisade":
-			return "PALIÇADA"
-		"build_barracks":
-			return "QUARTEL"
-		"build_forge":
-			return "FERRARIA"
-	return "ARQUEIRO"
 
 func _on_body_entered(body: Node3D) -> void:
 	if body == GameState.king_node or body.is_in_group("king"):
