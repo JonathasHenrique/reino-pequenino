@@ -1,16 +1,57 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/GameHUD.gd" id="1_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/VirtualJoystick.tscn" id="2_joy"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hudbar"]
-bg_color = Color(0.18, 0.12, 0.08, 0.75)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_topbar"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_gold"]
+bg_color = Color(0.169, 0.106, 0.071, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.788, 0.235, 0.95)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-content_margin_left = 16.0
-content_margin_top = 8.0
+content_margin_left = 14.0
+content_margin_top = 4.0
 content_margin_right = 16.0
-content_margin_bottom = 8.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_spoil"]
+bg_color = Color(0.169, 0.106, 0.071, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.851, 0.212, 0.243, 0.95)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_hp"]
+bg_color = Color(0.169, 0.106, 0.071, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.525, 0.761, 0.196, 0.95)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
 bg_color = Color(0.2, 0.2, 0.2, 0.8)
@@ -20,18 +61,55 @@ corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
-bg_color = Color(0.2, 0.8, 0.35, 1)
+bg_color = Color(0.25, 0.82, 0.38, 1)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_troop"]
+bg_color = Color(0.169, 0.106, 0.071, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.70, 0.95, 0.95)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_wave"]
+bg_color = Color(0.169, 0.106, 0.071, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.247, 0.498, 0.878, 0.95)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-bg_color = Color(0.9, 0.65, 0.15, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+bg_color = Color(0.95, 0.68, 0.18, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.88, 0.40, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="GameHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -41,59 +119,74 @@ script = ExtResource("1_hud")
 [node name="TopBar" type="PanelContainer" parent="."]
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 24.0
-offset_right = -24.0
-offset_bottom = 64.0
+offset_left = 20.0
+offset_top = 14.0
+offset_right = -20.0
+offset_bottom = 60.0
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_hudbar")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_topbar")
 
 [node name="HBox" type="HBoxContainer" parent="TopBar"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 14
 
-[node name="CoinContainer" type="HBoxContainer" parent="TopBar/HBox"]
+[node name="CoinPill" type="PanelContainer" parent="TopBar/HBox"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_gold")
 
-[node name="CoinIcon" type="Label" parent="TopBar/HBox/CoinContainer"]
+[node name="CoinBox" type="HBoxContainer" parent="TopBar/HBox/CoinPill"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "🪙"
+theme_override_constants/separation = 6
 
-[node name="CoinLabel" type="Label" parent="TopBar/HBox/CoinContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1.0, 0.9, 0.25, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 24
-text = "15"
-
-[node name="SpoilContainer" type="HBoxContainer" parent="TopBar/HBox"]
-layout_mode = 2
-
-[node name="SpoilIcon" type="Label" parent="TopBar/HBox/SpoilContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "🪖"
-
-[node name="SpoilLabel" type="Label" parent="TopBar/HBox/SpoilContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1.0, 0.5, 0.5, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 24
-text = "0"
-
-[node name="HPContainer" type="HBoxContainer" parent="TopBar/HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HPIcon" type="Label" parent="TopBar/HBox/HPContainer"]
+[node name="CoinIcon" type="Label" parent="TopBar/HBox/CoinPill/CoinBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
+text = "🪙"
+
+[node name="CoinLabel" type="Label" parent="TopBar/HBox/CoinPill/CoinBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.88, 0.35, 1)
+theme_override_colors/font_shadow_color = Color(0.169, 0.106, 0.071, 0.95)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "15"
+
+[node name="SpoilPill" type="PanelContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_spoil")
+
+[node name="SpoilBox" type="HBoxContainer" parent="TopBar/HBox/SpoilPill"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SpoilIcon" type="Label" parent="TopBar/HBox/SpoilPill/SpoilBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🪖"
+
+[node name="SpoilLabel" type="Label" parent="TopBar/HBox/SpoilPill/SpoilBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.45, 0.45, 1)
+theme_override_colors/font_shadow_color = Color(0.169, 0.106, 0.071, 0.95)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "0"
+
+[node name="HPPill" type="PanelContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_hp")
+
+[node name="HPBox" type="HBoxContainer" parent="TopBar/HBox/HPPill"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HPIcon" type="Label" parent="TopBar/HBox/HPPill/HPBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "❤️"
 
-[node name="HPBar" type="ProgressBar" parent="TopBar/HBox/HPContainer"]
-custom_minimum_size = Vector2(160, 20)
+[node name="HPBar" type="ProgressBar" parent="TopBar/HBox/HPPill/HPBox"]
+custom_minimum_size = Vector2(120, 14)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
@@ -101,23 +194,42 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
 value = 100.0
 show_percentage = false
 
-[node name="TroopContainer" type="HBoxContainer" parent="TopBar/HBox"]
+[node name="Spacer" type="Control" parent="TopBar/HBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="TroopIcon" type="Label" parent="TopBar/HBox/TroopContainer"]
+[node name="WavePill" type="PanelContainer" parent="TopBar/HBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_wave")
+
+[node name="WaveLabel" type="Label" parent="TopBar/HBox/WavePill"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.95, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0.169, 0.106, 0.071, 0.95)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "Onda 1 / 3"
+
+[node name="TroopPill" type="PanelContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_troop")
+
+[node name="TroopBox" type="HBoxContainer" parent="TopBar/HBox/TroopPill"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TroopIcon" type="Label" parent="TopBar/HBox/TroopPill/TroopBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "🏹"
 
-[node name="TroopLabel" type="Label" parent="TopBar/HBox/TroopContainer"]
+[node name="TroopLabel" type="Label" parent="TopBar/HBox/TroopPill/TroopBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.65, 0.85, 1.0, 1)
+theme_override_colors/font_shadow_color = Color(0.169, 0.106, 0.071, 0.95)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
 text = "0"
-
-[node name="WaveLabel" type="Label" parent="TopBar/HBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "Onda 1 / 3"
 
 [node name="ActionContainer" type="Control" parent="."]
 layout_mode = 3
@@ -132,13 +244,13 @@ grow_horizontal = 0
 grow_vertical = 0
 
 [node name="SkillButton" type="Button" parent="ActionContainer"]
-custom_minimum_size = Vector2(110, 60)
+custom_minimum_size = Vector2(110, 55)
 layout_mode = 0
 offset_left = 25.0
-offset_top = 65.0
+offset_top = 70.0
 offset_right = 135.0
 offset_bottom = 125.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.169, 0.106, 0.071, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "Coragem!"
@@ -159,4 +271,3 @@ offset_bottom = 26.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.7)
 theme_override_font_sizes/font_size = 14
 text = "FPS: 60"
-

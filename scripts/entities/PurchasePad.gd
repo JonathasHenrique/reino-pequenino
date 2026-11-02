@@ -33,6 +33,7 @@ func _ready() -> void:
 	_update_ui()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	GameState.coins_changed.connect(func(_c): _update_ui())
 
 func _setup_pad_visuals() -> void:
 	var col = Color(0.15, 0.48, 0.85, 0.85)
@@ -148,7 +149,15 @@ func _update_ui() -> void:
 				cost_label_3d.text = "%s 🪙 %d (%d/%d)" % [type_icon, current_cost, current_items, max_items]
 			else:
 				cost_label_3d.text = "%s 🪙 %d" % [type_icon, current_cost]
-		cost_label_3d.modulate = Color(1.0, 0.95, 0.70)
+				
+		var needed = current_cost - current_paid
+		var can_afford = GameState.stage_coins >= needed
+		if can_afford:
+			# Dourado/creme vivo: pode pagar!
+			cost_label_3d.modulate = Color(1.0, 0.95, 0.70, 1.0) # #FFF3D6
+		else:
+			# Cinza desaturado: saldo insuficiente
+			cost_label_3d.modulate = Color(0.65, 0.68, 0.72, 0.80) # #8E959E
 	
 	if fill_mesh:
 		var ratio = float(current_paid) / float(maxi(1, current_cost))

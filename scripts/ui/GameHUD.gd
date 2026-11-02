@@ -3,11 +3,11 @@ extends CanvasLayer
 # GameHUD.gd - Interface do jogador durante as fases
 # Exibe moedas, vida do rei, botão de habilidade do herói e joystick virtual
 
-@onready var coin_label: Label = $TopBar/HBox/CoinContainer/CoinLabel
-@onready var spoil_label: Label = $TopBar/HBox/SpoilContainer/SpoilLabel
-@onready var hp_bar: ProgressBar = $TopBar/HBox/HPContainer/HPBar
-@onready var wave_label: Label = $TopBar/HBox/WaveLabel
-@onready var troop_label: Label = $TopBar/HBox/TroopContainer/TroopLabel
+@onready var coin_label: Label = $TopBar/HBox/CoinPill/CoinBox/CoinLabel
+@onready var spoil_label: Label = $TopBar/HBox/SpoilPill/SpoilBox/SpoilLabel
+@onready var hp_bar: ProgressBar = $TopBar/HBox/HPPill/HPBox/HPBar
+@onready var wave_label: Label = $TopBar/HBox/WavePill/WaveLabel
+@onready var troop_label: Label = $TopBar/HBox/TroopPill/TroopBox/TroopLabel
 @onready var skill_button: Button = $ActionContainer/SkillButton
 @onready var joystick: Control = $VirtualJoystick
 @onready var fps_label: Label = $DebugOverlay/FPSLabel
