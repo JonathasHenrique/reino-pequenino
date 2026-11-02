@@ -27,33 +27,33 @@ size = Vector2(90, 90)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grass"]
 shader = ExtResource("20_shader")
-shader_parameter/color_a = Color(0.47, 0.71, 0.30, 1)
-shader_parameter/color_b = Color(0.38, 0.62, 0.25, 1)
-shader_parameter/speck_color = Color(0.60, 0.82, 0.38, 1)
-shader_parameter/noise_scale = 0.18
-shader_parameter/speck_amount = 0.12
+shader_parameter/grass_main = Color(0.525, 0.761, 0.196, 1)
+shader_parameter/grass_shade = Color(0.435, 0.659, 0.169, 1)
+shader_parameter/dirt_path = Color(0.851, 0.627, 0.4, 1)
+shader_parameter/path_weight = 0.0
+shader_parameter/noise_scale = 0.09
 
 [sub_resource type="BoxMesh" id="BoxMesh_camp_grass"]
 size = Vector3(20.0, 0.04, 18.0)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_camp"]
 shader = ExtResource("20_shader")
-shader_parameter/color_a = Color(0.82, 0.72, 0.54, 1)
-shader_parameter/color_b = Color(0.72, 0.60, 0.44, 1)
-shader_parameter/speck_color = Color(0.92, 0.84, 0.68, 1)
-shader_parameter/noise_scale = 0.25
-shader_parameter/speck_amount = 0.15
+shader_parameter/grass_main = Color(0.56, 0.78, 0.24, 1)
+shader_parameter/grass_shade = Color(0.48, 0.7, 0.2, 1)
+shader_parameter/dirt_path = Color(0.851, 0.627, 0.4, 1)
+shader_parameter/path_weight = 0.15
+shader_parameter/noise_scale = 0.12
 
 [sub_resource type="BoxMesh" id="BoxMesh_path_main"]
 size = Vector3(22.0, 0.03, 3.2)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dirt"]
 shader = ExtResource("20_shader")
-shader_parameter/color_a = Color(0.78, 0.64, 0.44, 1)
-shader_parameter/color_b = Color(0.65, 0.52, 0.34, 1)
-shader_parameter/speck_color = Color(0.55, 0.42, 0.28, 1)
-shader_parameter/noise_scale = 0.28
-shader_parameter/speck_amount = 0.18
+shader_parameter/grass_main = Color(0.851, 0.627, 0.4, 1)
+shader_parameter/grass_shade = Color(0.78, 0.54, 0.32, 1)
+shader_parameter/dirt_path = Color(0.851, 0.627, 0.4, 1)
+shader_parameter/path_weight = 1.0
+shader_parameter/noise_scale = 0.15
 
 [sub_resource type="Environment" id="Environment_sunset"]
 background_mode = 1

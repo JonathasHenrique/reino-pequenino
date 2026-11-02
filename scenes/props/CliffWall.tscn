@@ -4,16 +4,16 @@
 size = Vector3(5.6, 6.0, 4.6)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rock"]
-albedo_color = Color(0.50, 0.47, 0.43, 1)
-roughness = 0.92
+albedo_color = Color(0.557, 0.584, 0.620, 1)
+roughness = 0.90
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
-albedo_color = Color(0.42, 0.66, 0.26, 1)
+albedo_color = Color(0.525, 0.761, 0.196, 1)
 roughness = 0.85
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
-albedo_color = Color(0.38, 0.25, 0.15, 1)
-roughness = 0.9
+albedo_color = Color(0.54, 0.35, 0.17, 1)
+roughness = 0.90
 
 [sub_resource type="BoxMesh" id="BoxMesh_base"]
 size = Vector3(5.5, 2.4, 4.4)
