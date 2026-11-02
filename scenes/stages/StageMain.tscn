@@ -69,15 +69,15 @@ ambient_light_color = Color(0.541, 0.706, 0.973, 1)
 ambient_light_energy = 0.30
 ambient_light_sky_contribution = 0.3
 tonemap_mode = 3
-tonemap_exposure = 0.72
+tonemap_exposure = 0.82
 glow_enabled = true
 glow_normalized = true
-glow_intensity = 0.25
-glow_bloom = 0.05
+glow_intensity = 0.12
+glow_bloom = 0.02
 fog_enabled = true
 fog_light_color = Color(0.65, 0.74, 0.88, 1)
-fog_light_energy = 0.18
-fog_density = 0.003
+fog_light_energy = 0.12
+fog_density = 0.002
 fog_sky_affect = 0.20
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
@@ -98,7 +98,7 @@ environment = SubResource("Environment_sunset")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.454519, 0.541675, 0, 0.766044, 0.642788, -0.707107, -0.454519, 0.541675, 12, 18, 12)
 light_color = Color(1, 0.89, 0.69, 1)
-light_energy = 0.96
+light_energy = 0.92
 shadow_enabled = true
 directional_shadow_mode = 2
 directional_shadow_max_distance = 38.0
