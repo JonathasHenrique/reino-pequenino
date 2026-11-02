@@ -50,7 +50,7 @@ layout_mode = 2
 [node name="Icon" type="Label" parent="TopBar/HBox/GoldContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "🪙 Ouro:"
+text = "Ouro:"
 
 [node name="GoldLabel" type="Label" parent="TopBar/HBox/GoldContainer"]
 layout_mode = 2
@@ -65,7 +65,7 @@ size_flags_horizontal = 3
 [node name="Icon" type="Label" parent="TopBar/HBox/CrownContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "👑 Estrelas da Coroa:"
+text = "Estrelas da Coroa:"
 
 [node name="CrownLabel" type="Label" parent="TopBar/HBox/CrownContainer"]
 layout_mode = 2
@@ -74,22 +74,22 @@ theme_override_font_sizes/font_size = 24
 text = "0 / 6"
 
 [node name="AlbumButton" type="Button" parent="TopBar/HBox"]
-custom_minimum_size = Vector2(48, 40)
+custom_minimum_size = Vector2(96, 40)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "📖"
+theme_override_font_sizes/font_size = 18
+text = "Álbum"
 
 [node name="TrophiesButton" type="Button" parent="TopBar/HBox"]
-custom_minimum_size = Vector2(48, 40)
+custom_minimum_size = Vector2(110, 40)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "🏆"
+theme_override_font_sizes/font_size = 18
+text = "Troféus"
 
 [node name="SettingsButton" type="Button" parent="TopBar/HBox"]
 custom_minimum_size = Vector2(48, 40)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "⚙️"
+text = "⚙"
 
 [node name="BottomBar" type="HBoxContainer" parent="."]
 anchors_preset = 12
@@ -119,4 +119,4 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_battle_btn")
-text = "⚔️ Batalha (Fase 1)"
+text = "⚔ Batalha (Fase 1)"

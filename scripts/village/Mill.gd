@@ -65,10 +65,10 @@ func _update_label() -> void:
 	if label_status:
 		var max_cap = base_capacity + (current_level - 1) * 50
 		if stored_gold >= max_cap:
-			label_status.text = "🌾 MOINHO (CHEIO!)\nToque para coletar: 🪙 %d Ouro" % stored_gold
+			label_status.text = "MOINHO (CHEIO!)\nToque para coletar: %d Ouro" % stored_gold
 			label_status.modulate = Color(1.0, 0.9, 0.2)
 		else:
-			label_status.text = "🌾 MOINHO (Nível %d)\nAcumulado: 🪙 %d / %d" % [current_level, stored_gold, max_cap]
+			label_status.text = "MOINHO (Nível %d)\nAcumulado: %d / %d" % [current_level, stored_gold, max_cap]
 			label_status.modulate = Color(0.9, 0.95, 0.9)
 
 func collect_gold() -> int:

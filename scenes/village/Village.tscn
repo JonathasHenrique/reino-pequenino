@@ -26,17 +26,17 @@ shader_parameter/noise_scale = 0.20
 shader_parameter/speck_amount = 0.14
 
 [sub_resource type="BoxMesh" id="BoxMesh_plaza"]
-size = Vector3(14, 0.05, 14)
+size = Vector3(12, 0.05, 12)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cobble"]
 albedo_color = Color(0.72, 0.68, 0.62, 1)
 roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_road_long"]
-size = Vector3(4, 0.04, 22)
+size = Vector3(3.4, 0.04, 24)
 
 [sub_resource type="BoxMesh" id="BoxMesh_road_wide"]
-size = Vector3(22, 0.04, 4)
+size = Vector3(24, 0.04, 3.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(80, 1, 80)
@@ -132,39 +132,39 @@ current = true
 fov = 44.0
 script = ExtResource("2_cam")
 target_path = NodePath("../King")
-camera_distance = 25.0
+camera_distance = 29.0
 
 [node name="Buildings" type="Node3D" parent="."]
 
 [node name="Barracks" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -6.5)
 building_id = "barracks"
 building_name = "Quartel Real"
 base_cost = 40
 
 [node name="Blacksmith" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
 building_id = "blacksmith"
 building_name = "Ferraria da Vila"
 base_cost = 50
 
 [node name="Stable" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -6.5)
 building_id = "stable"
 building_name = "Estábulo do Biscoito"
 base_cost = 35
 
 [node name="Mill" parent="Buildings" instance=ExtResource("5_mill")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 6.5)
 
 [node name="Tavern" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
 building_id = "tavern"
 building_name = "Taverna dos Viajantes"
 base_cost = 30
 
 [node name="CrownWall" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 6.5)
 building_id = "crown_wall"
 building_name = "Mural da Coroa Mãe"
 base_cost = 0

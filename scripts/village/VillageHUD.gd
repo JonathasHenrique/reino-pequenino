@@ -62,7 +62,7 @@ func _update_hud() -> void:
 		crown_label.text = "%d / 6" % stars
 	if battle_button:
 		var next_stage = int(SaveManager.save_data.get("unlocked_stages", 1))
-		battle_button.text = "⚔️ Batalha (Fase %d)" % next_stage
+		battle_button.text = "⚔ Batalha (Fase %d)" % next_stage
 
 func _on_battle_pressed() -> void:
 	AudioManager.play_sfx("button_click")

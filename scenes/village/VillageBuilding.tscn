@@ -15,21 +15,25 @@ shape = SubResource("BoxShape3D_trigger")
 [node name="Visuals" type="Node3D" parent="."]
 
 [node name="LabelLevel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 0)
 billboard = 1
 double_sided = false
 text = "Edifício\nNível 1"
-font_size = 72
-outline_size = 20
+font_size = 34
+outline_size = 7
 outline_modulate = Color(0, 0, 0, 0.95)
 modulate = Color(1.0, 0.95, 0.75, 1)
+fixed_size = true
+pixel_size = 0.0007
 
 [node name="LabelUpgrade" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
 billboard = 1
 double_sided = false
-text = "Melhorar: 🪙 40 Ouro"
-font_size = 64
-outline_size = 18
+text = "Melhorar: 40 Ouro"
+font_size = 27
+outline_size = 6
 outline_modulate = Color(0, 0, 0, 0.95)
 modulate = Color(1.0, 0.88, 0.25, 1)
+fixed_size = true
+pixel_size = 0.0007

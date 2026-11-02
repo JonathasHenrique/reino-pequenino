@@ -19,8 +19,11 @@ var current_level: int = 1
 @onready var visuals_container: Node3D = $Visuals
 
 func _ready() -> void:
+	if label_upgrade:
+		label_upgrade.visible = false
 	_sync_level()
 	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
 
 func _sync_level() -> void:
 	var buildings = SaveManager.save_data.get("village_buildings", {})
@@ -37,38 +40,37 @@ func get_benefit_description() -> String:
 			var cur_bonus = (current_level - 1) * 10
 			var next_bonus = current_level * 10
 			if current_level >= max_level:
-				return "⚔️ Dano do Exército: +%d%% (MÁXIMO)" % cur_bonus
-			return "⚔️ Dano: +%d%% ➔ Nível %d: +%d%%" % [cur_bonus, current_level + 1, next_bonus]
+				return "⚔ Dano do Exército: +%d%% (MÁXIMO)" % cur_bonus
+			return "⚔ Dano: +%d%% ➔ Nível %d: +%d%%" % [cur_bonus, current_level + 1, next_bonus]
 		"blacksmith":
 			var cur_disc = (current_level - 1) * 5
 			var next_disc = current_level * 5
 			if current_level >= max_level:
-				return "🔨 Desconto de Moedas: -%d%% (MÁXIMO)" % cur_disc
-			return "🔨 Custo na Fase: -%d%% ➔ Nível %d: -%d%%" % [cur_disc, current_level + 1, next_disc]
+				return "Desconto de Moedas: -%d%% (MÁXIMO)" % cur_disc
+			return "Custo na Fase: -%d%% ➔ Nível %d: -%d%%" % [cur_disc, current_level + 1, next_disc]
 		"stable":
 			var cur_hp = (current_level - 1) * 20
 			var next_hp = current_level * 20
 			if current_level >= max_level:
-				return "🐎 Rei Teodoro: +%d HP (MÁXIMO)" % cur_hp
-			return "🐎 Rei: +%d HP ➔ Nível %d: +%d HP" % [cur_hp, current_level + 1, next_hp]
+				return "Rei Teodoro: +%d HP (MÁXIMO)" % cur_hp
+			return "Rei: +%d HP ➔ Nível %d: +%d HP" % [cur_hp, current_level + 1, next_hp]
 		"tavern":
-			return "🍻 Taverna Real: Heróis de Batalha"
+			return "Taverna Real: Heróis de Batalha"
 		"crown_wall":
-			return "👑 Mural das 6 Estrelas da Coroa"
+			return "Mural das 6 Estrelas da Coroa"
 		_:
 			return "Edifício do Reino"
 
 func _update_labels() -> void:
 	if label_level:
-		var benefit_str = get_benefit_description()
-		label_level.text = "🏛️ %s (Nível %d)\n%s" % [building_name, current_level, benefit_str]
+		label_level.text = "%s · Nível %d" % [building_name, current_level]
 	
 	if label_upgrade:
 		if current_level >= max_level or building_id == "crown_wall":
-			label_upgrade.text = "⭐ NÍVEL MÁXIMO ATINGIDO"
+			label_upgrade.text = get_benefit_description() + "\nNÍVEL MÁXIMO"
 			label_upgrade.modulate = Color(0.6, 0.95, 0.6)
 		else:
-			label_upgrade.text = "Melhorar: 🪙 %d Ouro Real\n(Aproxime-se para evoluir)" % get_upgrade_cost()
+			label_upgrade.text = "%s\nPróximo nível · %d ouro" % [get_benefit_description(), get_upgrade_cost()]
 			label_upgrade.modulate = Color(1.0, 0.88, 0.25)
 
 func _rebuild_visuals() -> void:
@@ -155,5 +157,12 @@ func try_upgrade() -> bool:
 
 func _on_body_entered(body: Node3D) -> void:
 	if body == GameState.king_node or body.is_in_group("king"):
+		if label_upgrade:
+			label_upgrade.visible = true
 		if current_level < max_level and SaveManager.get_gold() >= get_upgrade_cost():
 			try_upgrade()
+
+func _on_body_exited(body: Node3D) -> void:
+	if body == GameState.king_node or body.is_in_group("king"):
+		if label_upgrade:
+			label_upgrade.visible = false
