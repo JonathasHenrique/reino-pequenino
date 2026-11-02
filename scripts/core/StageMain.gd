@@ -25,14 +25,14 @@ const MAX_TOWERS: int = 3
 const MAX_PALISADES: int = 8
 
 var palisade_slots: Array[Dictionary] = [
-	{"pos": Vector3(12.0, 0, -1.8), "rot_y": 0.0},
-	{"pos": Vector3(12.0, 0, 1.8), "rot_y": 0.0},
-	{"pos": Vector3(10.2, 0, 5.2), "rot_y": 0.785},
-	{"pos": Vector3(7.0, 0, 8.5), "rot_y": 1.571},
-	{"pos": Vector3(3.2, 0, 10.5), "rot_y": 1.571},
-	{"pos": Vector3(-0.6, 0, 10.5), "rot_y": 1.571},
-	{"pos": Vector3(12.0, 0, -5.4), "rot_y": 0.0},
-	{"pos": Vector3(9.2, 0, -8.8), "rot_y": -0.785}
+	{"pos": Vector3(-2.25, 0, -8.5), "rot_y": 0.0},
+	{"pos": Vector3(6.25, 0, -8.5), "rot_y": 0.0},
+	{"pos": Vector3(10.5, 0, -4.25), "rot_y": 1.571},
+	{"pos": Vector3(10.5, 0, 4.25), "rot_y": 1.571},
+	{"pos": Vector3(6.25, 0, 8.5), "rot_y": 0.0},
+	{"pos": Vector3(-2.25, 0, 8.5), "rot_y": 0.0},
+	{"pos": Vector3(-6.5, 0, 4.25), "rot_y": 1.571},
+	{"pos": Vector3(-6.5, 0, -4.25), "rot_y": 1.571}
 ]
 var active_palisades: Array = []
 

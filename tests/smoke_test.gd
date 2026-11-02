@@ -46,6 +46,13 @@ func _run_scenes() -> void:
 			continue
 		get_tree().root.add_child(instance)
 		await get_tree().process_frame
+		if scene_path == "res://scenes/stages/StageMain.tscn":
+			if not _build_and_validate_palisade_ring(instance):
+				print("FALHA: perímetro das paliçadas não fecha")
+				failed += 1
+				instance.queue_free()
+				await get_tree().process_frame
+				continue
 		instance.queue_free()
 		await get_tree().process_frame
 		passed += 1
@@ -66,6 +73,31 @@ func _scripts_can_instantiate(packed: PackedScene) -> bool:
 				continue
 			var script := state.get_node_property_value(node_index, property_index) as Script
 			if not script or not script.can_instantiate():
+				return false
+	return true
+
+func _build_and_validate_palisade_ring(stage: Node) -> bool:
+	for _index in range(8):
+		stage.call("_spawn_palisade")
+	var palisades: Array = stage.get("active_palisades")
+	if palisades.size() != 8:
+		return false
+
+	for index in range(palisades.size()):
+		var palisade := palisades[index] as Node3D
+		var half_length := 4.3
+		var axis := palisade.global_transform.basis.x.normalized() * half_length
+		for endpoint in [palisade.global_position - axis, palisade.global_position + axis]:
+			var connected := false
+			for other_index in range(palisades.size()):
+				if other_index == index:
+					continue
+				var other := palisades[other_index] as Node3D
+				var other_axis := other.global_transform.basis.x.normalized() * half_length
+				if endpoint.distance_to(other.global_position - other_axis) <= 0.2 or endpoint.distance_to(other.global_position + other_axis) <= 0.2:
+					connected = true
+					break
+			if not connected:
 				return false
 	return true
 
