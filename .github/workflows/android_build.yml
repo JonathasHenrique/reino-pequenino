@@ -71,8 +71,11 @@ jobs:
         run: |
           godot --headless --editor --quit
 
+      - name: Instalar display virtual para smoke test
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
       - name: Validar carregamento das cenas
-        run: godot --headless --path . res://tests/SmokeTest.tscn
+        run: xvfb-run -a godot --rendering-driver opengl3 --rendering-method gl_compatibility --path . res://tests/SmokeTest.tscn
 
       - name: Compilar APK de Debug
         run: |

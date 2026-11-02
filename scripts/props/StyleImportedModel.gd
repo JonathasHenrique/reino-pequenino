@@ -8,6 +8,8 @@ extends Node3D
 @export var outline_enabled: bool = true
 
 func _ready() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
 	call_deferred("_style_meshes", self)
 
 func set_tint(value: Color) -> void:
