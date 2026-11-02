@@ -92,6 +92,12 @@ theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
 theme_override_font_sizes/font_size = 22
 text = "✨ Faíscas Estelares: 150"
 
+[node name="BaseLabel" type="Label" parent="UI/TopPanel/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.55, 1)
+theme_override_font_sizes/font_size = 20
+text = "Base: 3"
+
 [node name="BossContainer" type="HBoxContainer" parent="UI/TopPanel/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3

@@ -39,9 +39,20 @@ func _ready() -> void:
 		attempts_left = 3
 		
 	_update_attempts_ui()
+	_setup_structure_durability()
 	AudioManager.play_music("battle")
 	_update_slingshot_bands(anchor_center)
 	_spawn_ready_projectile()
+
+func _setup_structure_durability() -> void:
+	for structure in $Targets.get_children():
+		if not structure is RigidBody2D or structure == target_totem:
+			continue
+		var is_stone := structure.name in ["BlockL1", "BlockR1"]
+		structure.set_meta("durability", 3 if is_stone else 1)
+		for child in structure.get_children():
+			if child is ColorRect:
+				child.color = Color("#8E959E") if is_stone else Color("#8B5A2B")
 
 func _process(delta: float) -> void:
 	if camera_shake_intensity > 0.0:
@@ -172,6 +183,13 @@ func _launch_projectile() -> void:
 func _on_rock_impact(body: Node) -> void:
 	shake_camera(12.0)
 	AudioManager.play_sfx("hit")
+	if body is RigidBody2D and body != target_totem and body.has_meta("durability"):
+		var durability := int(body.get_meta("durability")) - 1
+		body.set_meta("durability", durability)
+		if durability <= 0:
+			body.queue_free()
+		else:
+			body.modulate = Color(0.82, 0.88, 0.92, 1.0)
 
 func _on_projectile_cycle_complete() -> void:
 	if game_finished:

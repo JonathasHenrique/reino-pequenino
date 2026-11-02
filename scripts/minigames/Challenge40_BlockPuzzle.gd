@@ -8,6 +8,7 @@ var current_score: int = 0
 var grid_size: int = 8
 var board: Array = [] # 8x8 booleanos
 var game_finished: bool = false
+var available_pieces: Array = []
 
 @onready var grid_container: GridContainer = $CenterContainer/Panel/VBox/GridContainer
 @onready var score_label: Label = $CenterContainer/Panel/VBox/ScoreLabel
@@ -56,15 +57,18 @@ func _render_board() -> void:
 func _spawn_piece_options() -> void:
 	for child in pieces_container.get_children():
 		child.queue_free()
+	available_pieces.clear()
 		
 	for i in range(3):
 		var template = piece_templates[randi() % piece_templates.size()]
+		available_pieces.append(template)
 		var btn = Button.new()
 		btn.custom_minimum_size = Vector2(80, 70)
 		btn.text = "Peça %d" % (i + 1)
 		btn.add_theme_font_size_override("font_size", 16)
 		btn.pressed.connect(_on_piece_clicked.bind(template))
 		pieces_container.add_child(btn)
+	_check_game_over()
 
 func _on_piece_clicked(piece: Array) -> void:
 	if game_finished:
@@ -102,6 +106,28 @@ func _can_place(piece: Array, start_r: int, start_c: int) -> bool:
 				if board[start_r + pr][start_c + pc]:
 					return false
 	return true
+
+func _check_game_over() -> void:
+	if game_finished or available_pieces.is_empty():
+		return
+	for piece in available_pieces:
+		for r in range(grid_size - piece.size() + 1):
+			for c in range(grid_size - piece[0].size() + 1):
+				if _can_place(piece, r, c):
+					return
+	_trigger_game_over()
+
+func _trigger_game_over() -> void:
+	if game_finished:
+		return
+	game_finished = true
+	MiniGameRunner.complete_challenge(40, {"won": false, "stars": 0})
+	var dialog := AcceptDialog.new()
+	dialog.title = "Fim de jogo"
+	dialog.dialog_text = "Não há espaço para nenhuma das peças disponíveis."
+	dialog.confirmed.connect(func(): get_tree().change_scene_to_file("res://scenes/village/Village.tscn"))
+	add_child(dialog)
+	dialog.popup_centered()
 
 func _place(piece: Array, start_r: int, start_c: int) -> void:
 	for pr in range(piece.size()):

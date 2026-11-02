@@ -9,18 +9,28 @@ var gravity: float = 1400.0
 var hearts: int = 3
 var coins_collected: int = 0
 var game_finished: bool = false
+var jump_requested: bool = false
 
 @onready var biscoito: CharacterBody2D = $Biscoito
 @onready var flag_area: Area2D = $Flag
 @onready var hud_hearts: Label = $UI/HeartsLabel
 @onready var hud_coins: Label = $UI/CoinsLabel
 @onready var victory_ui: CanvasLayer = $VictoryUI
+@onready var jump_button: Button = $UI/JumpButton
 
 func _ready() -> void:
 	AudioManager.play_music("battle")
 	_update_hud()
 	if flag_area:
 		flag_area.body_entered.connect(_on_flag_reached)
+	if jump_button:
+		jump_button.pressed.connect(jump_button_pressed)
+
+func _input(event: InputEvent) -> void:
+	if game_finished or not event is InputEventKey or not event.pressed or event.echo:
+		return
+	if event.keycode in [KEY_SPACE, KEY_W, KEY_UP]:
+		jump_requested = true
 
 func _physics_process(delta: float) -> void:
 	if game_finished or not is_instance_valid(biscoito):
@@ -39,10 +49,10 @@ func _physics_process(delta: float) -> void:
 		
 	biscoito.velocity.x = move_x * move_speed
 	
-	if Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
-		if biscoito.is_on_floor():
-			biscoito.velocity.y = jump_velocity
-			AudioManager.play_sfx("button_click")
+	if jump_requested and biscoito.is_on_floor():
+		biscoito.velocity.y = jump_velocity
+		AudioManager.play_sfx("button_click")
+	jump_requested = false
 			
 	biscoito.move_and_slide()
 	
@@ -51,9 +61,8 @@ func _physics_process(delta: float) -> void:
 		_take_damage()
 
 func jump_button_pressed() -> void:
-	if biscoito and biscoito.is_on_floor() and not game_finished:
-		biscoito.velocity.y = jump_velocity
-		AudioManager.play_sfx("button_click")
+	if biscoito and not game_finished:
+		jump_requested = true
 
 func _take_damage() -> void:
 	hearts -= 1

@@ -22,15 +22,27 @@ const DEFENDER_COSTS: Dictionary = {
 	"mage": 100        # Dano mágico em área
 }
 
-@onready var sparks_label: Label = $UI/SparksLabel
-@onready var boss_bar: ProgressBar = $UI/BossBar
-@onready var boss_label: Label = $UI/BossLabel
+@onready var sparks_label: Label = $UI/TopPanel/HBox/SparksLabel
+@onready var base_label: Label = $UI/TopPanel/HBox/BaseLabel
+@onready var boss_bar: ProgressBar = $UI/TopPanel/HBox/BossContainer/BossBar
+@onready var boss_label: Label = $UI/TopPanel/HBox/BossContainer/BossLabel
 @onready var lane_container: Node2D = $Lanes
 @onready var sparks_container: Node2D = $SparksContainer
 @onready var victory_ui: CanvasLayer = $VictoryUI
+@onready var archer_button: Button = $UI/BottomDefenderBar/ArcherBtn
+@onready var spearman_button: Button = $UI/BottomDefenderBar/SpearmanBtn
+@onready var mage_button: Button = $UI/BottomDefenderBar/MageBtn
+
+var base_integrity: int = 3
 
 func _ready() -> void:
 	AudioManager.play_music("boss")
+	if archer_button:
+		archer_button.pressed.connect(select_defender.bind("archer"))
+	if spearman_button:
+		spearman_button.pressed.connect(select_defender.bind("spearman"))
+	if mage_button:
+		mage_button.pressed.connect(select_defender.bind("mage"))
 	_update_ui()
 	_start_falling_sparks_timer()
 	_start_enemy_wave_timer()
@@ -38,6 +50,8 @@ func _ready() -> void:
 func _update_ui() -> void:
 	if sparks_label:
 		sparks_label.text = "✨ Faíscas Estelares: %d" % sparks
+	if base_label:
+		base_label.text = "Base: %d" % base_integrity
 	if boss_bar:
 		boss_bar.max_value = max_boss_hp
 		boss_bar.value = boss_hp
@@ -56,6 +70,7 @@ func _spawn_falling_spark() -> void:
 	if game_finished:
 		return
 	var spark = Area2D.new()
+	spark.add_to_group("falling_sparks")
 	spark.position = Vector2(randf_range(200, 1000), 50)
 	
 	var col = CollisionShape2D.new()
@@ -104,6 +119,7 @@ func _spawn_lane_enemy() -> void:
 	
 	var enemy = Area2D.new()
 	enemy.add_to_group("lane_enemies")
+	enemy.set_meta("lane_idx", lane_idx)
 	enemy.position = Vector2(1250, target_y)
 	
 	var col = CollisionShape2D.new()
@@ -130,16 +146,23 @@ func _spawn_lane_enemy() -> void:
 	)
 
 func _on_enemy_reached_base(enemy: Area2D) -> void:
+	if game_finished:
+		return
 	enemy.queue_free()
 	AudioManager.play_sfx("king_hit")
 	sparks = maxi(0, sparks - 30)
+	base_integrity -= 1
 	_update_ui()
+	if base_integrity <= 0 or sparks <= 0:
+		_trigger_defeat()
 
 func select_defender(type_id: String) -> void:
 	selected_defender = type_id
 	AudioManager.play_sfx("button_click")
 
 func place_defender_on_lane(lane_idx: int) -> void:
+	if game_finished or lane_idx < 0 or lane_idx >= lane_count:
+		return
 	var cost = DEFENDER_COSTS.get(selected_defender, 50)
 	if sparks >= cost:
 		sparks -= cost
@@ -150,15 +173,52 @@ func place_defender_on_lane(lane_idx: int) -> void:
 		var def = Node2D.new()
 		def.position = Vector2(240, lane_y_positions[lane_idx])
 		var lbl = Label.new()
-		lbl.text = "🏹" if selected_defender == "archer" else "🛡️"
+		match selected_defender:
+			"spearman":
+				lbl.text = "🗡️"
+			"mage":
+				lbl.text = "🔮"
+			_:
+				lbl.text = "🏹"
 		lbl.add_theme_font_size_override("font_size", 36)
 		def.add_child(lbl)
 		lane_container.add_child(def)
-		
-		# Dano automático no Barão a cada turno de tiro
+		var attack_timer := Timer.new()
+		attack_timer.wait_time = 1.25
+		attack_timer.autostart = true
+		def.add_child(attack_timer)
+		attack_timer.timeout.connect(_defender_attack.bind(def, lane_idx))
+
+func _defender_attack(defender: Node2D, lane_idx: int) -> void:
+	if game_finished or not is_instance_valid(defender):
+		return
+	for enemy in get_tree().get_nodes_in_group("lane_enemies"):
+		if not is_instance_valid(enemy) or int(enemy.get_meta("lane_idx", -1)) != lane_idx:
+			continue
+		if enemy.position.x < defender.position.x:
+			continue
+		enemy.queue_free()
 		_damage_boss(50)
+		return
+
+func _unhandled_input(event: InputEvent) -> void:
+	if game_finished:
+		return
+	var pressed_position := Vector2.ZERO
+	if event is InputEventScreenTouch and event.pressed:
+		pressed_position = event.position
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		pressed_position = event.position
+	else:
+		return
+	if pressed_position.y < 110.0 or pressed_position.y > 610.0:
+		return
+	var lane_idx := clampi(int((pressed_position.y - 110.0) / 100.0), 0, lane_count - 1)
+	place_defender_on_lane(lane_idx)
 
 func _damage_boss(amount: int) -> void:
+	if game_finished:
+		return
 	boss_hp -= amount
 	AudioManager.play_sfx("hit")
 	_update_ui()
@@ -178,10 +238,39 @@ func _trigger_victory() -> void:
 	if game_finished:
 		return
 	game_finished = true
+	_stop_gameplay_timers()
+	_clear_active_enemies()
 	
 	AudioManager.play_sfx("stage_victory")
 	MiniGameRunner.complete_challenge(60, {"won": true, "stars": 3})
 	
 	if victory_ui:
 		victory_ui.show_victory(60, 3, "Barão Cinzão (Redimido)", 6)
+
+func _trigger_defeat() -> void:
+	if game_finished:
+		return
+	game_finished = true
+	_stop_gameplay_timers()
+	_clear_active_enemies()
+	MiniGameRunner.complete_challenge(60, {"won": false, "stars": 0})
+	var dialog := AcceptDialog.new()
+	dialog.title = "Defesa perdida"
+	dialog.dialog_text = "A base ficou sem faíscas e não pode mais resistir."
+	dialog.confirmed.connect(func(): get_tree().change_scene_to_file("res://scenes/village/Village.tscn"))
+	add_child(dialog)
+	dialog.popup_centered()
+
+func _stop_gameplay_timers() -> void:
+	for child in get_children():
+		if child is Timer:
+			child.stop()
+
+func _clear_active_enemies() -> void:
+	for enemy in get_tree().get_nodes_in_group("lane_enemies"):
+		if is_instance_valid(enemy):
+			enemy.queue_free()
+	for spark in get_tree().get_nodes_in_group("falling_sparks"):
+		if is_instance_valid(spark):
+			spark.queue_free()
 

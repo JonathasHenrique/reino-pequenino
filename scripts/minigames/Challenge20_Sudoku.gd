@@ -102,10 +102,34 @@ func _on_cell_clicked(r: int, c: int) -> void:
 
 func _on_number_selected(val: int) -> void:
 	if selected_row != -1 and selected_col != -1 and not locked_cells[selected_row][selected_col]:
+		if not _is_valid_entry(selected_row, selected_col, val):
+			var cell_index := selected_row * grid_size + selected_col
+			var cell := grid_container.get_child(cell_index) as Button
+			if cell:
+				cell.modulate = Color("#D9363E")
+			AudioManager.play_sfx("hit")
+			return
 		player_grid[selected_row][selected_col] = val
 		AudioManager.play_sfx("button_click")
 		_render_cells()
 		_check_solution()
+
+func _is_valid_entry(row: int, col: int, value: int) -> bool:
+	if value == 0:
+		return true
+	for index in range(grid_size):
+		if index != col and player_grid[row][index] == value:
+			return false
+		if index != row and player_grid[index][col] == value:
+			return false
+
+	var box_row := int(row / 2) * 2
+	var box_col := int(col / 2) * 2
+	for box_y in range(box_row, box_row + 2):
+		for box_x in range(box_col, box_col + 2):
+			if (box_y != row or box_x != col) and player_grid[box_y][box_x] == value:
+				return false
+	return true
 
 func _on_hint_pressed() -> void:
 	if hints_remaining <= 0:
