@@ -1,0 +1,11 @@
+[gd_resource type="Theme" load_steps=2 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Fredoka-Variable.ttf" id="1_fredoka"]
+
+[resource]
+default_font = ExtResource("1_fredoka")
+default_font_size = 20
+Button/colors/font_color = Color(1, 0.953, 0.839, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 0.953, 0.839, 1)
+Label/colors/font_color = Color(1, 0.953, 0.839, 1)

@@ -15,7 +15,7 @@ func _ready() -> void:
 
 func _update_sign() -> void:
 	if label_sign:
-		label_sign.text = "🏪 TOBIAS MERCADOR\n[ 🪖 ➔ 🪙 %d ]" % coin_payout_per_spoil
+		label_sign.text = "TOBIAS MERCADOR\n[ CAPACETES -> MOEDAS %d ]" % coin_payout_per_spoil
 
 func _on_body_entered(body: Node3D) -> void:
 	if body == GameState.king_node or body.is_in_group("king"):
@@ -53,4 +53,3 @@ func _show_speech(text: String) -> void:
 			if is_instance_valid(speech_label):
 				speech_label.visible = false
 		)
-

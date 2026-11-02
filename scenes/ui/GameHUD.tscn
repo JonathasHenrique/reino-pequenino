@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/GameHUD.gd" id="1_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/VirtualJoystick.tscn" id="2_joy"]
+[ext_resource type="Script" path="res://scripts/ui/IconBadge.gd" id="3_icon"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_topbar"]
 
@@ -138,10 +139,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_pill_gold")
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="CoinIcon" type="Label" parent="TopBar/HBox/CoinPill/CoinBox"]
+[node name="CoinIcon" type="Control" parent="TopBar/HBox/CoinPill/CoinBox"]
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "🪙"
+script = ExtResource("3_icon")
+icon_type = "coin"
 
 [node name="CoinLabel" type="Label" parent="TopBar/HBox/CoinPill/CoinBox"]
 layout_mode = 2
@@ -159,10 +161,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_pill_spoil")
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="SpoilIcon" type="Label" parent="TopBar/HBox/SpoilPill/SpoilBox"]
+[node name="SpoilIcon" type="Control" parent="TopBar/HBox/SpoilPill/SpoilBox"]
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "🪖"
+script = ExtResource("3_icon")
+icon_type = "helmet"
 
 [node name="SpoilLabel" type="Label" parent="TopBar/HBox/SpoilPill/SpoilBox"]
 layout_mode = 2
@@ -180,10 +183,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_pill_hp")
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="HPIcon" type="Label" parent="TopBar/HBox/HPPill/HPBox"]
+[node name="HPIcon" type="Control" parent="TopBar/HBox/HPPill/HPBox"]
+custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "❤️"
+script = ExtResource("3_icon")
+icon_type = "heart"
 
 [node name="HPBar" type="ProgressBar" parent="TopBar/HBox/HPPill/HPBox"]
 custom_minimum_size = Vector2(120, 14)
@@ -218,10 +222,11 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_pill_troop")
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TroopIcon" type="Label" parent="TopBar/HBox/TroopPill/TroopBox"]
+[node name="TroopIcon" type="Control" parent="TopBar/HBox/TroopPill/TroopBox"]
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "🏹"
+script = ExtResource("3_icon")
+icon_type = "archer"
 
 [node name="TroopLabel" type="Label" parent="TopBar/HBox/TroopPill/TroopBox"]
 layout_mode = 2

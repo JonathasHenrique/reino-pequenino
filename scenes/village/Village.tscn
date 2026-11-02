@@ -52,9 +52,14 @@ background_mode = 1
 background_color = Color(0.68, 0.84, 0.96, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.541, 0.706, 0.973, 1)
-ambient_light_energy = 0.55
+ambient_light_energy = 0.44
 ambient_light_sky_contribution = 0.3
 tonemap_mode = 3
+fog_enabled = true
+fog_light_color = Color(0.65, 0.74, 0.88, 1)
+fog_light_energy = 0.20
+fog_density = 0.003
+fog_sky_affect = 0.15
 
 [node name="Village" type="Node3D"]
 script = ExtResource("1_vil")
@@ -65,8 +70,10 @@ environment = SubResource("Environment_village")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 12, 18, 12)
 light_color = Color(1.0, 0.89, 0.69, 1)
-light_energy = 1.25
+light_energy = 1.12
 shadow_enabled = true
+shadow_blur = 1.0
+light_angular_distance = 2.0
 
 [node name="Floor" type="StaticBody3D" parent="."]
 

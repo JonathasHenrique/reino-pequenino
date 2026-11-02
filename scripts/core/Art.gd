@@ -6,6 +6,7 @@ extends Node
 
 const TOON_SHADER = preload("res://assets/shaders/toon_character.gdshader")
 const OUTLINE_SHADER = preload("res://assets/shaders/outline_inverted_hull.gdshader")
+const UI_FONT = preload("res://assets/fonts/Fredoka-Variable.ttf")
 
 # ---------- PALETA (tons suaves de desenho animado, sem neon) ----------
 const GRASS := Color(0.525, 0.761, 0.196)
@@ -133,6 +134,7 @@ static func label(parent: Node3D, text: String, pos: Vector3, font_size: int = 6
 	l.text = text
 	l.position = pos
 	l.font_size = font_size
+	l.font = UI_FONT
 	l.outline_size = int(font_size * 0.28)
 	l.outline_modulate = Color(0.12, 0.08, 0.05, 1)
 	l.modulate = color

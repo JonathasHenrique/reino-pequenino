@@ -1,4 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/nature/flower_purpleA.glb" id="1_nature_flower"]
+[ext_resource type="Script" path="res://scripts/props/StyleImportedModel.gd" id="2_style"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_stem"]
 top_radius = 0.03
@@ -23,34 +26,44 @@ height = 0.22
 albedo_color = Color(0.9, 0.25, 0.25, 1)
 
 [node name="FlowerPatch" type="Node3D"]
+script = ExtResource("2_style")
+fallback_color = Color(0.72, 0.45, 0.82, 1)
 
 [node name="Stem1" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.18, 0.2)
 mesh = SubResource("CylinderMesh_stem")
 surface_material_override/0 = SubResource("StandardMaterial3D_stem")
 
 [node name="Flower1" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.38, 0.2)
 mesh = SubResource("SphereMesh_petal_yellow")
 surface_material_override/0 = SubResource("StandardMaterial3D_yellow")
 
 [node name="Stem2" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.15, -0.15)
 mesh = SubResource("CylinderMesh_stem")
 surface_material_override/0 = SubResource("StandardMaterial3D_stem")
 
 [node name="Flower2" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.35, -0.15)
 mesh = SubResource("SphereMesh_petal_red")
 surface_material_override/0 = SubResource("StandardMaterial3D_red")
 
 [node name="Stem3" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.18, 0.35)
 mesh = SubResource("CylinderMesh_stem")
 surface_material_override/0 = SubResource("StandardMaterial3D_stem")
 
 [node name="Flower3" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.38, 0.35)
 mesh = SubResource("SphereMesh_petal_yellow")
 surface_material_override/0 = SubResource("StandardMaterial3D_yellow")
 
+[node name="NatureFlowerModel" parent="." instance=ExtResource("1_nature_flower")]
+scale = Vector3(1.1, 1.1, 1.1)

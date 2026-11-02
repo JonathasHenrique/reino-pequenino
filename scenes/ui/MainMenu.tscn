@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/MainMenu.gd" id="1_menu"]
+[ext_resource type="Script" path="res://scripts/ui/IconBadge.gd" id="2_icon"]
 
 [sub_resource type="Gradient" id="Gradient_bg"]
 colors = PackedColorArray(0.15, 0.32, 0.65, 1, 0.96, 0.72, 0.42, 1)
@@ -61,11 +62,11 @@ offset_bottom = 220.0
 grow_horizontal = 2
 theme_override_constants/separation = 12
 
-[node name="CrownIcon" type="Label" parent="Header"]
+[node name="CrownIcon" type="Control" parent="Header"]
+custom_minimum_size = Vector2(64, 58)
 layout_mode = 2
-theme_override_font_sizes/font_size = 54
-text = "👑"
-horizontal_alignment = 1
+script = ExtResource("2_icon")
+icon_type = "crown"
 
 [node name="Title" type="Label" parent="Header"]
 layout_mode = 2
@@ -102,7 +103,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.1, 0.05, 1)
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_play")
-text = "⚔️ Iniciar Jornada"
+text = "INICIAR JORNADA"
 
 [node name="VillageButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(320, 52)
@@ -110,7 +111,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_village")
-text = "🏰 Vila Real do Rei"
+text = "VILA REAL DO REI"
 
 [node name="SettingsButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(320, 48)
@@ -118,5 +119,4 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_settings")
-text = "⚙️ Ajustes do Reino"
-
+text = "AJUSTES DO REINO"

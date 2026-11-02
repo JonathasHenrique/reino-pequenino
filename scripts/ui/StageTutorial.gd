@@ -2,6 +2,8 @@ extends CanvasLayer
 
 # Tutorial interativo da Fase 1: cada objetivo exige uma ação real antes de liberar o próximo.
 
+const UI_FONT = preload("res://assets/fonts/Fredoka-Variable.ttf")
+
 var stage: Node3D
 var king: Node3D
 var merchant: Node3D
@@ -116,6 +118,7 @@ func _panel_style() -> StyleBoxFlat:
 func _build_world_arrow() -> void:
 	arrow = Label3D.new()
 	arrow.text = "▼"
+	arrow.font = UI_FONT
 	arrow.font_size = 72
 	arrow.outline_size = 14
 	arrow.outline_modulate = Color("#2B1B12")
@@ -138,7 +141,7 @@ func _set_step(next_step: int) -> void:
 			_set_pad_locks(false, pads[0] if not pads.is_empty() else null)
 			step_label.text = "TUTORIAL 2/5"
 			objective_label.text = "Contrate o primeiro arqueiro"
-			hint_label.text = "Fique sobre o pad 🏹. Ele está liberado para iniciar a defesa."
+			hint_label.text = "Fique sobre o pad ARQUEIRO. Ele está liberado para iniciar a defesa."
 		2:
 			_set_pad_locks(true)
 			if wave_manager:
@@ -150,12 +153,12 @@ func _set_step(next_step: int) -> void:
 			coins_before_sale = GameState.stage_coins
 			step_label.text = "TUTORIAL 4/5"
 			objective_label.text = "Leve os capacetes ao balcão do Tobias"
-			hint_label.text = "Entre no balcão dourado para trocar 🪖 por moedas."
+			hint_label.text = "Entre no balcão dourado para trocar CAPACETES por moedas."
 		4:
 			_set_pad_locks(false, pads[2] if pads.size() > 2 else null)
 			step_label.text = "TUTORIAL 5/5"
 			objective_label.text = "Invista no pad da paliçada"
-			hint_label.text = "Fique sobre o pad 🪵 para reforçar o acampamento."
+			hint_label.text = "Fique sobre o pad PALIÇADA para reforçar o acampamento."
 
 func _set_pad_locks(locked: bool, only_pad: Node = null) -> void:
 	for pad in pads:

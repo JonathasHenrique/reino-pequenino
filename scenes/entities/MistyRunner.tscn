@@ -1,6 +1,8 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/Enemy.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/entities/VisualUpgrade.gd" id="2_upgrade"]
+[ext_resource type="PackedScene" path="res://assets/models/characters/QuaterniusRogue.tscn" id="3_rogue"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_misty"]
 radius = 0.40
@@ -83,6 +85,9 @@ shape = SubResource("CapsuleShape3D_misty")
 
 [node name="Visuals" type="Node3D" parent="."]
 
+[node name="VisualUpgrade" type="Node" parent="."]
+script = ExtResource("2_upgrade")
+
 [node name="Body" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0)
 mesh = SubResource("SphereMesh_body")
@@ -137,3 +142,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_dark_leather")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.18, 0)
 mesh = SubResource("CylinderMesh_leg")
 surface_material_override/0 = SubResource("StandardMaterial3D_dark_leather")
+
+[node name="ImportedCharacter" parent="Visuals" instance=ExtResource("3_rogue")]

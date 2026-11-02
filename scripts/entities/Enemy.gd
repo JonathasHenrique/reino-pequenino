@@ -39,12 +39,7 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 		visuals = $Visuals
 	if visuals:
 		visuals.scale = Vector3(scale_mult, scale_mult, scale_mult)
-		var body_mesh = visuals.get_node_or_null("Body")
-		if body_mesh and body_mesh is MeshInstance3D:
-			var mat = StandardMaterial3D.new()
-			mat.albedo_color = tint
-			mat.roughness = 0.7
-			body_mesh.material_override = mat
+		_apply_enemy_tint(visuals, tint)
 		
 		# Detalhes do Gigante Titã da Bruma (Capa vermelha fluida e capacete com chifres)
 		if enemy_id == "misty_giant" or scale_mult >= 2.0:
@@ -62,6 +57,13 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 				c_mat.roughness = 0.8
 				cape.material_override = c_mat
 				visuals.add_child(cape)
+
+func _apply_enemy_tint(node: Node, tint: Color) -> void:
+	for child in node.get_children():
+		if child is MeshInstance3D:
+			child.material_override = Art.toon_mat(tint, 0.78)
+		if child.get_child_count() > 0:
+			_apply_enemy_tint(child, tint)
 
 func _exit_tree() -> void:
 	GameState.unregister_enemy(self)

@@ -1,5 +1,7 @@
 extends Area3D
 
+const UI_FONT = preload("res://assets/fonts/Fredoka-Variable.ttf")
+
 # PurchasePad.gd - Plataforma de Compra Ampla e Legível (Estilo Kingshot / Clash of Clans)
 # Emblema 3D estilizado, título fixo em tela e custo em moedas de fácil visualização
 
@@ -24,12 +26,15 @@ var max_items: int = 0
 var is_repair_mode: bool = false
 
 @onready var cost_label_3d: Label3D = $Label3D
+@onready var status_plate: MeshInstance3D = $StatusPlate
 @onready var fill_mesh: MeshInstance3D = $FillProgress
 @onready var base_mesh: MeshInstance3D = $BaseMesh
 @onready var emblems: Node3D = get_node_or_null("Emblems")
 
 func _ready() -> void:
 	current_cost = base_cost
+	if cost_label_3d:
+		cost_label_3d.font = UI_FONT
 	_setup_pad_visuals()
 	_update_ui()
 	body_entered.connect(_on_body_entered)
@@ -84,6 +89,10 @@ func set_status(current_count: int, max_count: int, is_repair: bool = false, rep
 
 func set_tutorial_locked(locked: bool) -> void:
 	tutorial_locked = locked
+	if cost_label_3d:
+		cost_label_3d.visible = not locked
+	if status_plate:
+		status_plate.visible = not locked
 	if not locked:
 		# Evita uma compra acidental se o Rei terminar a etapa sobre este pad.
 		is_king_present = false
@@ -125,26 +134,26 @@ func _update_ui() -> void:
 	if not cost_label_3d:
 		return
 	if tutorial_locked:
-		cost_label_3d.text = "🔒 AGUARDE O OBJETIVO"
+		cost_label_3d.text = "🔒 OBJETIVO"
 		cost_label_3d.modulate = Color(0.62, 0.66, 0.70, 0.92)
 		if fill_mesh:
 			fill_mesh.scale.x = 0.01
 			fill_mesh.scale.z = 0.01
 		return
 		
-	var type_icon = "🏹"
+	var type_icon = "ARQUEIRO"
 	match pad_type:
 		"build_tower":
-			type_icon = "🗼"
+			type_icon = "TORRE"
 		"build_palisade":
-			type_icon = "🪵"
+			type_icon = "PALIÇADA"
 		"build_barracks":
-			type_icon = "🏛️"
+			type_icon = "QUARTEL"
 		"build_forge":
-			type_icon = "⚒️"
+			type_icon = "FERRARIA"
 			
 	if is_locked:
-		cost_label_3d.text = "%s ✔️ MÁXIMO" % type_icon
+		cost_label_3d.text = "%s  MÁXIMO" % type_icon
 		cost_label_3d.modulate = Color(0.55, 1.0, 0.55)
 		if fill_mesh:
 			fill_mesh.scale.x = 1.0
@@ -153,18 +162,18 @@ func _update_ui() -> void:
 		
 	if is_repair_mode:
 		if current_paid > 0:
-			cost_label_3d.text = "🛠️ 🪙 %d/%d" % [current_paid, current_cost]
+			cost_label_3d.text = "FERRARIA  %d/%d" % [current_paid, current_cost]
 		else:
-			cost_label_3d.text = "🛠️ 🪙 %d" % current_cost
+			cost_label_3d.text = "FERRARIA  %d" % current_cost
 		cost_label_3d.modulate = Color(1.0, 0.85, 0.3)
 	else:
 		if current_paid > 0:
-			cost_label_3d.text = "%s 🪙 %d/%d" % [type_icon, current_paid, current_cost]
+			cost_label_3d.text = "%s  %d/%d" % [type_icon, current_paid, current_cost]
 		else:
 			if max_items > 0:
-				cost_label_3d.text = "%s 🪙 %d (%d/%d)" % [type_icon, current_cost, current_items, max_items]
+				cost_label_3d.text = "%s  %d (%d/%d)" % [type_icon, current_cost, current_items, max_items]
 			else:
-				cost_label_3d.text = "%s 🪙 %d" % [type_icon, current_cost]
+				cost_label_3d.text = "%s  %d" % [type_icon, current_cost]
 				
 		var needed = current_cost - current_paid
 		var can_afford = GameState.stage_coins >= needed

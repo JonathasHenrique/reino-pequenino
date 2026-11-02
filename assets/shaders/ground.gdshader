@@ -10,6 +10,8 @@ uniform vec4 grass_shade : source_color = vec4(0.435, 0.659, 0.169, 1.0); // #6F
 uniform vec4 dirt_path : source_color = vec4(0.851, 0.627, 0.400, 1.0);  // #D9A066
 uniform float path_weight : hint_range(0.0, 1.0) = 0.0;
 uniform float noise_scale : hint_range(0.01, 1.0) = 0.09;
+uniform float pattern_scale : hint_range(0.05, 2.0) = 0.28;
+uniform float pattern_strength : hint_range(0.0, 0.25) = 0.08;
 
 varying vec3 world_pos;
 
@@ -35,6 +37,10 @@ void fragment() {
 	float n = smooth_noise(p * noise_scale) * 0.65 + smooth_noise(p * (noise_scale * 2.2)) * 0.35;
 	vec3 grass = mix(grass_main.rgb, grass_shade.rgb, smoothstep(0.35, 0.68, n));
 	vec3 final_color = mix(grass, dirt_path.rgb, path_weight);
+	// Quadriculado muito sutil para dar escala de miniatura sem poluir o chão.
+	vec2 tile = abs(fract(p * pattern_scale) - 0.5);
+	float tile_edge = 1.0 - smoothstep(0.46, 0.50, max(tile.x, tile.y));
+	final_color = mix(final_color, final_color * 0.90, tile_edge * pattern_strength);
 	
 	ALBEDO = final_color;
 	ROUGHNESS = 0.88;

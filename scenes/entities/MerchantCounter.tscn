@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/MerchantCounter.gd" id="1_merch"]
+[ext_resource type="FontFile" path="res://assets/fonts/Fredoka-Variable.ttf" id="2_font"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_counter"]
 size = Vector3(3.2, 2.2, 2.4)
@@ -123,8 +124,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_straw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 billboard = 1
 double_sided = false
-text = "🏪 Tobias
-🪖 ➔ 🪙 4"
+font = ExtResource("2_font")
+text = "TOBIAS\nCAPACETES -> MOEDAS 4"
 font_size = 40
 outline_size = 12
 outline_modulate = Color(0.169, 0.106, 0.071, 0.95)

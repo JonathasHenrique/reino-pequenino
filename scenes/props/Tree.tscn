@@ -1,4 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/nature/tree_detailed.glb" id="1_nature_tree"]
+[ext_resource type="Script" path="res://scripts/props/StyleImportedModel.gd" id="2_style"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_trunk"]
 top_radius = 0.22
@@ -30,23 +33,31 @@ height = 2.4
 radius = 0.45
 
 [node name="Tree" type="StaticBody3D"]
+script = ExtResource("2_style")
+fallback_color = Color(0.52, 0.76, 0.20, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 shape = SubResource("CylinderShape3D_col")
 
 [node name="Trunk" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("CylinderMesh_trunk")
 surface_material_override/0 = SubResource("StandardMaterial3D_bark")
 
 [node name="FoliageBottom" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
 mesh = SubResource("SphereMesh_leaves_bottom")
 surface_material_override/0 = SubResource("StandardMaterial3D_leaves")
 
 [node name="FoliageTop" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
 mesh = SubResource("SphereMesh_leaves_top")
 surface_material_override/0 = SubResource("StandardMaterial3D_leaves_light")
 
+[node name="NatureTreeModel" parent="." instance=ExtResource("1_nature_tree")]
+position = Vector3(0, 0, 0)
+scale = Vector3(1.15, 1.15, 1.15)

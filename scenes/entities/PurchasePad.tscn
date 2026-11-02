@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/PurchasePad.gd" id="1_pad"]
 
@@ -72,6 +72,14 @@ size = Vector3(0.50, 0.25, 0.22)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iron"]
 albedo_color = Color(0.28, 0.30, 0.35, 1)
 metallic = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_status_plate"]
+size = Vector3(2.65, 0.06, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_status_plate"]
+albedo_color = Color(0.169, 0.106, 0.071, 0.94)
+transparency = 1
+roughness = 0.72
 
 [node name="PurchasePad" type="Area3D"]
 script = ExtResource("1_pad")
@@ -163,15 +171,22 @@ visible = false
 mesh = SubResource("BoxMesh_mini_anvil")
 surface_material_override/0 = SubResource("StandardMaterial3D_iron")
 
+[node name="StatusPlate" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, 0)
+mesh = SubResource("BoxMesh_status_plate")
+surface_material_override/0 = SubResource("StandardMaterial3D_status_plate")
+
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12, 0)
 billboard = 1
 double_sided = false
 text = "🏹 🪙 5"
-font_size = 48
-outline_size = 14
-outline_modulate = Color(0, 0, 0, 0.95)
+font_size = 34
+outline_size = 10
+outline_modulate = Color(0.07, 0.04, 0.025, 1)
 modulate = Color(1.0, 0.95, 0.70, 1)
-pixel_size = 0.005
+pixel_size = 0.0007
+fixed_size = true
+no_depth_test = true
 render_priority = 6
 outline_render_priority = 5

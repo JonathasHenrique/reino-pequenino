@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/nature/rock_largeA.glb" id="1_nature_rock"]
+[ext_resource type="Script" path="res://scripts/props/StyleImportedModel.gd" id="2_style"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_col"]
 radius = 0.75
@@ -19,18 +22,25 @@ albedo_color = Color(0.32, 0.58, 0.25, 1)
 roughness = 0.85
 
 [node name="Rock" type="StaticBody3D"]
+script = ExtResource("2_style")
+fallback_color = Color(0.55, 0.58, 0.62, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("SphereShape3D_col")
 
 [node name="RockMesh" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 mesh = SubResource("SphereMesh_rock")
 surface_material_override/0 = SubResource("StandardMaterial3D_rock")
 
 [node name="MossPatch" type="MeshInstance3D" parent="."]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 mesh = SubResource("BoxMesh_moss")
 surface_material_override/0 = SubResource("StandardMaterial3D_moss")
 
+[node name="NatureRockModel" parent="." instance=ExtResource("1_nature_rock")]
+position = Vector3(0, 0, 0)
+scale = Vector3(1.25, 1.25, 1.25)
