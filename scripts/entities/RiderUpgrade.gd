@@ -1,7 +1,8 @@
 extends Node3D
 
 @export var imported_name: String = "ImportedRider"
-const CUSTOM_DETAILS: Array[String] = ["Torso", "Belt", "SwordHilt", "Head", "Crown", "Cape"]
+# O Warrior CC0 é o corpo do Rei; ficam por cima só a coroa e a capa procedurais.
+const CUSTOM_DETAILS: Array[String] = ["Crown", "Cape"]
 
 func _ready() -> void:
 	call_deferred("_swap_rider")

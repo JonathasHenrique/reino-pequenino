@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/MainMenu.gd" id="1_menu"]
 [ext_resource type="Script" path="res://scripts/ui/IconBadge.gd" id="2_icon"]
@@ -10,6 +10,21 @@ colors = PackedColorArray(0.15, 0.32, 0.65, 1, 0.96, 0.72, 0.42, 1)
 gradient = SubResource("Gradient_bg")
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0.5, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header_frame"]
+bg_color = Color(0.08, 0.16, 0.36, 0.38)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.79, 0.24, 0.95)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 10
+shadow_offset = Vector2(0, 6)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_play"]
 bg_color = Color(0.92, 0.72, 0.16, 1)
@@ -50,6 +65,35 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_bg")
 
+[node name="Sparkles" type="CPUParticles2D" parent="."]
+position = Vector2(640, 360)
+amount = 26
+lifetime = 7.0
+preprocess = 7.0
+emission_shape = 3
+emission_rect_extents = Vector2(660, 380)
+direction = Vector2(0, -1)
+spread = 25.0
+gravity = Vector2(0, -4)
+initial_velocity_min = 6.0
+initial_velocity_max = 20.0
+scale_amount_min = 1.5
+scale_amount_max = 3.5
+color = Color(1, 0.88, 0.45, 0.55)
+
+[node name="HeaderFrame" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -330.0
+offset_top = 40.0
+offset_right = 330.0
+offset_bottom = 300.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header_frame")
+mouse_filter = 2
+
 [node name="Header" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 5
@@ -63,7 +107,7 @@ grow_horizontal = 2
 theme_override_constants/separation = 12
 
 [node name="CrownIcon" type="Control" parent="Header"]
-custom_minimum_size = Vector2(64, 58)
+custom_minimum_size = Vector2(112, 98)
 layout_mode = 2
 script = ExtResource("2_icon")
 icon_type = "crown"

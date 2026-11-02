@@ -12,6 +12,8 @@ var move_direction: Vector3 = Vector3.ZERO
 var input_vector: Vector2 = Vector2.ZERO
 var trot_time: float = 0.0
 var step_timer: float = 0.0
+var idle_time: float = 0.0
+var base_visual_scale: Vector3 = Vector3.ONE
 
 const PUFF_SCENE: PackedScene = preload("res://scenes/entities/PuffEffect.tscn")
 
@@ -23,6 +25,8 @@ const PUFF_SCENE: PackedScene = preload("res://scenes/entities/PuffEffect.tscn")
 
 func _ready() -> void:
 	GameState.king_node = self
+	base_visual_scale = visuals.scale
+	GameState.hero_ability_used.connect(_on_hero_ability_used)
 	_apply_hero_passives()
 	_setup_magnet()
 
@@ -87,7 +91,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, move_speed * 8.0 * delta)
 		velocity.z = move_toward(velocity.z, 0, move_speed * 8.0 * delta)
-		visuals.position.y = lerp(visuals.position.y, 0.0, 10.0 * delta)
+		# Respiração suave em repouso: o Rei "respira" sem animação extra.
+		idle_time += delta * 2.2
+		visuals.position.y = lerp(visuals.position.y, sin(idle_time) * 0.025, 10.0 * delta)
 		visuals.rotation.x = lerp(visuals.rotation.x, 0.0, 10.0 * delta)
 	
 	move_and_slide()
@@ -95,6 +101,14 @@ func _physics_process(delta: float) -> void:
 	# Limita o movimento do Rei estritamente dentro da área do diorama
 	global_position.x = clamp(global_position.x, -26.0, 26.0)
 	global_position.z = clamp(global_position.z, -26.0, 26.0)
+
+# Impacto visual claro ao usar a habilidade do herói (escala com overshoot, sem mudar a lógica).
+func _on_hero_ability_used(_hero_id: String) -> void:
+	if not visuals:
+		return
+	var tw := create_tween()
+	tw.tween_property(visuals, "scale", base_visual_scale * 1.14, 0.09).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(visuals, "scale", base_visual_scale, 0.18).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 func _on_magnet_area_entered(area: Area3D) -> void:
 	if area.is_in_group("coins"):
