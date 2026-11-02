@@ -24,11 +24,20 @@ var slow_remaining: float = 0.0
 var slow_factor: float = 1.0
 var knockback_remaining: float = 0.0
 var knockback_velocity: Vector3 = Vector3.ZERO
+var stuck_time: float = 0.0
+var damage_flash_material: StandardMaterial3D
+var flash_tween: Tween
 
 @onready var visuals: Node3D = $Visuals
 @onready var faction_ring: MeshInstance3D = $FactionRing
 
 func _ready() -> void:
+	damage_flash_material = StandardMaterial3D.new()
+	damage_flash_material.albedo_color = Color.WHITE
+	damage_flash_material.emission_enabled = true
+	damage_flash_material.emission = Color.WHITE
+	damage_flash_material.emission_energy_multiplier = 0.8
+	damage_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	# Escalonamento de +8% de HP por fase a partir da fase 1
 	var stage_scale = pow(1.08, float(maxi(0, GameState.current_stage - 1)))
 	var diff_scale = 1.0
@@ -150,6 +159,17 @@ func _physics_process(delta: float) -> void:
 		var dist = to_target.length()
 		if dist > attack_range:
 			var dir = to_target.normalized()
+			if stuck_time >= 0.25:
+				var collision := get_last_slide_collision()
+				if collision:
+					var wall_normal := collision.get_normal()
+					wall_normal.y = 0.0
+					if wall_normal.length_squared() > 0.001:
+						var tangent := Vector3.UP.cross(wall_normal).normalized()
+						if tangent.dot(dir) < 0.0:
+							tangent = -tangent
+						dir = tangent
+				stuck_time = 0.0
 			velocity = dir * move_speed * slow_factor
 			# Os visuais dos inimigos apontam para +Z.
 			var target_rot = atan2(dir.x, dir.z)
@@ -160,6 +180,10 @@ func _physics_process(delta: float) -> void:
 				_attack_target(target)
 				
 		move_and_slide()
+		if velocity.length_squared() > 0.01 and get_position_delta().length_squared() < 0.0004:
+			stuck_time += delta
+		else:
+			stuck_time = 0.0
 
 func _find_target() -> Node3D:
 	# Inimigos terrestres atacam paliçadas no caminho se estiverem muito perto, senão vão ao Rei
@@ -192,6 +216,21 @@ func take_damage(amount: int) -> void:
 func _flash_white_and_squash() -> void:
 	if not visuals:
 		return
+	if flash_tween and flash_tween.is_running():
+		flash_tween.kill()
+	var meshes := visuals.find_children("*", "MeshInstance3D", true, false)
+	var previous_overlays: Array[Material] = []
+	for mesh in meshes:
+		previous_overlays.append(mesh.material_overlay)
+		mesh.material_overlay = damage_flash_material
+	flash_tween = create_tween()
+	flash_tween.tween_interval(0.06)
+	flash_tween.tween_callback(func():
+		for index in range(meshes.size()):
+			var mesh := meshes[index] as MeshInstance3D
+			if is_instance_valid(mesh):
+				mesh.material_overlay = previous_overlays[index]
+	)
 	var orig_scale = visuals.scale
 	visuals.scale = orig_scale * Vector3(1.25, 0.75, 1.25)
 	var tw = create_tween()

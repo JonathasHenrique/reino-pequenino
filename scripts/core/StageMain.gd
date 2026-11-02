@@ -44,9 +44,12 @@ var tower_slots: Array[Vector3] = [
 var active_towers: Array = []
 var barracks_built: bool = false
 var forge_built: bool = false
+var last_king_hp: int = -1
 
 func _ready() -> void:
 	stage_id = GameState.current_stage
+	last_king_hp = GameState.king_hp
+	GameState.king_hp_changed.connect(_on_king_hp_changed)
 	GameState.start_stage(stage_id)
 	AudioManager.play_music("battle")
 	
@@ -83,6 +86,11 @@ func _ready() -> void:
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 		])
 	)
+
+func _on_king_hp_changed(current_hp: int, _max_hp: int) -> void:
+	if last_king_hp >= 0 and current_hp < last_king_hp and camera and camera.has_method("shake"):
+		camera.call("shake", 0.12, 0.22)
+	last_king_hp = current_hp
 
 func _update_pad_statuses() -> void:
 	active_towers = active_towers.filter(func(t): return is_instance_valid(t))

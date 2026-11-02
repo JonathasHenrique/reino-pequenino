@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+const SafeArea = preload("res://scripts/ui/SafeArea.gd")
+
 # GameHUD.gd - Interface do jogador durante as fases
 # Exibe moedas, vida do rei, botão de habilidade do herói e joystick virtual
 
@@ -15,10 +17,14 @@ extends CanvasLayer
 @onready var pause_overlay: Control = $PauseOverlay
 @onready var resume_button: Button = $PauseOverlay/Panel/VBox/ResumeButton
 @onready var village_button: Button = $PauseOverlay/Panel/VBox/VillageButton
+@onready var top_bar: Control = $TopBar
+@onready var action_container: Control = $ActionContainer
 
 var skill_label: String = "Coragem!"
 
 func _ready() -> void:
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 	GameState.coins_changed.connect(_on_coins_changed)
 	GameState.spoils_changed.connect(_on_spoils_changed)
 	GameState.king_hp_changed.connect(_on_king_hp_changed)
@@ -42,6 +48,14 @@ func _ready() -> void:
 	_on_king_hp_changed(GameState.king_hp, GameState.king_max_hp)
 	_on_troop_count_changed(GameState.active_troops.size())
 	_setup_hero_button()
+
+func _apply_safe_area() -> void:
+	if top_bar:
+		SafeArea.apply_horizontal(top_bar, 20.0, 20.0)
+	if action_container:
+		var insets := SafeArea.horizontal_insets(action_container)
+		action_container.offset_left = -160.0 - insets.y
+		action_container.offset_right = -insets.y
 
 func _on_spoils_changed(amount: int) -> void:
 	if spoil_label:

@@ -1,17 +1,6 @@
 [gd_scene load_steps=5 format=3]
 
-[sub_resource type="GDScript" id="GDScript_puff"]
-script/source = "extends Node3D
-
-var timer: float = 0.5
-
-func _process(delta: float) -> void:
-	timer -= delta
-	scale += Vector3(delta * 2.0, delta * 2.0, delta * 2.0)
-	position.y += delta * 1.5
-	if timer <= 0.0:
-		queue_free()
-"
+[ext_resource type="Script" path="res://scripts/entities/PuffEffect.gd" id="1_puff"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_cloud"]
 radius = 0.4
@@ -23,7 +12,7 @@ transparency = 1
 roughness = 0.9
 
 [node name="PuffEffect" type="Node3D"]
-script = SubResource("GDScript_puff")
+script = ExtResource("1_puff")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_cloud")

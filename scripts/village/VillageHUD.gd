@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+const SafeArea = preload("res://scripts/ui/SafeArea.gd")
+
 # VillageHUD.gd - Interface da Vila Real do Rei
 # Conecta botões da vila às telas de ajustes, mapa de fases e seleção de heróis
 
@@ -11,8 +13,12 @@ extends CanvasLayer
 @onready var album_button: Button = $TopBar/HBox/AlbumButton
 @onready var trophies_button: Button = $TopBar/HBox/TrophiesButton
 @onready var joystick: Control = get_node_or_null("VirtualJoystick")
+@onready var top_bar: Control = $TopBar
+@onready var bottom_bar: Control = $BottomBar
 
 func _ready() -> void:
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 	_update_hud()
 	SaveManager.save_saved.connect(_update_hud)
 	
@@ -29,6 +35,12 @@ func _ready() -> void:
 		album_button.pressed.connect(_on_album_pressed)
 	if trophies_button:
 		trophies_button.pressed.connect(_on_trophies_pressed)
+
+func _apply_safe_area() -> void:
+	if top_bar:
+		SafeArea.apply_horizontal(top_bar, 20.0, 20.0)
+	if bottom_bar:
+		SafeArea.apply_horizontal(bottom_bar, 40.0, 40.0)
 
 func _on_album_pressed() -> void:
 	AudioManager.play_sfx("button_click")

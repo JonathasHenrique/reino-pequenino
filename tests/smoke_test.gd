@@ -1,62 +1,71 @@
-extends SceneTree
+extends Node
 
-# smoke_test.gd - Teste de fumaça real executado DENTRO da engine Godot 4.3 Headless
-# Carrega e instancia cada cena do jogo, roda 1 frame e garante ausência de falhas/crashes
+# smoke_test.gd - Runner de cenas executado pela cena SmokeTest.tscn com autoloads ativos.
 
-func _init() -> void:
+const SCENES: Array[String] = [
+	"res://scenes/ui/MainMenu.tscn",
+	"res://scenes/ui/IntroCutscene.tscn",
+	"res://scenes/ui/EndingCutscene.tscn",
+	"res://scenes/ui/SettingsMenu.tscn",
+	"res://scenes/ui/StoreMenu.tscn",
+	"res://scenes/ui/TrophiesMenu.tscn",
+	"res://scenes/ui/StickerAlbum.tscn",
+	"res://scenes/ui/GameHUD.tscn",
+	"res://scenes/ui/VictoryScreen.tscn",
+	"res://scenes/ui/DefeatScreen.tscn",
+	"res://scenes/ui/RetroFilterOverlay.tscn",
+	"res://scenes/village/Village.tscn",
+	"res://scenes/stages/StageMain.tscn",
+	"res://scenes/stages/StageCoreTest.tscn",
+	"res://scenes/minigames/Challenge10_Catapult.tscn",
+	"res://scenes/minigames/Challenge20_Sudoku.tscn",
+	"res://scenes/minigames/Challenge30_Breakout.tscn",
+	"res://scenes/minigames/Challenge40_BlockPuzzle.tscn",
+	"res://scenes/minigames/Challenge50_Platformer.tscn",
+	"res://scenes/minigames/Challenge60_LaneDefense.tscn"
+]
+
+func _ready() -> void:
+	call_deferred("_run_scenes")
+
+func _run_scenes() -> void:
 	print(">>> INICIANDO SMOKE TEST NO GODOT 4.3 HEADLESS <<<")
-	var scenes = [
-		"res://scenes/ui/MainMenu.tscn",
-		"res://scenes/ui/IntroCutscene.tscn",
-		"res://scenes/ui/EndingCutscene.tscn",
-		"res://scenes/ui/SettingsMenu.tscn",
-		"res://scenes/ui/StoreMenu.tscn",
-		"res://scenes/ui/TrophiesMenu.tscn",
-		"res://scenes/ui/StickerAlbum.tscn",
-		"res://scenes/ui/GameHUD.tscn",
-		"res://scenes/ui/VictoryScreen.tscn",
-		"res://scenes/ui/DefeatScreen.tscn",
-		"res://scenes/ui/RetroFilterOverlay.tscn",
-		"res://scenes/village/Village.tscn",
-		"res://scenes/stages/StageMain.tscn",
-		"res://scenes/stages/StageCoreTest.tscn",
-		"res://scenes/minigames/Challenge10_Catapult.tscn",
-		"res://scenes/minigames/Challenge20_Sudoku.tscn",
-		"res://scenes/minigames/Challenge30_Breakout.tscn",
-		"res://scenes/minigames/Challenge40_BlockPuzzle.tscn",
-		"res://scenes/minigames/Challenge50_Platformer.tscn",
-		"res://scenes/minigames/Challenge60_LaneDefense.tscn"
-	]
-	
-	var passed = 0
-	var failed = 0
-	
-	for s_path in scenes:
-		print("Testando cena: ", s_path)
-		var packed = load(s_path)
-		if not packed:
-			print("FALHA AO CARREGAR: ", s_path)
+	var passed := 0
+	var failed := 0
+	for scene_path in SCENES:
+		print("Testando cena: ", scene_path)
+		var packed := load(scene_path) as PackedScene
+		if not packed or not _scripts_can_instantiate(packed):
+			print("FALHA AO CARREGAR/COMPILAR: ", scene_path)
 			failed += 1
 			continue
-		var inst = packed.instantiate()
-		if not inst:
-			print("FALHA AO INSTANCIAR: ", s_path)
+		var instance := packed.instantiate()
+		if not instance:
+			print("FALHA AO INSTANCIAR: ", scene_path)
 			failed += 1
 			continue
-		root.add_child(inst)
-		inst.queue_free()
+		get_tree().root.add_child(instance)
+		await get_tree().process_frame
+		instance.queue_free()
+		await get_tree().process_frame
 		passed += 1
 		print("  -> OK!")
-		
+
 	print("============================================")
 	print("RESULTADO DO TESTE NO MOTOR GODOT:")
-	print("Aprovados: ", passed, " / ", scenes.size())
+	print("Aprovados: ", passed, " / ", SCENES.size())
 	print("Falhas: ", failed)
 	print("============================================")
-	
-	if failed > 0:
-		quit(1)
-	else:
-		print("🎉 TODAS AS CENAS RODARAM COM 100% DE SUCESSO NO GODOT 4.3!")
-		quit(0)
+	get_tree().quit(1 if failed > 0 else 0)
+
+func _scripts_can_instantiate(packed: PackedScene) -> bool:
+	var state := packed.get_state()
+	for node_index in range(state.get_node_count()):
+		for property_index in range(state.get_node_property_count(node_index)):
+			if state.get_node_property_name(node_index, property_index) != "script":
+				continue
+			var script := state.get_node_property_value(node_index, property_index) as Script
+			if not script or not script.can_instantiate():
+				return false
+	return true
 

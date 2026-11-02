@@ -13,6 +13,8 @@ var input_vector: Vector2 = Vector2.ZERO
 var trot_time: float = 0.0
 var step_timer: float = 0.0
 
+const PUFF_SCENE: PackedScene = preload("res://scenes/entities/PuffEffect.tscn")
+
 @onready var coin_stack: Node3D = $CoinStack
 @onready var magnet_area: Area3D = $MagnetArea
 @onready var magnet_shape: CollisionShape3D = $MagnetArea/CollisionShape3D
@@ -74,7 +76,9 @@ func _physics_process(delta: float) -> void:
 		if step_timer >= 0.24:
 			step_timer = 0.0
 			var spawn_pos = global_position - visuals.transform.basis.z * 0.35
-			Art.dust_puff(get_parent(), spawn_pos, 4)
+			var puff := PUFF_SCENE.instantiate()
+			get_parent().add_child(puff)
+			puff.follow(self, spawn_pos - global_position)
 		
 		# Rotação suave do personagem na direção do movimento
 		# Os visuais do cavalo foram modelados apontando para +Z.

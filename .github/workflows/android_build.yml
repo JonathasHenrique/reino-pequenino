@@ -69,7 +69,10 @@ jobs:
 
       - name: Importar Assets no Godot Headless
         run: |
-          godot --headless --editor --quit || true
+          godot --headless --editor --quit
+
+      - name: Validar carregamento das cenas
+        run: godot --headless --path . res://tests/SmokeTest.tscn
 
       - name: Compilar APK de Debug
         run: |

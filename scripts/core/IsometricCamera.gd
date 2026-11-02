@@ -10,6 +10,8 @@ extends Camera3D
 
 var target_node: Node3D = null
 var offset_vector: Vector3
+var shake_remaining: float = 0.0
+var shake_strength: float = 0.0
 
 func _ready() -> void:
 	if not target_path.is_empty():
@@ -32,6 +34,17 @@ func _physics_process(delta: float) -> void:
 		target_node = GameState.king_node
 		
 	if target_node and is_instance_valid(target_node):
-		var target_pos = target_node.global_position + offset_vector
+		var shake_offset := Vector3.ZERO
+		if shake_remaining > 0.0:
+			shake_remaining = maxf(0.0, shake_remaining - delta)
+			var strength := shake_strength * (shake_remaining / 0.22)
+			shake_offset = Vector3(randf_range(-strength, strength), randf_range(-strength, strength), 0.0)
+		else:
+			shake_strength = 0.0
+		var target_pos = target_node.global_position + offset_vector + shake_offset
 		global_position = global_position.lerp(target_pos, follow_speed * delta)
 		look_at(target_node.global_position, Vector3.UP)
+
+func shake(strength: float = 0.12, duration: float = 0.22) -> void:
+	shake_strength = maxf(shake_strength, strength)
+	shake_remaining = maxf(shake_remaining, duration)
