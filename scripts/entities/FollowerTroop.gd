@@ -107,9 +107,25 @@ func _perform_attack(target: Node3D, damage_multiplier: float = 1.0) -> void:
 	# Velocidade de ataque acelerada se habilidade do Teodoro estiver ativa
 	var speed_mult = 1.3 if GameState.hero_ability_active else 1.0
 	attack_cooldown = (1.0 / (attack_rate * speed_mult))
+	if troop_id == "archer":
+		_animate_archer_attack()
 	
 	AudioManager.play_sfx("shoot")
 	_spawn_arrow(target, int(base_damage * damage_multiplier))
+
+func _animate_archer_attack() -> void:
+	var arm := visuals.get_node_or_null("ArmR") as MeshInstance3D
+	var bow := visuals.get_node_or_null("ArmL/Bow") as MeshInstance3D
+	if not arm or not bow:
+		return
+
+	var arm_rest := arm.rotation.z
+	var bow_rest := bow.rotation.z
+	var tween := create_tween()
+	tween.tween_property(arm, "rotation:z", arm_rest + 0.45, 0.09).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(bow, "rotation:z", bow_rest - 0.18, 0.09)
+	tween.tween_property(arm, "rotation:z", arm_rest, 0.12).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.parallel().tween_property(bow, "rotation:z", bow_rest, 0.12)
 
 func _spawn_arrow(target: Node3D, dmg: int) -> void:
 	var arrow_scene = load("res://scenes/entities/Arrow.tscn")

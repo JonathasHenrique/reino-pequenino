@@ -60,6 +60,9 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 
 func _apply_enemy_tint(node: Node, tint: Color) -> void:
 	for child in node.get_children():
+		if child.has_method("set_tint"):
+			child.set_tint(tint)
+			continue
 		if child is MeshInstance3D:
 			child.material_override = Art.toon_mat(tint, 0.78)
 		if child.get_child_count() > 0:

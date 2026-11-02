@@ -11,11 +11,11 @@ const ENEMY_SCENE: PackedScene = preload("res://scenes/entities/MistyRunner.tscn
 
 # Aparência de cada tipo (escala e cor), para diferenciar sem depender só da cor (daltonismo)
 const ENEMY_LOOKS: Dictionary = {
-	"misty_runner": {"scale": 1.0, "tint": Color(0.48, 0.54, 0.62)},
-	"misty_squire": {"scale": 1.25, "tint": Color(0.40, 0.46, 0.58)},
-	"misty_archer": {"scale": 0.9, "tint": Color(0.55, 0.60, 0.70)},
-	"misty_crow": {"scale": 0.7, "tint": Color(0.30, 0.33, 0.40)},
-	"misty_giant": {"scale": 2.2, "tint": Color(0.36, 0.40, 0.50)}
+	"misty_runner": {"scale": 1.0, "tint": Color(0.85, 0.21, 0.24)},
+	"misty_squire": {"scale": 1.25, "tint": Color(0.70, 0.12, 0.19)},
+	"misty_archer": {"scale": 0.9, "tint": Color(0.95, 0.32, 0.34)},
+	"misty_crow": {"scale": 0.7, "tint": Color(0.55, 0.16, 0.24)},
+	"misty_giant": {"scale": 2.2, "tint": Color(0.62, 0.08, 0.14)}
 }
 
 @export var stage_id: int = 1

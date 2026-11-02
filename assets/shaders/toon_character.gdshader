@@ -6,6 +6,8 @@ render_mode diffuse_toon, specular_toon;
 
 uniform vec4 base_color : source_color = vec4(0.5, 0.5, 0.5, 1.0);
 uniform vec4 shade_color : source_color = vec4(0.3, 0.3, 0.35, 1.0);
+uniform sampler2D albedo_texture : source_color, filter_linear_mipmap, repeat_enable;
+uniform bool use_albedo_texture = false;
 uniform float rim_threshold : hint_range(0.0, 1.0) = 0.65;
 uniform vec4 rim_color : source_color = vec4(1.0, 0.95, 0.85, 0.3);
 uniform float roughness_val : hint_range(0.0, 1.0) = 0.7;
@@ -14,7 +16,8 @@ uniform vec4 emission_color : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform float emission_energy = 0.0;
 
 void fragment() {
-	ALBEDO = base_color.rgb;
+	vec3 texture_color = texture(albedo_texture, UV).rgb;
+	ALBEDO = use_albedo_texture ? pow(texture_color, vec3(0.78)) : base_color.rgb;
 	ROUGHNESS = roughness_val;
 	METALLIC = metallic_val;
 	if (emission_energy > 0.0) {

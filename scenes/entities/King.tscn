@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3]
+[gd_scene load_steps=42 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/King.gd" id="1_king"]
 [ext_resource type="Script" path="res://scripts/entities/CoinStack.gd" id="2_stack"]
@@ -24,6 +24,18 @@ transparency = 1
 material = SubResource("StandardMaterial3D_ring")
 inner_radius = 2.5
 outer_radius = 2.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_king_ring"]
+albedo_color = Color(0.247, 0.498, 0.878, 1)
+emission_enabled = true
+emission = Color(0.247, 0.498, 0.878, 1)
+emission_energy_multiplier = 0.45
+shading_mode = 0
+
+[sub_resource type="TorusMesh" id="TorusMesh_king_ring"]
+material = SubResource("StandardMaterial3D_king_ring")
+inner_radius = 0.78
+outer_radius = 0.86
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_horse_body"]
 radius = 0.45
@@ -172,6 +184,10 @@ script = ExtResource("1_king")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 shape = SubResource("CapsuleShape3D_king")
+
+[node name="FactionRing" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+mesh = SubResource("TorusMesh_king_ring")
 
 [node name="MagnetArea" type="Area3D" parent="."]
 
