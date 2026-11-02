@@ -2,11 +2,17 @@ extends Control
 
 # Ícones vetoriais simples e consistentes, sem depender de emojis do sistema.
 
-@export_enum("coin", "helmet", "heart", "archer", "crown") var icon_type: String = "coin"
+@export_enum("coin", "helmet", "heart", "archer", "crown", "star") var icon_type: String = "coin"
 @export var icon_color: Color = Color("#FFC93C")
+@export var star_filled: bool = true
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	queue_redraw()
+
+func set_star_filled(filled: bool) -> void:
+	star_filled = filled
+	icon_color = Color("#FFC93C") if filled else Color("#9299A1")
 	queue_redraw()
 
 func _draw() -> void:
@@ -49,3 +55,15 @@ func _draw() -> void:
 			])
 			draw_colored_polygon(crown, icon_color)
 			draw_line(center + Vector2(-radius * 0.65, radius * 0.48), center + Vector2(radius * 0.65, radius * 0.48), Color("#D99B26"), 2.0, true)
+		"star":
+			var points := PackedVector2Array()
+			for point_index in range(10):
+				var angle := -PI * 0.5 + float(point_index) * PI / 5.0
+				var point_radius := radius if point_index % 2 == 0 else radius * 0.46
+				points.append(center + Vector2(cos(angle), sin(angle)) * point_radius)
+			if star_filled:
+				draw_colored_polygon(points, icon_color)
+			else:
+				var outline := points.duplicate()
+				outline.append(points[0])
+				draw_polyline(outline, icon_color, 3.0, true)

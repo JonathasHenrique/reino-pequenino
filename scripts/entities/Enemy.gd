@@ -17,8 +17,16 @@ signal died(enemy: Node3D)
 var current_hp: int = 24
 var attack_timer: float = 0.0
 var alive: bool = true
+var base_tint: Color = Color(0.85, 0.21, 0.24)
+var is_frozen: bool = false
+var freeze_remaining: float = 0.0
+var slow_remaining: float = 0.0
+var slow_factor: float = 1.0
+var knockback_remaining: float = 0.0
+var knockback_velocity: Vector3 = Vector3.ZERO
 
 @onready var visuals: Node3D = $Visuals
+@onready var faction_ring: MeshInstance3D = $FactionRing
 
 func _ready() -> void:
 	# Escalonamento de +8% de HP por fase a partir da fase 1
@@ -35,6 +43,7 @@ func _ready() -> void:
 	GameState.register_enemy(self)
 
 func apply_look(scale_mult: float, tint: Color) -> void:
+	base_tint = tint
 	if not visuals:
 		visuals = $Visuals
 	if visuals:
@@ -68,6 +77,40 @@ func _apply_enemy_tint(node: Node, tint: Color) -> void:
 		if child.get_child_count() > 0:
 			_apply_enemy_tint(child, tint)
 
+func freeze_for(duration: float) -> void:
+	if not alive:
+		return
+	is_frozen = true
+	freeze_remaining = maxf(freeze_remaining, duration)
+	_apply_enemy_tint(visuals, Color(0.48, 0.82, 1.0))
+	if faction_ring:
+		var ice_material := StandardMaterial3D.new()
+		ice_material.albedo_color = Color("#76DDF2")
+		ice_material.emission_enabled = true
+		ice_material.emission = Color("#76DDF2")
+		ice_material.emission_energy_multiplier = 0.7
+		ice_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		faction_ring.material_override = ice_material
+
+func _clear_freeze() -> void:
+	is_frozen = false
+	freeze_remaining = 0.0
+	_apply_enemy_tint(visuals, base_tint)
+	if faction_ring:
+		faction_ring.material_override = null
+
+func apply_slow_for(duration: float, factor: float = 0.5) -> void:
+	slow_remaining = maxf(slow_remaining, duration)
+	slow_factor = minf(slow_factor, clampf(factor, 0.1, 1.0))
+
+func knock_back_from(origin: Vector3, strength: float = 10.0) -> void:
+	var direction := global_position - origin
+	direction.y = 0.0
+	if direction.length_squared() <= 0.001:
+		return
+	knockback_velocity = direction.normalized() * strength
+	knockback_remaining = 0.25
+
 func _exit_tree() -> void:
 	GameState.unregister_enemy(self)
 
@@ -77,6 +120,22 @@ func is_alive() -> bool:
 func _physics_process(delta: float) -> void:
 	if not alive or GameState.is_game_over:
 		velocity = Vector3.ZERO
+		return
+	if is_frozen:
+		freeze_remaining -= delta
+		velocity = Vector3.ZERO
+		if freeze_remaining <= 0.0:
+			_clear_freeze()
+		return
+	if slow_remaining > 0.0:
+		slow_remaining = maxf(0.0, slow_remaining - delta)
+		if slow_remaining <= 0.0:
+			slow_factor = 1.0
+	if knockback_remaining > 0.0:
+		knockback_remaining = maxf(0.0, knockback_remaining - delta)
+		velocity = knockback_velocity
+		knockback_velocity = knockback_velocity.move_toward(Vector3.ZERO, 32.0 * delta)
+		move_and_slide()
 		return
 	
 	attack_timer = maxf(0.0, attack_timer - delta)
@@ -91,7 +150,7 @@ func _physics_process(delta: float) -> void:
 		var dist = to_target.length()
 		if dist > attack_range:
 			var dir = to_target.normalized()
-			velocity = dir * move_speed
+			velocity = dir * move_speed * slow_factor
 			# Os visuais dos inimigos apontam para +Z.
 			var target_rot = atan2(dir.x, dir.z)
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 8.0 * delta)

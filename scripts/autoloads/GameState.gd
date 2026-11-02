@@ -14,6 +14,8 @@ signal stage_failed()
 signal hero_ability_used(hero_id: String)
 signal troop_count_changed(count: int)
 
+const HERO_ABILITY_COOLDOWN_SECONDS: float = 30.0
+
 var current_stage: int = 1
 var current_world: int = 1
 var stage_coins: int = 0
@@ -30,6 +32,8 @@ var is_stage_active: bool = false
 var is_game_over: bool = false
 var hero_ability_ready: bool = true
 var hero_ability_active: bool = false
+var hero_ability_cooldown_remaining: float = 0.0
+var hero_shield_remaining: float = 0.0
 
 var active_troops: Array = []
 var active_enemies: Array = []
@@ -48,6 +52,8 @@ func start_stage(stage_id: int) -> void:
 	is_paused = false
 	hero_ability_ready = true
 	hero_ability_active = false
+	hero_ability_cooldown_remaining = 0.0
+	hero_shield_remaining = 0.0
 	
 	active_troops.clear()
 	active_enemies.clear()
@@ -60,6 +66,14 @@ func start_stage(stage_id: int) -> void:
 	
 	coins_changed.emit(stage_coins)
 	king_hp_changed.emit(king_hp, king_max_hp)
+
+func _process(delta: float) -> void:
+	hero_shield_remaining = maxf(0.0, hero_shield_remaining - delta)
+	if hero_ability_ready or not is_stage_active:
+		return
+	hero_ability_cooldown_remaining = maxf(0.0, hero_ability_cooldown_remaining - delta)
+	if hero_ability_cooldown_remaining <= 0.0:
+		hero_ability_ready = true
 
 func add_stage_coins(amount: int) -> void:
 	stage_coins += amount
@@ -103,7 +117,8 @@ func unregister_enemy(enemy: Node3D) -> void:
 func damage_king(amount: int) -> void:
 	if is_game_over or not is_stage_active:
 		return
-	king_hp = maxi(0, king_hp - amount)
+	var applied_damage := ceili(float(amount) * 0.5) if hero_shield_remaining > 0.0 else amount
+	king_hp = maxi(0, king_hp - applied_damage)
 	king_hp_changed.emit(king_hp, king_max_hp)
 	AudioManager.play_sfx("king_hit")
 	
@@ -152,14 +167,21 @@ func complete_stage(totem_destroyed: bool = true) -> void:
 	stage_completed.emit(stars, gold_earned)
 
 func use_hero_ability() -> void:
-	if not hero_ability_ready or is_game_over:
+	if not hero_ability_ready or is_game_over or not is_stage_active:
 		return
-	hero_ability_ready = false
-	hero_ability_active = true
 	var hero_id = SaveManager.save_data.get("selected_hero", "teodoro")
+	hero_ability_ready = false
+	hero_ability_cooldown_remaining = HERO_ABILITY_COOLDOWN_SECONDS
+	hero_ability_active = hero_id == "teodoro"
 	hero_ability_used.emit(hero_id)
 	AudioManager.play_sfx("hero_skill")
-	
-	# Efeito dura 8 segundos
-	get_tree().create_timer(8.0).timeout.connect(func(): hero_ability_active = false)
+	if hero_ability_active:
+		get_tree().create_timer(8.0, false).timeout.connect(func(): hero_ability_active = false)
+	elif hero_id == "rosa":
+		hero_shield_remaining = 8.0
+	elif hero_id == "clara":
+		heal_king(king_max_hp)
+		for troop in active_troops:
+			if is_instance_valid(troop):
+				troop.current_hp = troop.hp
 

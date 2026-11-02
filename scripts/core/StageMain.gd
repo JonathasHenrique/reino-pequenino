@@ -53,6 +53,7 @@ func _ready() -> void:
 	# Totem protegido até o final de todas as ondas
 	if totem and wave_manager:
 		wave_manager.all_waves_spawned.connect(totem.remove_shield)
+	GameState.hero_ability_used.connect(_on_hero_ability_used)
 	
 	if wave_manager:
 		wave_manager.stage_id = stage_id
@@ -161,6 +162,30 @@ func _on_purchase_completed(pad_type: String) -> void:
 		"build_forge":
 			_spawn_forge()
 	_update_pad_statuses()
+
+func _on_hero_ability_used(hero_id: String) -> void:
+	if not is_instance_valid(king):
+		return
+	match hero_id:
+		"marta":
+			for palisade in active_palisades:
+				if is_instance_valid(palisade) and palisade.has_method("repair_fully"):
+					palisade.repair_fully()
+		"fidelio":
+			for enemy in get_tree().get_nodes_in_group("enemies"):
+				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 8.0:
+					if enemy.has_method("freeze_for"):
+						enemy.freeze_for(4.0)
+		"bento":
+			for enemy in get_tree().get_nodes_in_group("enemies"):
+				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 9.0:
+					if enemy.has_method("knock_back_from"):
+						enemy.knock_back_from(king.global_position)
+		"barao":
+			for enemy in get_tree().get_nodes_in_group("enemies"):
+				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 8.0:
+					if enemy.has_method("apply_slow_for"):
+						enemy.apply_slow_for(6.0, 0.5)
 
 func _spawn_barracks() -> void:
 	if barracks_built:

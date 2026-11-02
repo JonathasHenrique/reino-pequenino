@@ -15,7 +15,7 @@
     "description": "Ferreira veterana que nunca larga sua bigorna de bolso.",
     "passive_desc": "Construções e torres na fase custam 15% menos moedas.",
     "skill_name": "Martelada Mestra",
-    "skill_desc": "Conserta e reforça instantaneamente todas as torres e paliçadas.",
+    "skill_desc": "Repara instantaneamente todas as paliçadas ativas no acampamento.",
     "cost_discount": 0.15,
     "unlocked_by_default": false
   },
@@ -24,8 +24,8 @@
     "title": "Erudito dos Números",
     "description": "Mago que calcula trajetórias místicas com giz e régua.",
     "passive_desc": "Magos e arqueiros causam 10% de dano adicional em área.",
-    "skill_name": "Chuva de Números",
-    "skill_desc": "Invoca chuva rúnica que causa dano contínuo a todos os inimigos na tela.",
+    "skill_name": "Prisão Rúnica",
+    "skill_desc": "Congela por alguns segundos os inimigos próximos ao Rei.",
     "aoe_bonus": 0.10,
     "unlocked_by_default": false
   },
@@ -35,7 +35,7 @@
     "description": "Estrategista destemida que ensinou o rei a manter a formação.",
     "passive_desc": "Tropas aliadas recebem 15% menos dano de projéteis e impacto.",
     "skill_name": "Muralha de Escudos",
-    "skill_desc": "Cria um escudo radiante protetor ao redor da formação por 8 segundos.",
+    "skill_desc": "Reduz pela metade o dano recebido pelo Rei por 8 segundos.",
     "armor_bonus": 0.15,
     "unlocked_by_default": false
   },
@@ -65,7 +65,7 @@
     "description": "Agora com um chapéu colorido e um pedaço de bolo na mão.",
     "passive_desc": "Inimigos caminham 15% mais devagar perto do Rei.",
     "skill_name": "Névoa Protetora",
-    "skill_desc": "Envolve o Rei em uma névoa amiga que cega temporariamente os inimigos.",
+    "skill_desc": "Desacelera os inimigos próximos ao Rei por 6 segundos.",
     "slow_aura": 0.15,
     "unlocked_by_default": false
   }

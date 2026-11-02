@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/VictoryScreen.gd" id="1_vic"]
+[ext_resource type="Script" path="res://scripts/ui/IconBadge.gd" id="2_icon"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.15, 0.1, 0.06, 0.9)
@@ -67,11 +68,29 @@ theme_override_font_sizes/font_size = 32
 text = "VITÓRIA GLORIOSA!"
 horizontal_alignment = 1
 
-[node name="StarsLabel" type="Label" parent="Panel/VBox"]
+[node name="StarsContainer" type="HBoxContainer" parent="Panel/VBox"]
+custom_minimum_size = Vector2(180, 56)
 layout_mode = 2
-theme_override_font_sizes/font_size = 38
-text = "⭐ ⭐ ⭐"
-horizontal_alignment = 1
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Star1" type="Control" parent="Panel/VBox/StarsContainer"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+script = ExtResource("2_icon")
+icon_type = "star"
+
+[node name="Star2" type="Control" parent="Panel/VBox/StarsContainer"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+script = ExtResource("2_icon")
+icon_type = "star"
+
+[node name="Star3" type="Control" parent="Panel/VBox/StarsContainer"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+script = ExtResource("2_icon")
+icon_type = "star"
 
 [node name="GoldLabel" type="Label" parent="Panel/VBox"]
 layout_mode = 2

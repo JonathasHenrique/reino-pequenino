@@ -11,6 +11,12 @@ extends CanvasLayer
 @onready var skill_button: Button = $ActionContainer/SkillButton
 @onready var joystick: Control = $VirtualJoystick
 @onready var fps_label: Label = $DebugOverlay/FPSLabel
+@onready var pause_button: Button = $TopBar/HBox/PauseButton
+@onready var pause_overlay: Control = $PauseOverlay
+@onready var resume_button: Button = $PauseOverlay/Panel/VBox/ResumeButton
+@onready var village_button: Button = $PauseOverlay/Panel/VBox/VillageButton
+
+var skill_label: String = "Coragem!"
 
 func _ready() -> void:
 	GameState.coins_changed.connect(_on_coins_changed)
@@ -24,6 +30,12 @@ func _ready() -> void:
 		
 	if skill_button:
 		skill_button.pressed.connect(_on_skill_pressed)
+	if pause_button:
+		pause_button.pressed.connect(_on_pause_pressed)
+	if resume_button:
+		resume_button.pressed.connect(_on_resume_pressed)
+	if village_button:
+		village_button.pressed.connect(_on_pause_village_pressed)
 	
 	_on_coins_changed(GameState.stage_coins)
 	_on_spoils_changed(GameState.stage_spoils)
@@ -38,22 +50,28 @@ func _on_spoils_changed(amount: int) -> void:
 func _process(_delta: float) -> void:
 	if fps_label:
 		fps_label.text = "FPS: %d | Tropas: %d" % [Engine.get_frames_per_second(), GameState.active_troops.size()]
+	if skill_button:
+		if GameState.hero_ability_ready:
+			skill_button.disabled = GameState.is_game_over
+			skill_button.text = skill_label
+			skill_button.modulate = Color.WHITE
+		else:
+			skill_button.disabled = true
+			skill_button.text = "%ds" % ceili(GameState.hero_ability_cooldown_remaining)
+			skill_button.modulate = Color(0.6, 0.6, 0.6, 0.7)
 
 func _setup_hero_button() -> void:
 	var hero_id = SaveManager.save_data.get("selected_hero", "teodoro")
-	match hero_id:
-		"marta":
-			skill_button.text = "Martelada"
-		"fidelio":
-			skill_button.text = "Rúnica"
-		"rosa":
-			skill_button.text = "Escudo"
-		"clara":
-			skill_button.text = "Bênção"
-		"bento":
-			skill_button.text = "Rugido"
-		_:
-			skill_button.text = "Coragem!"
+	var file := FileAccess.open("res://data/heroes/heroes.json", FileAccess.READ)
+	if not file:
+		return
+	var heroes: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if typeof(heroes) != TYPE_DICTIONARY:
+		return
+	var hero_data: Dictionary = heroes.get(hero_id, {})
+	skill_label = str(hero_data.get("skill_name", "Coragem!"))
+	skill_button.tooltip_text = str(hero_data.get("skill_desc", ""))
 
 func _on_coins_changed(amount: int) -> void:
 	if coin_label:
@@ -75,8 +93,27 @@ func _on_troop_count_changed(count: int) -> void:
 func _on_skill_pressed() -> void:
 	if GameState.hero_ability_ready:
 		GameState.use_hero_ability()
-		skill_button.disabled = true
-		skill_button.modulate = Color(0.6, 0.6, 0.6, 0.7)
+
+func _on_pause_pressed() -> void:
+	if GameState.is_game_over:
+		return
+	GameState.is_paused = true
+	pause_overlay.visible = true
+	get_tree().paused = true
+
+func _on_resume_pressed() -> void:
+	AudioManager.play_sfx("button_click")
+	pause_overlay.visible = false
+	GameState.is_paused = false
+	get_tree().paused = false
+
+func _on_pause_village_pressed() -> void:
+	AudioManager.play_sfx("button_click")
+	pause_overlay.visible = false
+	GameState.is_paused = false
+	GameState.is_stage_active = false
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
 
 func _on_joystick_updated(direction: Vector2) -> void:
 	if GameState.king_node and is_instance_valid(GameState.king_node):

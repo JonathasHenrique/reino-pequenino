@@ -30,6 +30,10 @@ var is_repair_mode: bool = false
 @onready var fill_mesh: MeshInstance3D = $FillProgress
 @onready var base_mesh: MeshInstance3D = $BaseMesh
 @onready var emblems: Node3D = get_node_or_null("Emblems")
+@onready var cost_coin: MeshInstance3D = $CostCoin
+
+var status_material: StandardMaterial3D
+var cost_material: StandardMaterial3D
 
 func _ready() -> void:
 	current_cost = base_cost
@@ -43,6 +47,21 @@ func _ready() -> void:
 
 func _setup_pad_visuals() -> void:
 	var col = Color(0.15, 0.48, 0.85, 0.85)
+	status_material = StandardMaterial3D.new()
+	status_material.albedo_color = Color("#2B1B12")
+	status_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	status_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	status_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	status_plate.material_override = status_material
+
+	cost_material = StandardMaterial3D.new()
+	cost_material.albedo_color = Color("#FFC93C")
+	cost_material.emission_enabled = true
+	cost_material.emission = Color("#FFC93C")
+	cost_material.emission_energy_multiplier = 0.35
+	cost_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	cost_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	cost_coin.material_override = cost_material
 	
 	if emblems:
 		var bow = emblems.get_node_or_null("BowEmblem")
@@ -133,6 +152,13 @@ func _finalize_purchase() -> void:
 func _update_ui() -> void:
 	if not cost_label_3d:
 		return
+	var remaining_cost := maxi(0, current_cost - current_paid)
+	var can_afford: bool = GameState.stage_coins >= remaining_cost
+	if status_material:
+		status_material.albedo_color = Color("#24452D") if can_afford else Color("#45484D")
+	if cost_material:
+		cost_material.albedo_color = Color("#FFC93C") if can_afford else Color("#9299A1")
+		cost_material.emission = cost_material.albedo_color
 	if tutorial_locked:
 		cost_label_3d.text = str(current_cost)
 		cost_label_3d.modulate = Color(0.62, 0.66, 0.70, 0.92)
@@ -161,8 +187,6 @@ func _update_ui() -> void:
 		else:
 			cost_label_3d.text = str(current_cost)
 				
-		var needed = current_cost - current_paid
-		var can_afford = GameState.stage_coins >= needed
 		if can_afford:
 			# Dourado/creme vivo: pode pagar!
 			cost_label_3d.modulate = Color(1.0, 0.95, 0.70, 1.0) # #FFF3D6
