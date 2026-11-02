@@ -51,9 +51,10 @@ size = Vector3(2, 6, 60)
 background_mode = 1
 background_color = Color(0.68, 0.84, 0.96, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.92, 0.94, 0.98, 1)
-ambient_light_energy = 0.85
-tonemap_mode = 2
+ambient_light_color = Color(0.541, 0.706, 0.973, 1)
+ambient_light_energy = 0.55
+ambient_light_sky_contribution = 0.3
+tonemap_mode = 3
 
 [node name="Village" type="Node3D"]
 script = ExtResource("1_vil")
@@ -63,8 +64,8 @@ environment = SubResource("Environment_village")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 12, 18, 12)
-light_color = Color(1, 0.97, 0.9, 1)
-light_energy = 1.2
+light_color = Color(1.0, 0.89, 0.69, 1)
+light_energy = 1.25
 shadow_enabled = true
 
 [node name="Floor" type="StaticBody3D" parent="."]

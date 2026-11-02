@@ -66,7 +66,7 @@ func _handle_formation_movement(delta: float) -> void:
 		visuals.rotation.z = sin(walk_time) * 0.08
 		
 		# Rotação para a direção do movimento
-		var target_rot = atan2(-dir.x, -dir.z)
+		var target_rot = atan2(dir.x, dir.z)
 		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 10.0 * delta)
 	else:
 		velocity = Vector3.ZERO
@@ -84,7 +84,7 @@ func _handle_combat(_delta: float) -> void:
 		var to_enemy = current_target.global_position - global_position
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
-			var target_rot = atan2(-to_enemy.x, -to_enemy.z)
+			var target_rot = atan2(to_enemy.x, to_enemy.z)
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 14.0 * _delta)
 			
 		if attack_cooldown <= 0.0:
@@ -98,7 +98,7 @@ func _handle_mounted_combat(_delta: float) -> void:
 		var to_enemy = current_target.global_position - global_position
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
-			visuals.rotation.y = atan2(-to_enemy.x, -to_enemy.z)
+			visuals.rotation.y = atan2(to_enemy.x, to_enemy.z)
 			
 		if attack_cooldown <= 0.0:
 			_perform_attack(current_target, 1.25)
@@ -137,4 +137,3 @@ func mount_on_tower(tower: Node3D, mount_position: Vector3) -> void:
 	mounted_tower_node = tower
 	global_position = mount_position
 	velocity = Vector3.ZERO
-

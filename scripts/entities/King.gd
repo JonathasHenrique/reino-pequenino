@@ -77,7 +77,8 @@ func _physics_process(delta: float) -> void:
 			Art.dust_puff(get_parent(), spawn_pos, 4)
 		
 		# Rotação suave do personagem na direção do movimento
-		var target_angle = atan2(-move_direction.x, -move_direction.z)
+		# Os visuais do cavalo foram modelados apontando para +Z.
+		var target_angle = atan2(move_direction.x, move_direction.z)
 		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_angle, rotation_speed * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, move_speed * 8.0 * delta)
@@ -116,4 +117,3 @@ func get_formation_position(index: int, total: int) -> Vector3:
 	var angle = remaining_idx * angle_step
 	var offset = Vector3(cos(angle) * current_radius, 0, sin(angle) * current_radius)
 	return global_position + offset
-

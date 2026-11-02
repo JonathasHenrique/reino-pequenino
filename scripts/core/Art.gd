@@ -4,26 +4,56 @@ extends Node
 # Tudo é gerado por código (sem assets externos), com materiais reaproveitados
 # em cache para manter poucos draw calls e 60 fps em celulares médios.
 
+const TOON_SHADER = preload("res://assets/shaders/toon_character.gdshader")
+const OUTLINE_SHADER = preload("res://assets/shaders/outline_inverted_hull.gdshader")
+
 # ---------- PALETA (tons suaves de desenho animado, sem neon) ----------
-const GRASS := Color(0.47, 0.71, 0.30)
-const GRASS_DARK := Color(0.36, 0.60, 0.24)
-const DIRT := Color(0.80, 0.66, 0.46)
+const GRASS := Color(0.525, 0.761, 0.196)
+const GRASS_DARK := Color(0.435, 0.659, 0.169)
+const DIRT := Color(0.851, 0.627, 0.400)
 const DIRT_DARK := Color(0.66, 0.52, 0.34)
-const WOOD := Color(0.55, 0.36, 0.20)
+const WOOD := Color(0.545, 0.353, 0.169)
 const WOOD_DARK := Color(0.40, 0.25, 0.14)
 const WOOD_LIGHT := Color(0.72, 0.52, 0.32)
-const STONE := Color(0.62, 0.62, 0.60)
+const STONE := Color(0.557, 0.584, 0.620)
 const STONE_DARK := Color(0.45, 0.46, 0.46)
 const CLIFF := Color(0.52, 0.50, 0.46)
-const ROYAL_BLUE := Color(0.18, 0.42, 0.85)
-const ROYAL_RED := Color(0.82, 0.24, 0.20)
-const GOLD := Color(1.0, 0.80, 0.18)
+const ROYAL_BLUE := Color(0.247, 0.498, 0.878)
+const ROYAL_RED := Color(0.851, 0.212, 0.243)
+const GOLD := Color(1.0, 0.788, 0.235)
+const C_OUTLINE := Color(0.169, 0.106, 0.071)
 const WHITE := Color(0.97, 0.96, 0.92)
 const LEAF := Color(0.33, 0.62, 0.25)
 const LEAF_DARK := Color(0.22, 0.48, 0.20)
 const MIST := Color(0.50, 0.55, 0.65)
 
 static var _mat_cache: Dictionary = {}
+
+static func get_outline_mat(width: float = 0.024) -> ShaderMaterial:
+	var key := "outline_%.3f" % width
+	if _mat_cache.has(key):
+		return _mat_cache[key]
+	var outline := ShaderMaterial.new()
+	outline.shader = OUTLINE_SHADER
+	outline.set_shader_parameter("outline_color", C_OUTLINE)
+	outline.set_shader_parameter("outline_width", width)
+	_mat_cache[key] = outline
+	return outline
+
+static func toon_mat(color: Color, roughness: float = 0.8, emission_energy: float = 0.0) -> Material:
+	if emission_energy > 0.0:
+		return mat(color, roughness, emission_energy)
+	var key := "toon|%s|%.2f" % [color.to_html(), roughness]
+	if _mat_cache.has(key):
+		return _mat_cache[key]
+	var toon := ShaderMaterial.new()
+	toon.shader = TOON_SHADER
+	toon.set_shader_parameter("base_color", color)
+	toon.set_shader_parameter("shade_color", color.darkened(0.28))
+	toon.set_shader_parameter("roughness_val", roughness)
+	toon.next_pass = get_outline_mat()
+	_mat_cache[key] = toon
+	return toon
 
 # Material fosco e com leve brilho (visual "brinquedo de plástico/madeira")
 static func mat(color: Color, roughness: float = 0.8, emission: float = 0.0) -> StandardMaterial3D:
@@ -62,7 +92,7 @@ static func _add(parent: Node3D, mesh: Mesh, pos: Vector3, color: Color, rot: Ve
 	mi.mesh = mesh
 	mi.position = pos
 	mi.rotation = rot
-	mi.material_override = mat(color, roughness)
+	mi.material_override = toon_mat(color, roughness)
 	parent.add_child(mi)
 	return mi
 

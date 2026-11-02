@@ -28,6 +28,7 @@ var enemy_stats: Dictionary = {}
 var is_in_prep_phase: bool = true
 var prep_timer: float = 0.0
 var finished: bool = false
+var tutorial_hold: bool = false
 
 var active_enemies_count: int = 0
 var pending_spawns: int = 0 # inimigos agendados que ainda não nasceram
@@ -104,7 +105,7 @@ func _generate_waves(stage: int, count: int) -> Array:
 func _process(delta: float) -> void:
 	if GameState.is_game_over or finished:
 		return
-	if is_in_prep_phase:
+	if is_in_prep_phase and not tutorial_hold:
 		prep_timer -= delta
 		wave_countdown_updated.emit(prep_timer)
 		if prep_timer <= 0.0:

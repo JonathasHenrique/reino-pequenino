@@ -87,7 +87,8 @@ func _physics_process(delta: float) -> void:
 		if dist > attack_range:
 			var dir = to_target.normalized()
 			velocity = dir * move_speed
-			var target_rot = atan2(-dir.x, -dir.z)
+			# Os visuais dos inimigos apontam para +Z.
+			var target_rot = atan2(dir.x, dir.z)
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 8.0 * delta)
 		else:
 			velocity = Vector3.ZERO
@@ -177,4 +178,3 @@ func _drop_coins() -> void:
 		get_parent().add_child(coin)
 		var rand_offset = Vector3(randf_range(-0.7, 0.7), 0.2, randf_range(-0.7, 0.7))
 		coin.global_position = global_position + rand_offset
-

@@ -15,6 +15,7 @@ extends Node3D
 @onready var palisade_pad: Area3D = $PurchasePad_Palisade
 @onready var barracks_pad: Area3D = $PurchasePad_Barracks
 @onready var forge_pad: Area3D = $PurchasePad_Forge
+@onready var merchant: Area3D = $MerchantCounter
 
 @onready var east_spawn: Marker3D = $Spawners/EastSpawn
 @onready var north_spawn: Marker3D = $Spawners/NorthSpawn
@@ -74,7 +75,7 @@ func _ready() -> void:
 		
 	GameState.troop_count_changed.connect(func(_c): _update_pad_statuses())
 	_update_pad_statuses()
-	_trigger_stage_tutorial_if_needed()
+	_start_interactive_tutorial_if_needed()
 	get_tree().create_timer(0.2).timeout.connect(func():
 		print("[PERF] FPS Alvo: 60 | Objetos no Frame: %d | Draw Calls: %d" % [
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
@@ -108,22 +109,21 @@ func _update_pad_statuses() -> void:
 	if forge_pad:
 		forge_pad.set_status(1 if forge_built else 0, 1)
 
+func _start_interactive_tutorial_if_needed() -> void:
+	if stage_id == 1 and not SaveManager.save_data.get("stage_1_tutorial_completed", false):
+		var tutorial_script = load("res://scripts/ui/StageTutorial.gd")
+		if tutorial_script:
+			var tutorial = tutorial_script.new()
+			add_child(tutorial)
+			tutorial.setup(self, king, merchant, wave_manager, [archer_pad, tower_pad, palisade_pad, barracks_pad, forge_pad])
+		return
+	_trigger_stage_tutorial_if_needed()
+
 func _trigger_stage_tutorial_if_needed() -> void:
 	var tutorial_lines: Array[Dictionary] = []
 	match stage_id:
 		1:
-			tutorial_lines = [
-				{
-					"speaker": "Dona Zenaide",
-					"icon": "👵",
-					"text": "Teodoro, preste atenção! Os monstros agora só soltam CAPACETES. Colete-os e corra até o Tobias no balcão para trocar por moedas!"
-				},
-				{
-					"speaker": "Dona Zenaide",
-					"icon": "👵",
-					"text": "Com as moedas ganhas, construa suas paliçadas para fechar o acampamento e contrate seus arqueiros antes da horda chegar!"
-				}
-			]
+			return
 		2:
 			tutorial_lines = [
 				{

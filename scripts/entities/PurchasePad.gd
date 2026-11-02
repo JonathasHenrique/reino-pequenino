@@ -16,6 +16,7 @@ var is_king_present: bool = false
 var spend_timer: float = 0.0
 
 var is_locked: bool = false
+var tutorial_locked: bool = false
 var locked_message: String = ""
 
 var current_items: int = 0
@@ -81,8 +82,16 @@ func set_status(current_count: int, max_count: int, is_repair: bool = false, rep
 			
 	_update_ui()
 
+func set_tutorial_locked(locked: bool) -> void:
+	tutorial_locked = locked
+	if not locked:
+		# Evita uma compra acidental se o Rei terminar a etapa sobre este pad.
+		is_king_present = false
+		spend_timer = 0.0
+	_update_ui()
+
 func _process(delta: float) -> void:
-	if not is_king_present or GameState.is_game_over or is_locked:
+	if not is_king_present or GameState.is_game_over or is_locked or tutorial_locked:
 		return
 	
 	if current_paid < current_cost:
@@ -114,6 +123,13 @@ func _finalize_purchase() -> void:
 
 func _update_ui() -> void:
 	if not cost_label_3d:
+		return
+	if tutorial_locked:
+		cost_label_3d.text = "🔒 AGUARDE O OBJETIVO"
+		cost_label_3d.modulate = Color(0.62, 0.66, 0.70, 0.92)
+		if fill_mesh:
+			fill_mesh.scale.x = 0.01
+			fill_mesh.scale.z = 0.01
 		return
 		
 	var type_icon = "🏹"

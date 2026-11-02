@@ -4,7 +4,7 @@ extends Camera3D
 
 @export var target_path: NodePath
 @export var follow_speed: float = 6.0
-@export var camera_distance: float = 17.5
+@export var camera_distance: float = 19.5
 @export var elevation_angle_deg: float = 48.0
 @export var rotation_y_deg: float = 45.0
 
@@ -35,4 +35,3 @@ func _physics_process(delta: float) -> void:
 		var target_pos = target_node.global_position + offset_vector
 		global_position = global_position.lerp(target_pos, follow_speed * delta)
 		look_at(target_node.global_position, Vector3.UP)
-

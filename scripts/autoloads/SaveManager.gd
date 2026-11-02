@@ -43,7 +43,8 @@ func get_default_data() -> Dictionary:
 		"selected_pony_skin": "pony_biscoito",
 		"total_play_time": 0.0,
 		"enemies_defeated": 0,
-		"coins_collected": 0
+		"coins_collected": 0,
+		"stage_1_tutorial_completed": false
 	}
 
 func load_game() -> void:
@@ -163,4 +164,3 @@ func unlock_sticker(sticker_id: String) -> void:
 		stickers.append(sticker_id)
 		save_data["stickers"] = stickers
 		save_game()
-
