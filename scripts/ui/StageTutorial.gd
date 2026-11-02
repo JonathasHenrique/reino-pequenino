@@ -48,13 +48,16 @@ func _process(_delta: float) -> void:
 			if king.global_position.distance_to(start_position) >= 1.0:
 				_set_step(1)
 		1:
-			if GameState.stage_spoils > 0:
+			if GameState.active_troops.size() > 0:
 				_set_step(2)
 		2:
-			if GameState.stage_spoils == 0 and GameState.stage_coins > coins_before_sale:
+			if GameState.stage_spoils > 0:
 				_set_step(3)
 		3:
-			if GameState.active_troops.size() > 0:
+			if GameState.stage_spoils == 0 and GameState.stage_coins > coins_before_sale:
+				_set_step(4)
+		4:
+			if get_tree().get_nodes_in_group("palisades").size() > 0:
 				_finish_tutorial()
 
 func _build_ui() -> void:
@@ -128,25 +131,31 @@ func _set_step(next_step: int) -> void:
 	step = next_step
 	match step:
 		0:
-			step_label.text = "TUTORIAL 1/4"
+			step_label.text = "TUTORIAL 1/5"
 			objective_label.text = "Mova o Rei pelo acampamento"
 			hint_label.text = "Arraste o joystick. Primeiro aprenda a conduzir Teodoro."
 		1:
+			_set_pad_locks(false, pads[0] if not pads.is_empty() else null)
+			step_label.text = "TUTORIAL 2/5"
+			objective_label.text = "Contrate o primeiro arqueiro"
+			hint_label.text = "Fique sobre o pad 🏹. Ele está liberado para iniciar a defesa."
+		2:
+			_set_pad_locks(true)
 			if wave_manager:
 				wave_manager.tutorial_hold = false
-			step_label.text = "TUTORIAL 2/4"
+			step_label.text = "TUTORIAL 3/5"
 			objective_label.text = "Derrote um monstro e recolha o primeiro capacete"
 			hint_label.text = "O capacete aparece depois do puf. Passe com o Rei sobre ele."
-		2:
+		3:
 			coins_before_sale = GameState.stage_coins
-			step_label.text = "TUTORIAL 3/4"
+			step_label.text = "TUTORIAL 4/5"
 			objective_label.text = "Leve os capacetes ao balcão do Tobias"
 			hint_label.text = "Entre no balcão dourado para trocar 🪖 por moedas."
-		3:
-			_set_pad_locks(false, pads[0] if not pads.is_empty() else null)
-			step_label.text = "TUTORIAL 4/4"
-			objective_label.text = "Invista no pad do arqueiro"
-			hint_label.text = "Fique sobre o pad 🏹 até completar a contratação."
+		4:
+			_set_pad_locks(false, pads[2] if pads.size() > 2 else null)
+			step_label.text = "TUTORIAL 5/5"
+			objective_label.text = "Invista no pad da paliçada"
+			hint_label.text = "Fique sobre o pad 🪵 para reforçar o acampamento."
 
 func _set_pad_locks(locked: bool, only_pad: Node = null) -> void:
 	for pad in pads:
@@ -159,11 +168,13 @@ func _update_arrow() -> void:
 		return
 	var target: Node3D = king
 	match step:
-		2:
-			target = merchant
 		3:
-			target = pads[0] if not pads.is_empty() else king
+			target = merchant
+		4:
+			target = pads[2] if pads.size() > 2 else king
 		1:
+			target = pads[0] if not pads.is_empty() else king
+		2:
 			var spoils := get_tree().get_nodes_in_group("spoils")
 			if not spoils.is_empty() and is_instance_valid(spoils[0]):
 				target = spoils[0]
