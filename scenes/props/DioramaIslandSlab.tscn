@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3]
+
+[sub_resource type="BoxMesh" id="BoxMesh_grass_rim"]
+size = Vector3(54.0, 0.6, 54.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
+albedo_color = Color(0.52, 0.76, 0.20, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_stone_layer"]
+size = Vector3(53.2, 2.0, 53.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.55, 0.58, 0.62, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_earth_layer"]
+size = Vector3(51.6, 3.5, 51.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_earth"]
+albedo_color = Color(0.54, 0.35, 0.17, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_bedrock"]
+size = Vector3(48.5, 2.5, 48.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bedrock"]
+albedo_color = Color(0.17, 0.11, 0.07, 1)
+roughness = 0.95
+
+[node name="DioramaIslandSlab" type="Node3D"]
+
+[node name="GrassRim" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+mesh = SubResource("BoxMesh_grass_rim")
+surface_material_override/0 = SubResource("StandardMaterial3D_grass")
+
+[node name="StoneLayer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6, 0)
+mesh = SubResource("BoxMesh_stone_layer")
+surface_material_override/0 = SubResource("StandardMaterial3D_stone")
+
+[node name="EarthLayer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.3, 0)
+mesh = SubResource("BoxMesh_earth_layer")
+surface_material_override/0 = SubResource("StandardMaterial3D_earth")
+
+[node name="Bedrock" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7.0, 0)
+mesh = SubResource("BoxMesh_bedrock")
+surface_material_override/0 = SubResource("StandardMaterial3D_bedrock")

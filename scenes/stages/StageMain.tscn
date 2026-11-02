@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/StageMain.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/core/IsometricCamera.gd" id="2_cam"]
@@ -20,6 +20,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/ground.gdshader" id="20_shader"]
 [ext_resource type="PackedScene" path="res://scenes/props/CliffWall.tscn" id="21_cliff"]
 [ext_resource type="PackedScene" path="res://scenes/props/SpikeBarricade.tscn" id="22_barricade"]
+[ext_resource type="PackedScene" path="res://scenes/props/DioramaIslandSlab.tscn" id="23_slab"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 size = Vector2(90, 90)
@@ -56,13 +57,16 @@ shader_parameter/speck_amount = 0.18
 
 [sub_resource type="Environment" id="Environment_sunset"]
 background_mode = 1
-background_color = Color(0.68, 0.82, 0.96, 1)
+background_color = Color(0.84, 0.90, 0.95, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.88, 0.90, 0.94, 1)
+ambient_light_color = Color(0.55, 0.63, 0.74, 1)
 ambient_light_energy = 0.85
-tonemap_mode = 2
+tonemap_mode = 3
+tonemap_exposure = 1.08
 glow_enabled = true
-glow_bloom = 0.12
+glow_normalized = true
+glow_intensity = 0.25
+glow_bloom = 0.05
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(90, 1, 90)
@@ -80,11 +84,17 @@ script = ExtResource("1_main")
 environment = SubResource("Environment_sunset")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 15, 20, 15)
-light_color = Color(1, 0.95, 0.88, 1)
+transform = Transform3D(0.707107, -0.454519, 0.541675, 0, 0.766044, 0.642788, -0.707107, -0.454519, 0.541675, 12, 18, 12)
+light_color = Color(1, 0.89, 0.69, 1)
 light_energy = 1.25
 shadow_enabled = true
 directional_shadow_mode = 2
+directional_shadow_max_distance = 38.0
+directional_shadow_blend_splits = true
+shadow_bias = 0.03
+shadow_normal_bias = 1.5
+
+[node name="DioramaIslandSlab" parent="." instance=ExtResource("23_slab")]
 
 [node name="Floor" type="StaticBody3D" parent="."]
 
