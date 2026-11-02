@@ -119,9 +119,18 @@ func take_damage(amount: int) -> void:
 	current_hp -= amount
 	AudioManager.play_sfx("hit")
 	_spawn_damage_number(amount)
+	_flash_white_and_squash()
 	
 	if current_hp <= 0:
 		_die()
+
+func _flash_white_and_squash() -> void:
+	if not visuals:
+		return
+	var orig_scale = visuals.scale
+	visuals.scale = orig_scale * Vector3(1.25, 0.75, 1.25)
+	var tw = create_tween()
+	tw.tween_property(visuals, "scale", orig_scale, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _spawn_damage_number(val: int) -> void:
 	var float_scene = load("res://scenes/ui/FloatingNumber.tscn")

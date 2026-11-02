@@ -11,6 +11,7 @@ extends CharacterBody3D
 var move_direction: Vector3 = Vector3.ZERO
 var input_vector: Vector2 = Vector2.ZERO
 var trot_time: float = 0.0
+var step_timer: float = 0.0
 
 @onready var coin_stack: Node3D = $CoinStack
 @onready var magnet_area: Area3D = $MagnetArea
@@ -67,6 +68,13 @@ func _physics_process(delta: float) -> void:
 		trot_time += delta * 15.0
 		visuals.position.y = abs(sin(trot_time)) * 0.12
 		visuals.rotation.x = sin(trot_time) * 0.05
+		
+		# Partículas suaves de poeira nas patas do cavalo
+		step_timer += delta
+		if step_timer >= 0.24:
+			step_timer = 0.0
+			var spawn_pos = global_position - visuals.transform.basis.z * 0.35
+			Art.dust_puff(get_parent(), spawn_pos, 4)
 		
 		# Rotação suave do personagem na direção do movimento
 		var target_angle = atan2(-move_direction.x, -move_direction.z)

@@ -28,6 +28,9 @@ func _process(delta: float) -> void:
 		
 		current_accel += delta * 12.0
 		var step = to_king.normalized() * (magnet_speed * current_accel * delta)
+		var arc_y = sin(clampf(1.0 - (dist / 6.0), 0.0, 1.0) * PI) * 0.9
+		if visual_node:
+			visual_node.position.y = arc_y
 		
 		if step.length() >= dist or dist < 0.6:
 			# Coleta concluída

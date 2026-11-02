@@ -14,7 +14,10 @@ func setup(number: int, color: Color = Color.WHITE) -> void:
 		label = $Label3D
 	label.text = "-%d" % number
 	label.modulate = color
-	# Pequeno desvio horizontal aleatório para números não se sobreporem
+	scale = Vector3(0.4, 0.4, 0.4)
+	var tw = create_tween()
+	tw.tween_property(self, "scale", Vector3(1.15, 1.15, 1.15), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(self, "scale", Vector3.ONE, 0.1)
 	velocity.x = randf_range(-0.8, 0.8)
 	velocity.z = randf_range(-0.5, 0.5)
 

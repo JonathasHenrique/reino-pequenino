@@ -25,7 +25,12 @@ func _process(delta: float) -> void:
 		
 	if is_attracted and is_instance_valid(target_node):
 		var target_pos = target_node.global_position + Vector3(0, 0.6, 0)
+		var to_target = target_pos - global_position
+		var dist = to_target.length()
+		var arc_y = sin(clampf(1.0 - (dist / 6.0), 0.0, 1.0) * PI) * 1.1
 		global_position = global_position.move_toward(target_pos, attract_speed * delta)
+		if visuals:
+			visuals.position.y = 0.25 + arc_y
 		if global_position.distance_to(target_pos) < 0.8:
 			_collect()
 
