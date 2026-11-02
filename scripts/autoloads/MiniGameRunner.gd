@@ -45,14 +45,7 @@ func complete_challenge(challenge_id: int, result: Dictionary) -> void:
 		var rew = CHALLENGE_REWARDS[challenge_id]
 		var hero_id = rew["hero"]
 		var star_idx = rew["star_index"]
-		
-		SaveManager.unlock_hero(hero_id)
-		SaveManager.unlock_crown_star(star_idx)
-		SaveManager.record_stage_result(challenge_id, stars, 100 * star_idx)
-		
-		# Registra figurinha colecionável correspondente
-		SaveManager.unlock_sticker("star_" + str(star_idx))
-		SaveManager.unlock_trophy("challenge_" + str(challenge_id))
+		SaveManager.record_challenge_result(challenge_id, stars, 100 * star_idx, hero_id, star_idx)
 	
 	challenge_completed.emit(challenge_id, result)
 

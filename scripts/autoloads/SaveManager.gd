@@ -5,6 +5,7 @@ extends Node
 
 signal save_loaded()
 signal save_saved()
+signal save_failed(error_message: String)
 
 const SAVE_PATH: String = "user://savegame.json"
 const BACKUP_PATH: String = "user://savegame.bak"
@@ -84,7 +85,7 @@ func _migrate_if_needed() -> void:
 		if not save_data.has(key):
 			save_data[key] = default[key]
 
-func save_game() -> void:
+func save_game() -> bool:
 	# Antes de sobrescrever, cria backup se o arquivo atual for válido
 	if FileAccess.file_exists(SAVE_PATH):
 		var src = FileAccess.open(SAVE_PATH, FileAccess.READ)
@@ -98,10 +99,21 @@ func save_game() -> void:
 
 	var json_str = JSON.stringify(save_data, "\t")
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file:
-		file.store_string(json_str)
-		file.close()
-		save_saved.emit()
+	if not file:
+		var message := "Não foi possível abrir o arquivo de progresso para gravação."
+		push_error(message)
+		save_failed.emit(message)
+		return false
+	file.store_string(json_str)
+	var write_error := file.get_error()
+	file.close()
+	if write_error != OK:
+		var message := "Não foi possível gravar o arquivo de progresso."
+		push_error(message)
+		save_failed.emit(message)
+		return false
+	save_saved.emit()
+	return true
 
 # --- Métodos de Conveniência ---
 
@@ -123,20 +135,34 @@ func spend_gold(amount: int) -> bool:
 func is_stage_unlocked(stage_id: int) -> bool:
 	return stage_id <= int(save_data.get("unlocked_stages", 1))
 
-func record_stage_result(stage_id: int, stars: int, gold_earned: int) -> void:
-	add_gold(gold_earned)
+func _apply_stage_result(stage_id: int, stars: int, gold_earned: int) -> void:
+	save_data["gold"] = get_gold() + gold_earned
 	var stage_str = str(stage_id)
 	var prev_stars = int(save_data.get("stage_stars", {}).get(stage_str, 0))
 	if stars > prev_stars:
-		if not save_data.has("stage_stars"):
-			save_data["stage_stars"] = {}
 		save_data["stage_stars"][stage_str] = stars
 	
 	var current_unlocked = int(save_data.get("unlocked_stages", 1))
 	if stage_id >= current_unlocked and stage_id < 60:
 		save_data["unlocked_stages"] = stage_id + 1
-	
-	save_game()
+
+func record_stage_result(stage_id: int, stars: int, gold_earned: int) -> bool:
+	_apply_stage_result(stage_id, stars, gold_earned)
+	return save_game()
+
+func record_challenge_result(challenge_id: int, stars: int, gold_earned: int, hero_id: String, star_index: int) -> bool:
+	_apply_stage_result(challenge_id, stars, gold_earned)
+	_add_unique("unlocked_heroes", hero_id)
+	save_data["crown_stars"] = maxi(int(save_data.get("crown_stars", 0)), star_index)
+	_add_unique("stickers", "star_" + str(star_index))
+	_add_unique("trophies", "challenge_" + str(challenge_id))
+	return save_game()
+
+func _add_unique(key: String, value: String) -> void:
+	var values: Array = save_data.get(key, [])
+	if not values.has(value):
+		values.append(value)
+		save_data[key] = values
 
 func unlock_hero(hero_id: String) -> void:
 	var list: Array = save_data.get("unlocked_heroes", [])
