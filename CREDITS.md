@@ -19,6 +19,7 @@ Todos os recursos visuais, códigos, efeitos sonoros e músicas deste projeto s�
   - Autor: Quaternius.
   - Fonte: https://opengameart.org/content/lowpoly-rpg-characters
   - Licença: CC0 1.0; licença original preservada em `assets/models/characters/quaternius/Quaternius-RPG-Characters-License.txt`.
+  - O Warrior é usado como Rei Teodoro em `assets/models/characters/QuaterniusWarrior.tscn`.
 
 ---
 

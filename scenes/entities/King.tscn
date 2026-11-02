@@ -1,8 +1,10 @@
-[gd_scene load_steps=38 format=3]
+[gd_scene load_steps=40 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/King.gd" id="1_king"]
 [ext_resource type="Script" path="res://scripts/entities/CoinStack.gd" id="2_stack"]
 [ext_resource type="Script" path="res://scripts/entities/SpoilStack.gd" id="3_spoil"]
+[ext_resource type="Script" path="res://scripts/entities/RiderUpgrade.gd" id="4_rider_upgrade"]
+[ext_resource type="PackedScene" path="res://assets/models/characters/QuaterniusWarrior.tscn" id="5_warrior"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_king"]
 radius = 0.85
@@ -309,6 +311,7 @@ mesh = SubResource("CylinderMesh_hoof")
 surface_material_override/0 = SubResource("StandardMaterial3D_hoof")
 
 [node name="KingRider" type="Node3D" parent="Visuals"]
+script = ExtResource("4_rider_upgrade")
 
 [node name="Torso" type="MeshInstance3D" parent="Visuals/KingRider"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38, 0.05)
@@ -404,3 +407,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_gold")
 transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 1.35, -0.32)
 mesh = SubResource("PrismMesh_cape")
 surface_material_override/0 = SubResource("StandardMaterial3D_cape_scarlet")
+
+[node name="ImportedRider" parent="Visuals/KingRider" instance=ExtResource("5_warrior")]
