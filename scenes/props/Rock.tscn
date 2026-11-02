@@ -24,6 +24,7 @@ roughness = 0.85
 [node name="Rock" type="StaticBody3D"]
 script = ExtResource("2_style")
 fallback_color = Color(0.55, 0.58, 0.62, 1)
+outline_enabled = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)

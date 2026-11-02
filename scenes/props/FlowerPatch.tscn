@@ -28,6 +28,7 @@ albedo_color = Color(0.9, 0.25, 0.25, 1)
 [node name="FlowerPatch" type="Node3D"]
 script = ExtResource("2_style")
 fallback_color = Color(0.72, 0.45, 0.82, 1)
+outline_enabled = false
 
 [node name="Stem1" type="MeshInstance3D" parent="."]
 visible = false

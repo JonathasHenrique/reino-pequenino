@@ -5,6 +5,7 @@ extends Node3D
 @export var fallback_color: Color = Color(0.52, 0.76, 0.20)
 @export var albedo_texture: Texture2D
 @export var tint: Color = Color.WHITE
+@export var outline_enabled: bool = true
 
 func _ready() -> void:
 	call_deferred("_style_meshes", self)
@@ -22,7 +23,7 @@ func _style_meshes(node: Node) -> void:
 				if source_material is BaseMaterial3D:
 					color = source_material.albedo_color
 			color *= tint
-			var toon_material := Art.toon_mat(color, 0.82)
+			var toon_material := Art.toon_mat(color, 0.82, 0.0, outline_enabled)
 			if albedo_texture and toon_material is ShaderMaterial:
 				var textured_material := (toon_material as ShaderMaterial).duplicate() as ShaderMaterial
 				textured_material.set_shader_parameter("albedo_texture", albedo_texture)

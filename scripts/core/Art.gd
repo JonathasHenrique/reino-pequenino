@@ -41,10 +41,10 @@ static func get_outline_mat(width: float = 0.024) -> ShaderMaterial:
 	_mat_cache[key] = outline
 	return outline
 
-static func toon_mat(color: Color, roughness: float = 0.8, emission_energy: float = 0.0) -> Material:
+static func toon_mat(color: Color, roughness: float = 0.8, emission_energy: float = 0.0, outline_enabled: bool = true) -> Material:
 	if emission_energy > 0.0:
 		return mat(color, roughness, emission_energy)
-	var key := "toon|%s|%.2f" % [color.to_html(), roughness]
+	var key := "toon|%s|%.2f|%s" % [color.to_html(), roughness, str(outline_enabled)]
 	if _mat_cache.has(key):
 		return _mat_cache[key]
 	var toon := ShaderMaterial.new()
@@ -52,7 +52,8 @@ static func toon_mat(color: Color, roughness: float = 0.8, emission_energy: floa
 	toon.set_shader_parameter("base_color", color)
 	toon.set_shader_parameter("shade_color", color.darkened(0.28))
 	toon.set_shader_parameter("roughness_val", roughness)
-	toon.next_pass = get_outline_mat()
+	if outline_enabled:
+		toon.next_pass = get_outline_mat()
 	_mat_cache[key] = toon
 	return toon
 

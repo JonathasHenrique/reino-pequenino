@@ -39,6 +39,7 @@ radius = 0.4
 [node name="PineTree" type="StaticBody3D"]
 script = ExtResource("2_style")
 fallback_color = Color(0.24, 0.58, 0.28, 1)
+outline_enabled = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
