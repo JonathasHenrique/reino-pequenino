@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/ArcherTower.gd" id="1_tower"]
 
@@ -10,42 +10,41 @@ height = 2.5
 radius = 4.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_post"]
-top_radius = 0.12
-bottom_radius = 0.16
-height = 3.2
+top_radius = 0.14
+bottom_radius = 0.18
+height = 3.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood_dark"]
 albedo_color = Color(0.42, 0.28, 0.16, 1)
 roughness = 0.85
 
 [sub_resource type="BoxMesh" id="BoxMesh_stone_foot"]
-size = Vector3(0.45, 0.5, 0.45)
+size = Vector3(0.5, 0.6, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
-albedo_color = Color(0.45, 0.48, 0.52, 1)
+albedo_color = Color(0.557, 0.584, 0.620, 1)
 roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_platform"]
-size = Vector3(2.8, 0.25, 2.8)
+size = Vector3(3.0, 0.3, 3.0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood_plank"]
 albedo_color = Color(0.58, 0.42, 0.24, 1)
 roughness = 0.8
 
-[sub_resource type="BoxMesh" id="BoxMesh_railing"]
-size = Vector3(2.6, 0.65, 0.1)
+[sub_resource type="BoxMesh" id="BoxMesh_parapet"]
+size = Vector3(2.8, 0.8, 0.16)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_roof"]
-top_radius = 0.0
-bottom_radius = 1.8
-height = 1.2
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_roof_tiles"]
-albedo_color = Color(0.72, 0.26, 0.22, 1)
-roughness = 0.7
+[sub_resource type="CylinderMesh" id="CylinderMesh_merlon"]
+top_radius = 0.05
+bottom_radius = 0.14
+height = 1.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flag"]
-albedo_color = Color(0.2, 0.5, 0.88, 1)
+albedo_color = Color(0.247, 0.498, 0.878, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_pennant"]
+size = Vector3(0.8, 0.5, 0.04)
 
 [node name="ArcherTower" type="StaticBody3D" groups=["towers"]]
 script = ExtResource("1_tower")
@@ -60,47 +59,47 @@ shape = SubResource("BoxShape3D_base")
 shape = SubResource("CylinderShape3D_garrison")
 
 [node name="PlatformMarker" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 0)
 
 [node name="Visuals" type="Node3D" parent="."]
 
 [node name="PostNW" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 1.6, -1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.7, -1.1)
 mesh = SubResource("CylinderMesh_post")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
 [node name="PostNE" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 1.6, -1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.7, -1.1)
 mesh = SubResource("CylinderMesh_post")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
 [node name="PostSW" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 1.6, 1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.7, 1.1)
 mesh = SubResource("CylinderMesh_post")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
 [node name="PostSE" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 1.6, 1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.7, 1.1)
 mesh = SubResource("CylinderMesh_post")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
 [node name="StoneNW" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.25, -1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.3, -1.1)
 mesh = SubResource("BoxMesh_stone_foot")
 surface_material_override/0 = SubResource("StandardMaterial3D_stone")
 
 [node name="StoneNE" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.25, -1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.3, -1.1)
 mesh = SubResource("BoxMesh_stone_foot")
 surface_material_override/0 = SubResource("StandardMaterial3D_stone")
 
 [node name="StoneSW" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.25, 1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.3, 1.1)
 mesh = SubResource("BoxMesh_stone_foot")
 surface_material_override/0 = SubResource("StandardMaterial3D_stone")
 
 [node name="StoneSE" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.25, 1.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.3, 1.1)
 mesh = SubResource("BoxMesh_stone_foot")
 surface_material_override/0 = SubResource("StandardMaterial3D_stone")
 
@@ -109,37 +108,47 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.15, 0)
 mesh = SubResource("BoxMesh_platform")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_plank")
 
-[node name="RailNorth" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -1.3)
-mesh = SubResource("BoxMesh_railing")
+[node name="ParapetNorth" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, -1.4)
+mesh = SubResource("BoxMesh_parapet")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
-[node name="RailSouth" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 1.3)
-mesh = SubResource("BoxMesh_railing")
+[node name="ParapetSouth" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 1.4)
+mesh = SubResource("BoxMesh_parapet")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
-[node name="RailWest" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.3, 3.6, 0)
-mesh = SubResource("BoxMesh_railing")
+[node name="ParapetWest" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 3.7, 0)
+mesh = SubResource("BoxMesh_parapet")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
-[node name="RailEast" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.3, 3.6, 0)
-mesh = SubResource("BoxMesh_railing")
+[node name="ParapetEast" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.4, 3.7, 0)
+mesh = SubResource("BoxMesh_parapet")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
-[node name="Roof" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.8, 0)
-mesh = SubResource("CylinderMesh_roof")
-surface_material_override/0 = SubResource("StandardMaterial3D_roof_tiles")
-
-[node name="FlagPole" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(0.2, 0, 0, 0, 0.4, 0, 0, 0, 0.2, 0, 5.7, 0)
-mesh = SubResource("CylinderMesh_post")
+[node name="CornerPostNW" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 3.8, -1.35)
+mesh = SubResource("CylinderMesh_merlon")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
 
-[node name="Flag" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(0.3, 0, 0, 0, 0.4, 0, 0, 0, 0.05, 0.35, 6.0, 0)
-mesh = SubResource("BoxMesh_railing")
+[node name="CornerPostNE" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 3.8, -1.35)
+mesh = SubResource("CylinderMesh_merlon")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
+
+[node name="CornerPostSW" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 3.8, 1.35)
+mesh = SubResource("CylinderMesh_merlon")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
+
+[node name="CornerPostSE" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 3.8, 1.35)
+mesh = SubResource("CylinderMesh_merlon")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood_dark")
+
+[node name="BannerPennant" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, -1.45)
+mesh = SubResource("PrismMesh_pennant")
 surface_material_override/0 = SubResource("StandardMaterial3D_flag")

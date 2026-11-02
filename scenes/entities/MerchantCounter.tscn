@@ -1,105 +1,148 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://scripts/entities/MerchantCounter.gd" id="1_merch"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_trig"]
-size = Vector3(3.6, 2.5, 3.6)
+[sub_resource type="BoxShape3D" id="BoxShape3D_counter"]
+size = Vector3(3.2, 2.2, 2.4)
 
-[sub_resource type="BoxMesh" id="BoxMesh_counter"]
+[sub_resource type="BoxMesh" id="BoxMesh_counter_wood"]
 size = Vector3(2.4, 0.9, 1.2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
-albedo_color = Color(0.48, 0.32, 0.18, 1)
+albedo_color = Color(0.54, 0.35, 0.17, 1)
 roughness = 0.85
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_npc_body"]
-top_radius = 0.28
-bottom_radius = 0.35
-height = 1.0
+[sub_resource type="BoxMesh" id="BoxMesh_awning_stripe1"]
+size = Vector3(2.6, 0.12, 1.8)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_apron"]
-albedo_color = Color(0.25, 0.55, 0.35, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crimson_cloth"]
+albedo_color = Color(0.85, 0.22, 0.25, 1)
+roughness = 0.7
 
-[sub_resource type="SphereMesh" id="SphereMesh_npc_head"]
-radius = 0.24
-height = 0.48
+[sub_resource type="BoxMesh" id="BoxMesh_awning_stripe2"]
+size = Vector3(2.62, 0.14, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cream_cloth"]
+albedo_color = Color(0.98, 0.94, 0.82, 1)
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_post"]
+top_radius = 0.05
+bottom_radius = 0.06
+height = 2.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_crate"]
+size = Vector3(0.65, 0.45, 0.55)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crate_wood"]
+albedo_color = Color(0.44, 0.28, 0.14, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_coin_pile"]
+top_radius = 0.32
+bottom_radius = 0.38
+height = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold"]
+albedo_color = Color(1.0, 0.82, 0.18, 1)
+metallic = 0.75
+roughness = 0.25
+emission_enabled = true
+emission = Color(1.0, 0.75, 0.1, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_tobias_head"]
+radius = 0.26
+height = 0.52
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skin"]
-albedo_color = Color(1.0, 0.88, 0.76, 1)
+albedo_color = Color(1.0, 0.86, 0.74, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_hat"]
-top_radius = 0.38
-bottom_radius = 0.45
-height = 0.12
+top_radius = 0.12
+bottom_radius = 0.38
+height = 0.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_straw"]
-albedo_color = Color(0.88, 0.76, 0.42, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_roof"]
-size = Vector3(2.6, 0.15, 1.6)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awning"]
-albedo_color = Color(0.85, 0.25, 0.25, 1)
+albedo_color = Color(0.86, 0.75, 0.45, 1)
 
 [node name="MerchantCounter" type="Area3D"]
 script = ExtResource("1_merch")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
-shape = SubResource("BoxShape3D_trig")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+shape = SubResource("BoxShape3D_counter")
 
 [node name="Visuals" type="Node3D" parent="."]
 
-[node name="Table" type="MeshInstance3D" parent="Visuals"]
+[node name="CounterBase" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("BoxMesh_counter")
+mesh = SubResource("BoxMesh_counter_wood")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="PostL" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.1, -0.45)
+mesh = SubResource("CylinderMesh_post")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="PostR" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.1, -0.45)
+mesh = SubResource("CylinderMesh_post")
 surface_material_override/0 = SubResource("StandardMaterial3D_wood")
 
 [node name="Awning" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 2.2, -0.1)
-mesh = SubResource("BoxMesh_roof")
-surface_material_override/0 = SubResource("StandardMaterial3D_awning")
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.2, 0.05)
+mesh = SubResource("BoxMesh_awning_stripe1")
+surface_material_override/0 = SubResource("StandardMaterial3D_crimson_cloth")
 
-[node name="MerchantBody" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -0.65)
-mesh = SubResource("CylinderMesh_npc_body")
-surface_material_override/0 = SubResource("StandardMaterial3D_apron")
+[node name="AwningStripe" type="MeshInstance3D" parent="Visuals/Awning"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("BoxMesh_awning_stripe2")
+surface_material_override/0 = SubResource("StandardMaterial3D_cream_cloth")
 
-[node name="MerchantHead" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -0.65)
-mesh = SubResource("SphereMesh_npc_head")
+[node name="TroughCrate" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.25, 0.9)
+mesh = SubResource("BoxMesh_crate")
+surface_material_override/0 = SubResource("StandardMaterial3D_crate_wood")
+
+[node name="CoinPallet" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.18, 0.9)
+mesh = SubResource("CylinderMesh_coin_pile")
+surface_material_override/0 = SubResource("StandardMaterial3D_gold")
+
+[node name="TobiasNPC" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.4)
+mesh = SubResource("SphereMesh_tobias_head")
 surface_material_override/0 = SubResource("StandardMaterial3D_skin")
 
-[node name="MerchantHat" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -0.65)
+[node name="StrawHat" type="MeshInstance3D" parent="Visuals/TobiasNPC"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 mesh = SubResource("CylinderMesh_hat")
 surface_material_override/0 = SubResource("StandardMaterial3D_straw")
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 billboard = 1
 double_sided = false
 text = "🏪 Tobias
 🪖 ➔ 🪙 4"
-font_size = 38
+font_size = 40
 outline_size = 12
-outline_modulate = Color(0, 0, 0, 0.95)
-modulate = Color(1.0, 0.95, 0.5, 1)
-pixel_size = 0.005
+outline_modulate = Color(0.169, 0.106, 0.071, 0.95)
+modulate = Color(1.0, 0.95, 0.70, 1)
+pixel_size = 0.0045
 render_priority = 6
 outline_render_priority = 5
 
 [node name="SpeechBubble" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
 visible = false
 billboard = 1
 double_sided = false
 text = "✨ Negócio Fechado!"
-font_size = 36
+font_size = 38
 outline_size = 12
-outline_modulate = Color(0, 0, 0, 0.95)
+outline_modulate = Color(0.169, 0.106, 0.071, 0.95)
 modulate = Color(0.4, 1.0, 0.5, 1)
-pixel_size = 0.005
+pixel_size = 0.0045
 render_priority = 7
 outline_render_priority = 6
-
