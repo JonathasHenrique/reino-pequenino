@@ -119,14 +119,14 @@ func _build_world_arrow() -> void:
 	arrow = Label3D.new()
 	arrow.text = "▼"
 	arrow.font = UI_FONT
-	arrow.font_size = 72
-	arrow.outline_size = 14
+	arrow.font_size = 46
+	arrow.outline_size = 9
 	arrow.outline_modulate = Color("#2B1B12")
 	arrow.modulate = Color("#FFC93C")
 	arrow.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	arrow.no_depth_test = true
 	arrow.fixed_size = true
-	arrow.pixel_size = 0.0012
+	arrow.pixel_size = 0.0007
 	arrow.render_priority = 20
 	stage.add_child(arrow)
 
@@ -183,7 +183,7 @@ func _update_arrow() -> void:
 				target = spoils[0]
 	if target and is_instance_valid(target):
 		var bob := sin(Time.get_ticks_msec() * 0.006) * 0.18
-		arrow.global_position = target.global_position + Vector3(0, 2.3 + bob, 0)
+		arrow.global_position = target.global_position + Vector3(0, 3.0 + bob, 0)
 
 func _finish_tutorial() -> void:
 	if not is_active:

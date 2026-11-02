@@ -90,9 +90,9 @@ func set_status(current_count: int, max_count: int, is_repair: bool = false, rep
 func set_tutorial_locked(locked: bool) -> void:
 	tutorial_locked = locked
 	if cost_label_3d:
-		cost_label_3d.visible = not locked
+		cost_label_3d.visible = true
 	if status_plate:
-		status_plate.visible = not locked
+		status_plate.visible = true
 	if not locked:
 		# Evita uma compra acidental se o Rei terminar a etapa sobre este pad.
 		is_king_present = false
@@ -133,25 +133,15 @@ func _finalize_purchase() -> void:
 func _update_ui() -> void:
 	if not cost_label_3d:
 		return
+	var type_icon := _get_pad_label()
 	if tutorial_locked:
-		cost_label_3d.text = "🔒 OBJETIVO"
+		cost_label_3d.text = "%s  %d" % [type_icon, current_cost]
 		cost_label_3d.modulate = Color(0.62, 0.66, 0.70, 0.92)
 		if fill_mesh:
 			fill_mesh.scale.x = 0.01
 			fill_mesh.scale.z = 0.01
 		return
 		
-	var type_icon = "ARQUEIRO"
-	match pad_type:
-		"build_tower":
-			type_icon = "TORRE"
-		"build_palisade":
-			type_icon = "PALIÇADA"
-		"build_barracks":
-			type_icon = "QUARTEL"
-		"build_forge":
-			type_icon = "FERRARIA"
-			
 	if is_locked:
 		cost_label_3d.text = "%s  MÁXIMO" % type_icon
 		cost_label_3d.modulate = Color(0.55, 1.0, 0.55)
@@ -188,6 +178,18 @@ func _update_ui() -> void:
 		var ratio = float(current_paid) / float(maxi(1, current_cost))
 		fill_mesh.scale.x = clampf(ratio, 0.01, 1.0)
 		fill_mesh.scale.z = clampf(ratio, 0.01, 1.0)
+
+func _get_pad_label() -> String:
+	match pad_type:
+		"build_tower":
+			return "TORRE"
+		"build_palisade":
+			return "PALIÇADA"
+		"build_barracks":
+			return "QUARTEL"
+		"build_forge":
+			return "FERRARIA"
+	return "ARQUEIRO"
 
 func _on_body_entered(body: Node3D) -> void:
 	if body == GameState.king_node or body.is_in_group("king"):
