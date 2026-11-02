@@ -75,6 +75,12 @@ func _ready() -> void:
 	GameState.troop_count_changed.connect(func(_c): _update_pad_statuses())
 	_update_pad_statuses()
 	_trigger_stage_tutorial_if_needed()
+	get_tree().create_timer(0.2).timeout.connect(func():
+		print("[PERF] FPS Alvo: 60 | Objetos no Frame: %d | Draw Calls: %d" % [
+			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		])
+	)
 
 func _update_pad_statuses() -> void:
 	active_towers = active_towers.filter(func(t): return is_instance_valid(t))
