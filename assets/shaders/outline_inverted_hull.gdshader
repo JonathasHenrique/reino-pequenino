@@ -14,3 +14,4 @@ void vertex() {
 void fragment() {
 	ALBEDO = outline_color.rgb;
 }
+

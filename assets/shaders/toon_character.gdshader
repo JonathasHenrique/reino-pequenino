@@ -34,3 +34,4 @@ void light() {
 	
 	DIFFUSE_LIGHT += diffuse * LIGHT_COLOR * ATTENUATION + (rim_color.rgb * rim_term * rim_color.a);
 }
+

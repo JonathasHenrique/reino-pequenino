@@ -49,3 +49,4 @@ surface_material_override/0 = SubResource("StandardMaterial3D_earth")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7.0, 0)
 mesh = SubResource("BoxMesh_bedrock")
 surface_material_override/0 = SubResource("StandardMaterial3D_bedrock")
+
