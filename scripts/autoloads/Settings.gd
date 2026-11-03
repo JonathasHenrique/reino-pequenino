@@ -23,6 +23,9 @@ var language: String = "pt_BR"
 var reduced_effects: bool = false # Acessibilidade / dispositivos mais simples
 
 func _ready() -> void:
+	# Telas de 120 Hz: limitar em 60 FPS (divisor exato de 120) evita quadros
+	# que ficam 1 ou 2 atualizações na tela e causam tremor/travadinhas.
+	Engine.max_fps = 60
 	load_settings()
 
 func get_difficulty_name() -> String:
