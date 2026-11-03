@@ -15,6 +15,10 @@ Todos os recursos visuais, códigos, efeitos sonoros e músicas deste projeto s�
   - Autor: Kenney.
   - Fonte: https://opengameart.org/content/nature-kit
   - Licença: CC0 1.0; licença original preservada em `assets/models/nature/Kenney-Nature-Kit-License.txt`.
+* **Kenney Castle Kit 2.0** — torres, muralhas, portão, bandeira, árvores e rochas do castelo de fundo da Vila (`assets/models/castle/`).
+  - Autor: Kenney.
+  - Fonte: https://kenney.nl/assets/castle-kit (espelho usado para download: https://github.com/Evolis-Work/kenney-castle-kit).
+  - Licença: CC0 1.0; licença original preservada em `assets/models/castle/Kenney-Castle-Kit-License.txt`.
 * **LowPoly RPG Characters** — Ranger e Rogue em `assets/models/characters/quaternius/`.
   - Autor: Quaternius.
   - Fonte: https://opengameart.org/content/lowpoly-rpg-characters

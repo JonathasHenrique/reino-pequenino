@@ -132,7 +132,7 @@ current = true
 fov = 44.0
 script = ExtResource("2_cam")
 target_path = NodePath("../King")
-camera_distance = 29.0
+camera_distance = 36.0
 
 [node name="Buildings" type="Node3D" parent="."]
 

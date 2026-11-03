@@ -14,3 +14,8 @@ func _ready() -> void:
 	GameState.is_paused = false
 	
 	AudioManager.play_music("village")
+
+	# Cenário decorativo (castelo de fundo, árvores e postes); não afeta a jogabilidade
+	var decor := Node3D.new()
+	decor.set_script(load("res://scripts/village/VillageDecor.gd"))
+	add_child(decor)
