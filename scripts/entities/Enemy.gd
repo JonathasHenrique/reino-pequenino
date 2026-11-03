@@ -59,6 +59,9 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 		visuals.scale = Vector3(scale_mult, scale_mult, scale_mult)
 		_apply_enemy_tint(visuals, tint)
 		
+		if enemy_id == "misty_archer":
+			_add_archer_gear(visuals)
+
 		# Detalhes do Gigante Titã da Bruma (Capa vermelha fluida e capacete com chifres)
 		if enemy_id == "misty_giant" or scale_mult >= 2.0:
 			var cape = visuals.get_node_or_null("RedCape")
@@ -76,8 +79,77 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 				cape.material_override = c_mat
 				visuals.add_child(cape)
 
+func _add_archer_gear(parent: Node3D) -> void:
+	# Silhueta de arqueira inimiga: capuz pontudo, arco na mão e aljava com penas.
+	# Os nomes começam com "Gear_" para o tom da facção não recolorir estas peças.
+	if parent.get_node_or_null("Gear_Hood"):
+		return
+	# O VisualUpgrade oculta filhos de Visuals que não estão em custom_overlays (troca diferida).
+	var upgrade := get_node_or_null("VisualUpgrade")
+	if upgrade:
+		for gear_name in ["Gear_Hood", "Gear_Bow", "Gear_Quiver", "Gear_Feathers"]:
+			if not upgrade.custom_overlays.has(gear_name):
+				upgrade.custom_overlays.append(gear_name)
+	var cloth := StandardMaterial3D.new()
+	cloth.albedo_color = Color(0.36, 0.08, 0.12)
+	cloth.roughness = 0.85
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(0.42, 0.26, 0.14)
+	wood.roughness = 0.8
+	var feather := StandardMaterial3D.new()
+	feather.albedo_color = Color(0.95, 0.85, 0.35)
+	feather.roughness = 0.9
+
+	var hood := MeshInstance3D.new()
+	hood.name = "Gear_Hood"
+	var cone := CylinderMesh.new()
+	cone.top_radius = 0.02
+	cone.bottom_radius = 0.28
+	cone.height = 0.45
+	hood.mesh = cone
+	hood.material_override = cloth
+	hood.position = Vector3(0.0, 2.2, -0.02)
+	hood.rotation = Vector3(-0.18, 0.0, 0.0)
+	parent.add_child(hood)
+
+	var bow := MeshInstance3D.new()
+	bow.name = "Gear_Bow"
+	var ring := TorusMesh.new()
+	ring.inner_radius = 0.44
+	ring.outer_radius = 0.5
+	bow.mesh = ring
+	bow.material_override = wood
+	bow.position = Vector3(0.62, 1.45, 0.05)
+	bow.rotation = Vector3(0.0, 0.0, PI / 2.0)
+	bow.rotation_degrees.y = 25.0
+	parent.add_child(bow)
+
+	var quiver := MeshInstance3D.new()
+	quiver.name = "Gear_Quiver"
+	var tube := CylinderMesh.new()
+	tube.top_radius = 0.14
+	tube.bottom_radius = 0.12
+	tube.height = 0.9
+	quiver.mesh = tube
+	quiver.material_override = wood
+	quiver.position = Vector3(-0.12, 1.85, -0.62)
+	quiver.rotation = Vector3(0.28, 0.0, 0.18)
+	parent.add_child(quiver)
+
+	var fletch := MeshInstance3D.new()
+	fletch.name = "Gear_Feathers"
+	var plume := BoxMesh.new()
+	plume.size = Vector3(0.2, 0.35, 0.04)
+	fletch.mesh = plume
+	fletch.material_override = feather
+	fletch.position = Vector3(-0.12, 2.4, -0.66)
+	fletch.rotation = Vector3(0.28, 0.0, 0.18)
+	parent.add_child(fletch)
+
 func _apply_enemy_tint(node: Node, tint: Color) -> void:
 	for child in node.get_children():
+		if str(child.name).begins_with("Gear_"):
+			continue
 		if child.has_method("set_tint"):
 			child.set_tint(tint)
 			continue
