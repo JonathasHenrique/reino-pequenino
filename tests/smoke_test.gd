@@ -15,6 +15,7 @@ const SCENES: Array[String] = [
 	"res://scenes/ui/DefeatScreen.tscn",
 	"res://scenes/ui/RetroFilterOverlay.tscn",
 	"res://scenes/village/Village.tscn",
+	"res://scenes/entities/Archer.tscn",
 	"res://scenes/stages/StageMain.tscn",
 	"res://scenes/stages/StageCoreTest.tscn",
 	"res://scenes/minigames/Challenge10_Catapult.tscn",

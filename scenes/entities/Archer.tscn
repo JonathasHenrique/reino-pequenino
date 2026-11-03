@@ -105,7 +105,7 @@ scale = Vector3(0.65, 0.65, 0.65)
 
 [node name="VisualUpgrade" type="Node" parent="."]
 script = ExtResource("2_upgrade")
-custom_overlays = PackedStringArray(["ArmL", "ArmR"])
+custom_overlays = PackedStringArray("ArmL", "ArmR")
 
 [node name="Torso" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
