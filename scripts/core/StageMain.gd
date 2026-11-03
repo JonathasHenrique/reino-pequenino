@@ -254,7 +254,13 @@ func _spawn_palisade() -> void:
 		
 	if active_palisades.size() < MAX_PALISADES:
 		var slot = palisade_slots[active_palisades.size()]
-		var p = scene.instantiate()
+		var p: Node3D
+		if active_palisades.size() == MAX_PALISADES - 1:
+			# Última peça do perímetro é o portão: fecha o cerco, mas o Rei e as aliadas passam.
+			p = Node3D.new()
+			p.set_script(load("res://scripts/entities/Gate.gd"))
+		else:
+			p = scene.instantiate() as Node3D
 		add_child(p)
 		p.global_position = slot.pos
 		p.rotation.y = slot.rot_y

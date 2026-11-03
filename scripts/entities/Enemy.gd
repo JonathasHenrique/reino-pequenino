@@ -32,6 +32,9 @@ var flash_tween: Tween
 @onready var faction_ring: MeshInstance3D = $FactionRing
 
 func _ready() -> void:
+	# Além do chão/paliçadas (camada 1), inimigos colidem com os portões (camada 2).
+	# Rei e aliadas não têm a camada 2 na máscara, então passam pelo portão.
+	collision_mask = collision_mask | 2
 	damage_flash_material = StandardMaterial3D.new()
 	damage_flash_material.albedo_color = Color.WHITE
 	damage_flash_material.emission_enabled = true
