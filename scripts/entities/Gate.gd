@@ -24,9 +24,13 @@ var allies_inside: int = 0
 var close_timer: float = 0.0
 var is_open: bool = false
 var door_tween: Tween
+var wood_mat: StandardMaterial3D
+var wood_dark_mat: StandardMaterial3D
 
 func _ready() -> void:
 	current_hp = max_hp
+	wood_mat = _wood(WOOD_COLOR)
+	wood_dark_mat = _wood(WOOD_DARK)
 	add_to_group("palisades")
 	_build_side_walls()
 	_build_door()
@@ -63,7 +67,7 @@ func _build_side_walls() -> void:
 			cyl.bottom_radius = 0.16
 			cyl.height = 2.0
 			log.mesh = cyl
-			log.material_override = _wood(WOOD_COLOR)
+			log.material_override = wood_mat
 			log.position = Vector3(-1.5 + i * 0.75, 1.0, 0.0)
 			body.add_child(log)
 		for y in [0.45, 1.6]:
@@ -71,9 +75,10 @@ func _build_side_walls() -> void:
 			var bm := BoxMesh.new()
 			bm.size = Vector3(3.5, 0.18, 0.25)
 			beam.mesh = bm
-			beam.material_override = _wood(WOOD_DARK)
+			beam.material_override = wood_dark_mat
 			beam.position = Vector3(0, y, 0)
 			body.add_child(beam)
+		load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(body)
 
 func _build_door() -> void:
 	# Bloqueio para inimigos (camada 2): fica sempre ativo, mesmo com a porta aberta.

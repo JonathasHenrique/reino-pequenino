@@ -30,9 +30,9 @@ var palisade_slots: Array[Dictionary] = [
 	{"pos": Vector3(10.5, 0, -4.25), "rot_y": 1.571},
 	{"pos": Vector3(10.5, 0, 4.25), "rot_y": 1.571},
 	{"pos": Vector3(6.25, 0, 8.5), "rot_y": 0.0},
-	{"pos": Vector3(-2.25, 0, 8.5), "rot_y": 0.0},
 	{"pos": Vector3(-6.5, 0, 4.25), "rot_y": 1.571},
-	{"pos": Vector3(-6.5, 0, -4.25), "rot_y": 1.571}
+	{"pos": Vector3(-6.5, 0, -4.25), "rot_y": 1.571},
+	{"pos": Vector3(-2.25, 0, 8.5), "rot_y": 0.0}
 ]
 var active_palisades: Array = []
 
@@ -82,6 +82,21 @@ func _ready() -> void:
 	_start_interactive_tutorial_if_needed()
 	get_tree().create_timer(0.2).timeout.connect(func():
 		print("[PERF] FPS Alvo: 60 | Objetos no Frame: %d | Draw Calls: %d" % [
+			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		])
+	)
+	# Depois que o estilo toon do cenário é aplicado (diferido), funde as malhas estáticas.
+	get_tree().create_timer(0.35).timeout.connect(_optimize_static_geometry)
+
+func _optimize_static_geometry() -> void:
+	var merger = load("res://scripts/core/StaticMeshMerger.gd")
+	for scenery_name in ["DioramaScenery"]:
+		var scenery := get_node_or_null(scenery_name) as Node3D
+		if scenery:
+			merger.merge_subtree(scenery, ["Label3D"])
+	get_tree().create_timer(0.4).timeout.connect(func():
+		print("[PERF] Pós-fusão: Objetos no Frame: %d | Draw Calls: %d" % [
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
 			RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 		])
@@ -206,6 +221,9 @@ func _spawn_barracks() -> void:
 		b.global_position = Vector3(-6.5, 0, -4.5)
 		Art.pop_in(b)
 		Art.dust_puff(self, b.global_position, 18)
+		var bvisuals := b.get_node_or_null("Visuals") as Node3D
+		if bvisuals:
+			load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(bvisuals, ["Label3D"])
 
 func _spawn_forge() -> void:
 	if forge_built:
@@ -218,6 +236,9 @@ func _spawn_forge() -> void:
 		f.global_position = Vector3(-6.5, 0, 4.5)
 		Art.pop_in(f)
 		Art.dust_puff(self, f.global_position, 18)
+		var fvisuals := f.get_node_or_null("Visuals") as Node3D
+		if fvisuals:
+			load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(fvisuals, ["Label3D"])
 
 func _spawn_archer() -> void:
 	if GameState.active_troops.size() >= MAX_ARCHERS:

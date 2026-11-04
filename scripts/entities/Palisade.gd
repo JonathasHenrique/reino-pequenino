@@ -24,6 +24,10 @@ func _ready() -> void:
 	# Barra de vida 3D limpa e moderna que só aparece quando sofre dano
 	health_bar = HealthBar3D.create(self, 2.1, 1.8, Color(0.35, 0.85, 0.30), false)
 	_update_ui()
+	# Funde os troncos/vigas (estáticos) numa só malha por material.
+	var visuals := get_node_or_null("Visuals") as Node3D
+	if visuals:
+		load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(visuals)
 
 func take_damage(amount: int) -> void:
 	if not alive:

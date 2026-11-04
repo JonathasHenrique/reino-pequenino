@@ -41,6 +41,10 @@ func _ready() -> void:
 		cost_label_3d.font = UI_FONT
 	_setup_pad_visuals()
 	_update_ui()
+	# Cantos decorativos são estáticos: funde as 8 hastes numa só malha.
+	var brackets := get_node_or_null("CornerBrackets") as Node3D
+	if brackets:
+		load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(brackets)
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	GameState.coins_changed.connect(func(_c): _update_ui())
