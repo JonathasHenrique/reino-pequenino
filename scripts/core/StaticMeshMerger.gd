@@ -4,7 +4,7 @@ extends RefCounted
 # Agrupa por material e gera uma única malha por grupo. Usado só em cenário
 # decorativo (sem script de animação), nunca em personagens ou peças interativas.
 
-static func merge_subtree(root: Node3D, exclude_names: Array = [], keep_shadows: bool = false) -> int:
+static func merge_subtree(root: Node3D, exclude_names: Array = [], keep_shadows: bool = false, by_texture: bool = false) -> int:
 	if root == null or not root.is_inside_tree():
 		return 0
 	var items: Array = []
@@ -20,7 +20,7 @@ static func merge_subtree(root: Node3D, exclude_names: Array = [], keep_shadows:
 			var material: Material = mi.get_active_material(surface)
 			if material == null:
 				material = mesh.surface_get_material(surface)
-			var key: int = material.get_instance_id() if material != null else 0
+			var key: int = _material_key(material, by_texture)
 			if not groups.has(key):
 				groups[key] = {"material": material, "parts": []}
 			groups[key]["parts"].append({
@@ -59,6 +59,15 @@ static func merge_subtree(root: Node3D, exclude_names: Array = [], keep_shadows:
 		mi.visible = false
 
 	return items.size() - groups.size()
+
+static func _material_key(material: Material, by_texture: bool) -> int:
+	if material == null:
+		return 0
+	if by_texture and material is BaseMaterial3D:
+		var tex := (material as BaseMaterial3D).albedo_texture
+		if tex != null:
+			return tex.get_instance_id()
+	return material.get_instance_id()
 
 static func _collect(root: Node3D, node: Node, exclude_names: Array, out: Array) -> void:
 	for child in node.get_children():

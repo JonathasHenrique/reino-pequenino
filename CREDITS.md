@@ -19,6 +19,10 @@ Todos os recursos visuais, códigos, efeitos sonoros e músicas deste projeto s�
   - Autor: Kenney.
   - Fonte: https://kenney.nl/assets/castle-kit (espelho usado para download: https://github.com/Evolis-Work/kenney-castle-kit).
   - Licença: CC0 1.0; licença original preservada em `assets/models/castle/Kenney-Castle-Kit-License.txt`.
+* **Medieval Village MegaKit** — paredes, telhados, portas, janelas e props das casas da Vila em `assets/models/village_kit/`.
+  - Autor: Quaternius.
+  - Fonte: https://quaternius.itch.io/medieval-village-megakit (espelho usado para download: https://github.com/J-Ponzo/gltf-medieval-village-megakit).
+  - Licença: CC0 1.0; licença original preservada em `assets/models/village_kit/Quaternius-Medieval-Village-License.txt`.
 * **LowPoly RPG Characters** — Ranger e Rogue em `assets/models/characters/quaternius/`.
   - Autor: Quaternius.
   - Fonte: https://opengameart.org/content/lowpoly-rpg-characters

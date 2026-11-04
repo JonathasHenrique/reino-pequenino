@@ -64,6 +64,9 @@ func get_benefit_description() -> String:
 func _update_labels() -> void:
 	if label_level:
 		label_level.text = "%s · Nível %d" % [building_name, current_level]
+		if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
+			var tall := current_level >= 2
+			label_level.position.y = 9.6 if tall else 7.8
 	
 	if label_upgrade:
 		if current_level >= max_level or building_id == "crown_wall":
@@ -84,12 +87,45 @@ func _rebuild_visuals() -> void:
 		child.queue_free()
 		
 	# Constrói o modelo 3D proporcional ao nível (Evolução Estilo Clash of Clans!)
-	if current_level <= 1:
+	if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
+		_build_modular_house()
+	elif current_level <= 1:
 		_build_level_1_cottage()
 	elif current_level == 2:
 		_build_level_2_stone_house()
 	else:
 		_build_level_3_castle_keep()
+
+func _build_modular_house() -> void:
+	var footprints := {
+		"barracks": Vector2i(6, 6),
+		"blacksmith": Vector2i(4, 4),
+		"stable": Vector2i(4, 6),
+		"tavern": Vector2i(6, 6),
+	}
+	var styles := {
+		"barracks": "plaster",
+		"blacksmith": "brick",
+		"stable": "plaster",
+		"tavern": "brick",
+	}
+	var footprint: Vector2i = footprints.get(building_id, Vector2i(4, 4))
+	var roof_tints := {
+		"barracks": Color(0.92, 0.84, 0.78),
+		"blacksmith": Color(0.78, 0.72, 0.70),
+		"stable": Color(0.90, 0.95, 0.82),
+		"tavern": Color(1.0, 0.92, 0.82),
+	}
+	load("res://scripts/village/ModularHouse.gd").build(visuals_container, footprint, str(styles.get(building_id, "plaster")), current_level, "south", roof_tints.get(building_id, Color.WHITE))
+	visuals_container.rotation.y = atan2(-global_position.x, -global_position.z)
+
+	var collider := get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if collider and collider.shape is BoxShape3D:
+		var box := collider.shape as BoxShape3D
+		box.size = Vector3(float(footprint.x) + 0.8, 3.0, float(footprint.y) + 0.8)
+		collider.position = Vector3(0, 1.5, 0)
+
+	load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(visuals_container, ["Label3D"], false, true)
 
 func _build_level_1_cottage() -> void:
 	# Nível 1: Cabana de madeira rústica com vigas e telhado de madeira
