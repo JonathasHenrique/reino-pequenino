@@ -18,6 +18,11 @@ func _ready() -> void:
 	_build_castle()
 	_build_trees()
 	_build_lamp_posts()
+	_build_plaza_props()
+	# Os modelos importados recebem material toon de forma diferida; espera e funde.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_merge_static()
 
 func _piece(piece_name: String) -> Node3D:
 	var packed := load(CASTLE_DIR + piece_name + ".glb") as PackedScene
@@ -69,6 +74,16 @@ func _build_castle() -> void:
 		_place(castle, "wall", Vector3(-2.0, 0.0, z), PI / 2.0)
 		_place(castle, "wall", Vector3(2.0, 0.0, z), PI / 2.0)
 
+	var blocker := StaticBody3D.new()
+	blocker.name = "CastleBlocker"
+	var bshape := CollisionShape3D.new()
+	var bbox := BoxShape3D.new()
+	bbox.size = Vector3(5.5, 3.0, 5.5)
+	bshape.shape = bbox
+	bshape.position = Vector3(0, 1.5, 0)
+	blocker.add_child(bshape)
+	castle.add_child(blocker)
+
 	# Pedras e árvores na base do castelo
 	_place(castle, "rocks-large", Vector3(-3.2, 0.0, 2.6))
 	_place(castle, "tree-large", Vector3(3.4, 0.0, 3.2))
@@ -90,6 +105,39 @@ func _build_trees() -> void:
 	]
 	for spot in spots:
 		_place(scenery, str(spot[1]), spot[0], float(spot[0].x) * 0.07)
+
+func _build_plaza_props() -> void:
+	# Canteiros e pedras nas quinas da praça, longe das estradas e do centro.
+	var props := Node3D.new()
+	props.name = "PlazaProps"
+	add_child(props)
+	var flower = load("res://scenes/props/FlowerPatch.tscn") as PackedScene
+	var rock = load("res://scenes/props/Rock.tscn") as PackedScene
+	var fence = load("res://scenes/props/WoodenFence.tscn") as PackedScene
+	var spots := [
+		[Vector3(-7.0, 0.0, -7.0), flower],
+		[Vector3(7.0, 0.0, -7.0), flower],
+		[Vector3(-7.0, 0.0, 7.0), flower],
+		[Vector3(7.0, 0.0, 7.0), flower],
+		[Vector3(-8.6, 0.0, -8.6), rock],
+		[Vector3(8.6, 0.0, 8.6), rock],
+		[Vector3(-15.5, 0.0, -9.5), fence],
+		[Vector3(15.5, 0.0, 9.5), fence],
+	]
+	for spot in spots:
+		var scene: PackedScene = spot[1]
+		if scene == null:
+			continue
+		var inst := scene.instantiate() as Node3D
+		inst.position = spot[0]
+		props.add_child(inst)
+
+func _merge_static() -> void:
+	var merger = load("res://scripts/core/StaticMeshMerger.gd")
+	for node_name in ["CastleBackdrop", "OuterTrees", "PlazaLamps", "PlazaProps"]:
+		var n := get_node_or_null(node_name) as Node3D
+		if n:
+			merger.merge_subtree(n, ["Label3D"])
 
 func _build_lamp_posts() -> void:
 	var lamps := Node3D.new()
