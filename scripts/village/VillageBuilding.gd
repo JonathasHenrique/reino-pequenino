@@ -66,7 +66,7 @@ func _update_labels() -> void:
 		label_level.text = "%s · Nível %d" % [building_name, current_level]
 		if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
 			var tall := current_level >= 2
-			label_level.position.y = 9.6 if tall else 7.8
+			label_level.position.y = 9.0 if tall else 7.4
 	
 	if label_upgrade:
 		if current_level >= max_level or building_id == "crown_wall":
@@ -118,6 +118,7 @@ func _build_modular_house() -> void:
 	}
 	load("res://scripts/village/ModularHouse.gd").build(visuals_container, footprint, str(styles.get(building_id, "plaster")), current_level, "south", roof_tints.get(building_id, Color.WHITE))
 	visuals_container.rotation.y = atan2(-global_position.x, -global_position.z)
+	visuals_container.scale = Vector3.ONE * 0.92
 
 	var collider := get_node_or_null("CollisionShape3D") as CollisionShape3D
 	if collider and collider.shape is BoxShape3D:

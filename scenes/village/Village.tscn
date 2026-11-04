@@ -52,7 +52,7 @@ background_mode = 1
 background_color = Color(0.68, 0.84, 0.96, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.541, 0.706, 0.973, 1)
-ambient_light_energy = 0.36
+ambient_light_energy = 0.44
 ambient_light_sky_contribution = 0.3
 tonemap_mode = 3
 tonemap_exposure = 0.82
@@ -137,7 +137,7 @@ camera_distance = 41.0
 [node name="Buildings" type="Node3D" parent="."]
 
 [node name="Barracks" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -5)
 building_id = "barracks"
 building_name = "Quartel Real"
 base_cost = 40

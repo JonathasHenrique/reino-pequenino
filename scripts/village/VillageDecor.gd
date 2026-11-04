@@ -7,9 +7,9 @@ extends Node3D
 
 const CASTLE_DIR := "res://assets/models/castle/"
 const CASTLE_SCALE := 2.0
-const CASTLE_POS := Vector3(-16.0, 0.0, -16.0)
+const CASTLE_POS := Vector3(-17.0, 0.0, -17.0)
 const CASTLE_YAW := PI / 4.0
-const KING_SPAWN := Vector3(-9.0, 0.0, -9.0)
+const KING_SPAWN := Vector3(-8.5, 0.0, -8.5)
 
 @export var build_on_ready: bool = true
 
@@ -54,47 +54,77 @@ func _build_castle() -> void:
 	castle.scale = Vector3.ONE * CASTLE_SCALE
 	add_child(castle)
 
-	# Torres de canto: base + dois andares + telhado com bandeira
-	for sx in [-2.0, 2.0]:
-		for sz in [-2.0, 2.0]:
+	# Torres de canto da muralha
+	for sx in [-3.0, 3.0]:
+		for sz in [-3.0, 3.0]:
 			var p := Vector3(sx, 0.0, sz)
 			_place(castle, "tower-square-base", p)
 			_place(castle, "tower-square-mid-windows", p + Vector3(0, 1.01, 0))
 			_place(castle, "tower-square-top-roof-high", p + Vector3(0, 2.02, 0))
+			_place(castle, "flag-pennant", p + Vector3(0, 3.37, 0))
 
-	# Torre central (keep), mais alta que as de canto
-	_place(castle, "tower-square-base", Vector3.ZERO)
-	_place(castle, "tower-square-mid-windows", Vector3(0, 1.01, 0))
-	_place(castle, "tower-square-mid-windows", Vector3(0, 2.02, 0))
-	_place(castle, "tower-square-top-roof-high", Vector3(0, 3.03, 0))
+	# Torre central (keep), mais alta e recuada
+	_place(castle, "tower-square-base", Vector3(0, 0.0, -1.0))
+	_place(castle, "tower-square-mid-windows", Vector3(0, 1.01, -1.0))
+	_place(castle, "tower-square-mid-windows", Vector3(0, 2.02, -1.0))
+	_place(castle, "tower-square-top-roof-high", Vector3(0, 3.03, -1.0))
+	_place(castle, "flag-pennant", Vector3(0, 4.38, -1.0))
 
-	# Muralhas entre as torres (lado frontal com portão em z = +2)
-	for x in [-1.0, 0.0, 1.0]:
-		_place(castle, "wall", Vector3(x, 0.0, -2.0))
-		if x == 0.0:
-			_place(castle, "wall-doorway", Vector3(x, 0.0, 2.0))
-		else:
-			_place(castle, "wall", Vector3(x, 0.0, 2.0))
-	for z in [-1.0, 0.0, 1.0]:
-		_place(castle, "wall", Vector3(-2.0, 0.0, z), PI / 2.0)
-		_place(castle, "wall", Vector3(2.0, 0.0, z), PI / 2.0)
+	# Muralha: frente com portão central, fundo e laterais
+	for x in [-2.0, -1.0, 1.0, 2.0]:
+		_place(castle, "wall", Vector3(x, 0.0, 3.0))
+		_place(castle, "wall", Vector3(x, 0.0, -3.0))
+	_place(castle, "wall-doorway", Vector3(0, 0.0, 3.0))
+	for z in [-2.0, -1.0, 0.0, 1.0, 2.0]:
+		_place(castle, "wall", Vector3(-3.0, 0.0, z), PI / 2.0)
+		_place(castle, "wall", Vector3(3.0, 0.0, z), PI / 2.0)
 
-	var blocker := StaticBody3D.new()
-	blocker.name = "CastleBlocker"
-	var bshape := CollisionShape3D.new()
-	var bbox := BoxShape3D.new()
-	bbox.size = Vector3(5.5, 3.0, 5.5)
-	bshape.shape = bbox
-	bshape.position = Vector3(0, 1.5, 0)
-	blocker.add_child(bshape)
-	castle.add_child(blocker)
+	# Piso do pátio interno
+	var yard := MeshInstance3D.new()
+	var ym := BoxMesh.new()
+	ym.size = Vector3(5.6, 0.08, 5.6)
+	yard.mesh = ym
+	var stone := StandardMaterial3D.new()
+	stone.albedo_color = Color(0.70, 0.66, 0.58)
+	stone.roughness = 0.95
+	yard.material_override = stone
+	yard.position = Vector3(0, 0.04, 0)
+	castle.add_child(yard)
 
-	_build_castle_ground()
+	_build_castle_collision(castle)
 
 	# Pedras e árvores na base do castelo
-	_place(castle, "rocks-large", Vector3(-3.2, 0.0, 2.6))
-	_place(castle, "tree-large", Vector3(3.4, 0.0, 3.2))
-	_place(castle, "tree-small", Vector3(-3.6, 0.0, -1.2))
+	_place(castle, "rocks-large", Vector3(-4.2, 0.0, 3.6))
+	_place(castle, "tree-large", Vector3(4.4, 0.0, 4.2))
+	_place(castle, "tree-small", Vector3(-4.6, 0.0, -1.2))
+
+func _build_castle_collision(castle: Node3D) -> void:
+	var walls := StaticBody3D.new()
+	walls.name = "CastleWalls"
+	castle.add_child(walls)
+	var boxes := [
+		[Vector3(-1.6, 1.5, 3.0), Vector3(2.8, 3.0, 0.6)],
+		[Vector3(1.6, 1.5, 3.0), Vector3(2.8, 3.0, 0.6)],
+		[Vector3(0.0, 1.5, -3.0), Vector3(6.6, 3.0, 0.6)],
+		[Vector3(-3.0, 1.5, 0.0), Vector3(0.6, 3.0, 6.6)],
+		[Vector3(3.0, 1.5, 0.0), Vector3(0.6, 3.0, 6.6)],
+	]
+	for b in boxes:
+		var cs := CollisionShape3D.new()
+		var shape := BoxShape3D.new()
+		shape.size = b[1]
+		cs.shape = shape
+		cs.position = b[0]
+		walls.add_child(cs)
+	var keep := StaticBody3D.new()
+	keep.name = "CastleKeep"
+	castle.add_child(keep)
+	var kcs := CollisionShape3D.new()
+	var kbox := BoxShape3D.new()
+	kbox.size = Vector3(2.6, 4.0, 2.6)
+	kcs.shape = kbox
+	kcs.position = Vector3(0, 2.0, -1.0)
+	keep.add_child(kcs)
 
 func _build_castle_ground() -> void:
 	var ground := Node3D.new()
@@ -216,7 +246,8 @@ func _build_villagers() -> void:
 		bot.set("waypoints", paths[i])
 		bot.set("model", model)
 		villagers.add_child(bot)
-		model.call("set_tint", Color(1.55, 1.5, 1.45))
+		model.set("outline_enabled", false)
+		model.call("set_tint", Color(2.0, 1.95, 1.9))
 
 func get_king_spawn() -> Vector3:
 	return KING_SPAWN
