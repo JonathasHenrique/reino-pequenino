@@ -7,6 +7,7 @@ extends Camera3D
 @export var camera_distance: float = 19.5
 @export var elevation_angle_deg: float = 48.0
 @export var rotation_y_deg: float = 45.0
+@export var follow_enabled: bool = true
 
 var target_node: Node3D = null
 var offset_vector: Vector3
@@ -30,6 +31,8 @@ func _ready() -> void:
 	look_at_from_position(offset_vector, Vector3.ZERO, Vector3.UP)
 
 func _physics_process(delta: float) -> void:
+	if not follow_enabled:
+		return
 	if not target_node and GameState.king_node:
 		target_node = GameState.king_node
 		

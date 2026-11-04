@@ -132,24 +132,24 @@ current = true
 fov = 44.0
 script = ExtResource("2_cam")
 target_path = NodePath("../King")
-camera_distance = 36.0
+camera_distance = 41.0
 
 [node name="Buildings" type="Node3D" parent="."]
 
 [node name="Barracks" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -7)
 building_id = "barracks"
 building_name = "Quartel Real"
 base_cost = 40
 
 [node name="Blacksmith" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 building_id = "blacksmith"
 building_name = "Ferraria da Vila"
 base_cost = 50
 
 [node name="Stable" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, -7)
 building_id = "stable"
 building_name = "Estábulo do Biscoito"
 base_cost = 35
@@ -158,13 +158,13 @@ base_cost = 35
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 6.5)
 
 [node name="Tavern" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15)
 building_id = "tavern"
 building_name = "Taverna dos Viajantes"
 base_cost = 30
 
 [node name="CrownWall" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 7)
 building_id = "crown_wall"
 building_name = "Mural da Coroa Mãe"
 base_cost = 0

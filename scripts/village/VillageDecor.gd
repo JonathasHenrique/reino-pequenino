@@ -6,9 +6,10 @@ extends Node3D
 # os postes têm colisão só no fuste, longe das estradas e do centro.
 
 const CASTLE_DIR := "res://assets/models/castle/"
-const CASTLE_SCALE := 1.8
-const CASTLE_POS := Vector3(-19.0, 0.0, -21.0)
-const CASTLE_YAW := PI / 4.0 # frente do castelo voltada para a Vila
+const CASTLE_SCALE := 2.0
+const CASTLE_POS := Vector3(-16.0, 0.0, -16.0)
+const CASTLE_YAW := PI / 4.0
+const KING_SPAWN := Vector3(-9.0, 0.0, -9.0)
 
 @export var build_on_ready: bool = true
 
@@ -19,9 +20,15 @@ func _ready() -> void:
 	_build_trees()
 	_build_lamp_posts()
 	_build_plaza_props()
+	_build_city_props()
+	_build_villagers()
 	# Os modelos importados recebem material toon de forma diferida; espera e funde.
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	_merge_static()
 
 func _piece(piece_name: String) -> Node3D:
@@ -54,14 +61,12 @@ func _build_castle() -> void:
 			_place(castle, "tower-square-base", p)
 			_place(castle, "tower-square-mid-windows", p + Vector3(0, 1.01, 0))
 			_place(castle, "tower-square-top-roof-high", p + Vector3(0, 2.02, 0))
-			_place(castle, "flag-banner-long", p + Vector3(0, 3.37, 0))
 
 	# Torre central (keep), mais alta que as de canto
 	_place(castle, "tower-square-base", Vector3.ZERO)
 	_place(castle, "tower-square-mid-windows", Vector3(0, 1.01, 0))
 	_place(castle, "tower-square-mid-windows", Vector3(0, 2.02, 0))
 	_place(castle, "tower-square-top-roof-high", Vector3(0, 3.03, 0))
-	_place(castle, "flag-banner-long", Vector3(0, 4.38, 0))
 
 	# Muralhas entre as torres (lado frontal com portão em z = +2)
 	for x in [-1.0, 0.0, 1.0]:
@@ -84,10 +89,38 @@ func _build_castle() -> void:
 	blocker.add_child(bshape)
 	castle.add_child(blocker)
 
+	_build_castle_ground()
+
 	# Pedras e árvores na base do castelo
 	_place(castle, "rocks-large", Vector3(-3.2, 0.0, 2.6))
 	_place(castle, "tree-large", Vector3(3.4, 0.0, 3.2))
 	_place(castle, "tree-small", Vector3(-3.6, 0.0, -1.2))
+
+func _build_castle_ground() -> void:
+	var ground := Node3D.new()
+	ground.name = "CastleGround"
+	add_child(ground)
+	var stone := StandardMaterial3D.new()
+	stone.albedo_color = Color(0.66, 0.62, 0.55)
+	stone.roughness = 0.95
+
+	var yard := MeshInstance3D.new()
+	var ym := BoxMesh.new()
+	ym.size = Vector3(8.0, 0.08, 6.0)
+	yard.mesh = ym
+	yard.material_override = stone
+	yard.position = CASTLE_POS + Vector3(4.0, 0.02, 4.0)
+	yard.rotation.y = CASTLE_YAW
+	ground.add_child(yard)
+
+	var path := MeshInstance3D.new()
+	var pm := BoxMesh.new()
+	pm.size = Vector3(4.0, 0.06, 9.0)
+	path.mesh = pm
+	path.material_override = stone
+	path.position = CASTLE_POS + Vector3(8.5, 0.03, 8.5)
+	path.rotation.y = CASTLE_YAW
+	ground.add_child(path)
 
 func _build_trees() -> void:
 	var scenery := Node3D.new()
@@ -132,12 +165,71 @@ func _build_plaza_props() -> void:
 		inst.position = spot[0]
 		props.add_child(inst)
 
+func _build_city_props() -> void:
+	var props := Node3D.new()
+	props.name = "CityProps"
+	add_child(props)
+	var wagon = load("res://assets/models/village_kit/Prop_Wagon.gltf") as PackedScene
+	var crate = load("res://assets/models/village_kit/Prop_Crate.gltf") as PackedScene
+	var fence = load("res://assets/models/village_kit/Prop_WoodenFence_Single.gltf") as PackedScene
+	if wagon:
+		for spot in [Vector3(6.5, 0, 12.0), Vector3(-8.0, 0, -11.0)]:
+			var w := wagon.instantiate() as Node3D
+			w.position = spot
+			w.rotation.y = spot.x * 0.3
+			props.add_child(w)
+	if crate:
+		for spot in [Vector3(4.0, 0, -11.5), Vector3(4.8, 0, -12.3), Vector3(-5.0, 0, 11.0)]:
+			var c := crate.instantiate() as Node3D
+			c.position = spot
+			c.rotation.y = spot.x * 0.5
+			props.add_child(c)
+	if fence:
+		for spot in [Vector3(-7.0, 0, -8.0), Vector3(-9.0, 0, -8.0), Vector3(7.0, 0, 8.0)]:
+			var f := fence.instantiate() as Node3D
+			f.position = spot
+			props.add_child(f)
+
+func _build_villagers() -> void:
+	var villagers := Node3D.new()
+	villagers.name = "Villagers"
+	add_child(villagers)
+	var models := [
+		"res://assets/models/characters/QuaterniusRanger.tscn",
+		"res://assets/models/characters/QuaterniusRogue.tscn",
+		"res://assets/models/characters/QuaterniusWarrior.tscn",
+		"res://assets/models/characters/QuaterniusRogue.tscn",
+	]
+	var paths := [
+		[Vector3(-5, 0, -4), Vector3(-7, 0, 4), Vector3(-2, 0, 7)],
+		[Vector3(5, 0, -4), Vector3(8, 0, 3), Vector3(4, 0, 7)],
+		[Vector3(-6, 0, 9), Vector3(2, 0, 10), Vector3(6, 0, 8)],
+		[Vector3(9, 0, -8), Vector3(3, 0, -10), Vector3(-3, 0, -8)],
+	]
+	for i in range(models.size()):
+		var model := (load(models[i]) as PackedScene).instantiate() as Node3D
+		model.scale = Vector3.ONE * 0.8
+		var bot := Node3D.new()
+		bot.set_script(load("res://scripts/village/VillagerBot.gd"))
+		bot.add_child(model)
+		bot.position = paths[i][0]
+		bot.set("waypoints", paths[i])
+		bot.set("model", model)
+		villagers.add_child(bot)
+		model.call("set_tint", Color(1.55, 1.5, 1.45))
+
+func get_king_spawn() -> Vector3:
+	return KING_SPAWN
+
+func get_castle_center() -> Vector3:
+	return CASTLE_POS + Vector3(0, 4.2, 0)
+
 func _merge_static() -> void:
 	var merger = load("res://scripts/core/StaticMeshMerger.gd")
-	for node_name in ["CastleBackdrop", "OuterTrees", "PlazaLamps", "PlazaProps"]:
+	for node_name in ["CastleBackdrop", "CastleGround", "OuterTrees", "PlazaLamps", "PlazaProps", "CityProps"]:
 		var n := get_node_or_null(node_name) as Node3D
 		if n:
-			merger.merge_subtree(n, ["Label3D"])
+			merger.merge_subtree(n, ["Label3D"], false, true)
 
 func _build_lamp_posts() -> void:
 	var lamps := Node3D.new()
