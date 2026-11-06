@@ -63,6 +63,7 @@ func _update_hud() -> void:
 	if battle_button:
 		var next_stage = int(SaveManager.save_data.get("unlocked_stages", 1))
 		battle_button.text = "⚔ Batalha (Fase %d)" % next_stage
+	_update_hero_button()
 
 func _on_battle_pressed() -> void:
 	AudioManager.play_sfx("button_click")
@@ -75,17 +76,38 @@ func _on_battle_pressed() -> void:
 
 func _on_heroes_pressed() -> void:
 	AudioManager.play_sfx("button_click")
-	# Alterna o herói selecionado entre os desbloqueados para teste rápido
-	var unlocked = SaveManager.save_data.get("unlocked_heroes", ["teodoro"])
-	var current = SaveManager.save_data.get("selected_hero", "teodoro")
-	var cur_idx = unlocked.find(current)
-	var next_idx = (cur_idx + 1) % unlocked.size()
-	SaveManager.save_data["selected_hero"] = unlocked[next_idx]
+	var heroes := _hero_ids()
+	var current = str(SaveManager.save_data.get("selected_hero", "teodoro"))
+	var cur_idx = heroes.find(current)
+	var next_idx = (cur_idx + 1) % heroes.size()
+	SaveManager.save_data["selected_hero"] = heroes[next_idx]
 	SaveManager.save_game()
-	
-	var hero_name = unlocked[next_idx].capitalize()
-	if heroes_button:
-		heroes_button.text = "Herói: %s" % hero_name
+	_update_hero_button()
+
+func _hero_ids() -> Array:
+	var file := FileAccess.open("res://data/heroes/heroes.json", FileAccess.READ)
+	if not file:
+		return ["teodoro"]
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return ["teodoro"]
+	var ids: Array = parsed.keys()
+	ids.sort()
+	return ids
+
+func _update_hero_button() -> void:
+	if heroes_button == null:
+		return
+	var hero_id = str(SaveManager.save_data.get("selected_hero", "teodoro"))
+	var display := hero_id.capitalize()
+	var file := FileAccess.open("res://data/heroes/heroes.json", FileAccess.READ)
+	if file:
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		file.close()
+		if typeof(parsed) == TYPE_DICTIONARY and parsed.has(hero_id):
+			display = str(parsed[hero_id].get("name", display))
+	heroes_button.text = "Herói: %s" % display
 
 func _on_settings_pressed() -> void:
 	AudioManager.play_sfx("button_click")

@@ -22,6 +22,8 @@ var walk_time: float = 0.0
 func _ready() -> void:
 	current_hp = hp
 	add_to_group("troops")
+	# Camada própria (bit 3): o Rei atravessa aliados; mundo/paliçadas continuam bloqueando.
+	collision_layer = 8
 	GameState.register_troop(self)
 	
 	# Bônus do Quartel da Vila

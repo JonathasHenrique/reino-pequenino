@@ -91,17 +91,17 @@ mesh = SubResource("PlaneMesh_ground")
 surface_material_override/0 = SubResource("ShaderMaterial_village_grass")
 
 [node name="PlazaCenter" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
 mesh = SubResource("BoxMesh_plaza")
 surface_material_override/0 = SubResource("StandardMaterial3D_cobble")
 
 [node name="RoadNS" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 mesh = SubResource("BoxMesh_road_long")
 surface_material_override/0 = SubResource("StandardMaterial3D_cobble")
 
 [node name="RoadEW" type="MeshInstance3D" parent="Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 mesh = SubResource("BoxMesh_road_wide")
 surface_material_override/0 = SubResource("StandardMaterial3D_cobble")
 
@@ -143,7 +143,7 @@ building_name = "Quartel Real"
 base_cost = 40
 
 [node name="Blacksmith" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -12)
 building_id = "blacksmith"
 building_name = "Ferraria da Vila"
 base_cost = 50

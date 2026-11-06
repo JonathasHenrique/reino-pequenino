@@ -7,9 +7,10 @@ extends Node3D
 
 const CASTLE_DIR := "res://assets/models/castle/"
 const CASTLE_SCALE := 2.0
-const CASTLE_POS := Vector3(-17.0, 0.0, -17.0)
-const CASTLE_YAW := PI / 4.0
-const KING_SPAWN := Vector3(-8.5, 0.0, -8.5)
+const CASTLE_POS := Vector3(0.0, 0.0, -18.0)
+const CASTLE_YAW := 0.0
+const KING_SPAWN := Vector3(0.0, 0.0, -8.5)
+const KING_GATE := Vector3(0.0, 0.0, -11.2)
 
 @export var build_on_ready: bool = true
 
@@ -88,7 +89,7 @@ func _build_castle() -> void:
 	stone.albedo_color = Color(0.70, 0.66, 0.58)
 	stone.roughness = 0.95
 	yard.material_override = stone
-	yard.position = Vector3(0, 0.04, 0)
+	yard.position = Vector3(0, 0.12, 0)
 	castle.add_child(yard)
 
 	_build_castle_collision(castle)
@@ -136,21 +137,12 @@ func _build_castle_ground() -> void:
 
 	var yard := MeshInstance3D.new()
 	var ym := BoxMesh.new()
-	ym.size = Vector3(8.0, 0.08, 6.0)
+	ym.size = Vector3(9.0, 0.08, 5.0)
 	yard.mesh = ym
 	yard.material_override = stone
-	yard.position = CASTLE_POS + Vector3(4.0, 0.02, 4.0)
+	yard.position = CASTLE_POS + Vector3(0.0, 0.06, 8.0)
 	yard.rotation.y = CASTLE_YAW
 	ground.add_child(yard)
-
-	var path := MeshInstance3D.new()
-	var pm := BoxMesh.new()
-	pm.size = Vector3(4.0, 0.06, 9.0)
-	path.mesh = pm
-	path.material_override = stone
-	path.position = CASTLE_POS + Vector3(8.5, 0.03, 8.5)
-	path.rotation.y = CASTLE_YAW
-	ground.add_child(path)
 
 func _build_trees() -> void:
 	var scenery := Node3D.new()
@@ -251,6 +243,9 @@ func _build_villagers() -> void:
 
 func get_king_spawn() -> Vector3:
 	return KING_SPAWN
+
+func get_king_gate() -> Vector3:
+	return KING_GATE
 
 func get_castle_center() -> Vector3:
 	return CASTLE_POS + Vector3(0, 4.2, 0)

@@ -64,9 +64,15 @@ func get_benefit_description() -> String:
 func _update_labels() -> void:
 	if label_level:
 		label_level.text = "%s · Nível %d" % [building_name, current_level]
+		var top := 5.4
 		if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
-			var tall := current_level >= 2
-			label_level.position.y = 9.0 if tall else 7.4
+			top = 9.0 if current_level >= 2 else 7.4
+		label_level.position.y = top
+		label_level.no_depth_test = true
+		label_level.render_priority = 10
+		label_level.outline_render_priority = 9
+		if label_upgrade:
+			label_upgrade.position.y = top - 1.1
 	
 	if label_upgrade:
 		if current_level >= max_level or building_id == "crown_wall":

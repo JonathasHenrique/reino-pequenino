@@ -45,7 +45,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			shake_strength = 0.0
 		var target_pos = target_node.global_position + offset_vector + shake_offset
-		global_position = global_position.lerp(target_pos, follow_speed * delta)
+		var smooth := 1.0 - exp(-follow_speed * delta)
+		global_position = global_position.lerp(target_pos, smooth)
 		look_at(target_node.global_position, Vector3.UP)
 
 func shake(strength: float = 0.12, duration: float = 0.22) -> void:

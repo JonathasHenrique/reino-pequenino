@@ -52,11 +52,11 @@ func _build_side_walls() -> void:
 		body.name = "SideWall"
 		body.collision_layer = 1
 		body.collision_mask = 0
-		body.position = Vector3(side * 2.55, 0, 0)
+		body.position = Vector3(side * 2.85, 0, 0)
 		add_child(body)
 		var shape := CollisionShape3D.new()
 		var box := BoxShape3D.new()
-		box.size = Vector3(3.5, 2.0, 1.0)
+		box.size = Vector3(2.9, 2.0, 1.0)
 		shape.shape = box
 		shape.position = Vector3(0, 1.0, 0)
 		body.add_child(shape)
@@ -68,12 +68,12 @@ func _build_side_walls() -> void:
 			cyl.height = 2.0
 			log.mesh = cyl
 			log.material_override = wood_mat
-			log.position = Vector3(-1.5 + i * 0.75, 1.0, 0.0)
+			log.position = Vector3(-1.2 + i * 0.6, 1.0, 0.0)
 			body.add_child(log)
 		for y in [0.45, 1.6]:
 			var beam := MeshInstance3D.new()
 			var bm := BoxMesh.new()
-			bm.size = Vector3(3.5, 0.18, 0.25)
+			bm.size = Vector3(2.9, 0.18, 0.25)
 			beam.mesh = bm
 			beam.material_override = wood_dark_mat
 			beam.position = Vector3(0, y, 0)
@@ -89,7 +89,7 @@ func _build_door() -> void:
 	add_child(enemy_block)
 	var eshape := CollisionShape3D.new()
 	var ebox := BoxShape3D.new()
-	ebox.size = Vector3(1.6, 2.0, 0.35)
+	ebox.size = Vector3(2.8, 2.0, 0.35)
 	eshape.shape = ebox
 	eshape.position = Vector3(0, 1.0, 0)
 	enemy_block.add_child(eshape)
@@ -102,7 +102,7 @@ func _build_door() -> void:
 	add_child(king_body)
 	king_block = CollisionShape3D.new()
 	var kbox := BoxShape3D.new()
-	kbox.size = Vector3(1.6, 2.0, 0.35)
+	kbox.size = Vector3(2.8, 2.0, 0.35)
 	king_block.shape = kbox
 	king_block.position = Vector3(0, 1.0, 0)
 	king_body.add_child(king_block)
@@ -110,25 +110,25 @@ func _build_door() -> void:
 	# Folha da porta, presa numa dobradiça à esquerda da abertura.
 	door_pivot = Node3D.new()
 	door_pivot.name = "DoorPivot"
-	door_pivot.position = Vector3(-0.8, 0, 0)
+	door_pivot.position = Vector3(-1.4, 0, 0)
 	add_child(door_pivot)
 	var model := load(GATE_MODEL) as PackedScene
 	if model:
 		var leaf := model.instantiate() as Node3D
-		leaf.scale = Vector3.ONE * 2.4
+		leaf.scale = Vector3.ONE * 3.2
 		leaf.rotation.y = PI / 2.0
-		leaf.position = Vector3(0.8, 0, 0)
+		leaf.position = Vector3(1.4, 0, 0)
 		door_pivot.add_child(leaf)
 
 	# Área de detecção: aliadas por perto abrem a porta.
 	var area := Area3D.new()
 	area.name = "Trigger"
 	area.collision_layer = 0
-	area.collision_mask = 1
+	area.collision_mask = 1 | 8
 	add_child(area)
 	var ashape := CollisionShape3D.new()
 	var abox := BoxShape3D.new()
-	abox.size = Vector3(3.0, 2.0, 2.6)
+	abox.size = Vector3(4.0, 2.0, 3.0)
 	ashape.shape = abox
 	ashape.position = Vector3(0, 1.0, 0)
 	area.add_child(ashape)

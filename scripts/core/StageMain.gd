@@ -190,6 +190,15 @@ func _on_hero_ability_used(hero_id: String) -> void:
 	if not is_instance_valid(king):
 		return
 	match hero_id:
+		"teodoro":
+			for enemy in get_tree().get_nodes_in_group("enemies"):
+				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 7.0:
+					if enemy.has_method("apply_slow_for"):
+						enemy.apply_slow_for(4.0, 0.55)
+			for troop in GameState.active_troops:
+				if is_instance_valid(troop) and troop.get("current_hp") != null and troop.get("hp") != null:
+					troop.current_hp = mini(int(troop.hp), int(troop.current_hp) + int(troop.hp) * 0.2)
+			_hero_burst()
 		"marta":
 			for palisade in active_palisades:
 				if is_instance_valid(palisade) and palisade.has_method("repair_fully"):
@@ -209,6 +218,35 @@ func _on_hero_ability_used(hero_id: String) -> void:
 				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 8.0:
 					if enemy.has_method("apply_slow_for"):
 						enemy.apply_slow_for(6.0, 0.5)
+
+func _hero_burst() -> void:
+	if not is_instance_valid(king):
+		return
+	var ring := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.9
+	torus.outer_radius = 1.15
+	ring.mesh = torus
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(1.0, 0.82, 0.25, 0.95)
+	mat.emission_enabled = true
+	mat.emission = Color(1.0, 0.75, 0.2)
+	mat.emission_energy_multiplier = 2.0
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	ring.material_override = mat
+	ring.position = king.global_position + Vector3(0, 0.12, 0)
+	add_child(ring)
+	var tw := create_tween()
+	tw.tween_property(ring, "scale", Vector3(6.5, 1.0, 6.5), 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(mat, "albedo_color", Color(1.0, 0.82, 0.25, 0.0), 0.55)
+	tw.tween_callback(ring.queue_free)
+	Art.dust_puff(self, king.global_position, 22)
+	var shout := Art.label(self, "GRITO!", king.global_position + Vector3(0, 2.6, 0), 64, Color(1.0, 0.9, 0.4))
+	var ltw := create_tween()
+	ltw.tween_property(shout, "position:y", shout.position.y + 1.4, 0.9)
+	ltw.parallel().tween_property(shout, "modulate", Color(1.0, 0.9, 0.4, 0.0), 0.9)
+	ltw.tween_callback(shout.queue_free)
 
 func _spawn_barracks() -> void:
 	if barracks_built:
