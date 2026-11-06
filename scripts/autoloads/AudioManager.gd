@@ -9,6 +9,10 @@ var max_sfx_voices: int = 12
 
 var synthesized_sfx: Dictionary = {}
 var current_track: String = ""
+var _music_cache: Dictionary = {}
+var _music_tasks: Dictionary = {}
+var _music_results: Dictionary = {}
+var _wanted_track: String = ""
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -38,17 +42,199 @@ func _on_settings_updated() -> void:
 # --- Gerador Procedural de Áudio WAV PCM 16-bit ---
 
 func _pregenerate_sounds() -> void:
-	synthesized_sfx["button_click"] = _generate_tone(0.06, 540.0, 720.0, 0.4, "sine")
-	synthesized_sfx["coin_pickup"] = _generate_arpeggio([987.77, 1318.51], 0.12, 0.35, "sine")
-	synthesized_sfx["recruit"] = _generate_arpeggio([440.0, 554.37, 659.25], 0.22, 0.4, "triangle")
-	synthesized_sfx["build"] = _generate_noise_hit(0.18, 220.0, 0.45)
-	synthesized_sfx["puff"] = _generate_noise_hit(0.25, 120.0, 0.35)
-	synthesized_sfx["shoot"] = _generate_tone(0.1, 800.0, 300.0, 0.3, "square")
-	synthesized_sfx["hit"] = _generate_tone(0.08, 220.0, 90.0, 0.5, "triangle")
-	synthesized_sfx["king_hit"] = _generate_tone(0.15, 180.0, 70.0, 0.6, "saw")
-	synthesized_sfx["stage_victory"] = _generate_arpeggio([523.25, 659.25, 783.99, 1046.50], 0.5, 0.5, "triangle")
-	synthesized_sfx["stage_defeat"] = _generate_arpeggio([440.0, 415.30, 392.00, 349.23], 0.6, 0.5, "saw")
-	synthesized_sfx["hero_skill"] = _generate_arpeggio([392.0, 523.25, 659.25, 783.99, 1046.50], 0.4, 0.5, "sine")
+	synthesized_sfx["button_click"] = _generate_pluck(660.0, 0.09, 0.30)
+	synthesized_sfx["coin_pickup"] = _generate_pluck_sequence([783.99, 1046.50], 0.08, 0.32)
+	synthesized_sfx["recruit"] = _generate_horn([392.0, 523.25, 659.25], 0.30, 0.30)
+	synthesized_sfx["build"] = _generate_wood_hit(0.20, 0.55)
+	synthesized_sfx["puff"] = _generate_noise_hit(0.25, 120.0, 0.30)
+	synthesized_sfx["shoot"] = _generate_whoosh(0.14, 0.32)
+	synthesized_sfx["hit"] = _generate_wood_hit(0.12, 0.48)
+	synthesized_sfx["king_hit"] = _generate_drum(0.28, 0.65)
+	synthesized_sfx["stage_victory"] = _generate_horn([392.0, 523.25, 659.25, 783.99], 0.85, 0.36)
+	synthesized_sfx["stage_defeat"] = _generate_arpeggio([440.0, 415.30, 392.00, 349.23], 0.6, 0.5, "triangle")
+	synthesized_sfx["hero_skill"] = _generate_harp_gliss()
+
+func _sound_wav(samples: PackedFloat32Array, sample_rate: int = 22050) -> AudioStreamWAV:
+	var byte_data := PackedByteArray()
+	byte_data.resize(samples.size() * 2)
+	for i in range(samples.size()):
+		byte_data.encode_s16(i * 2, int(clampf(samples[i], -1.0, 1.0) * 32767.0))
+	var wav := AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sample_rate
+	wav.stereo = false
+	wav.data = byte_data
+	return wav
+
+func _hash_noise(seed_value: float) -> float:
+	var n := sin(seed_value * 12.9898) * 43758.5453
+	return (n - floor(n)) * 2.0 - 1.0
+
+func _instrument(kind: String, freq: float, t: float, dur: float) -> float:
+	match kind:
+		"pluck":
+			var attack := minf(t / 0.006, 1.0)
+			var body := sin(TAU * freq * t) + 0.45 * sin(TAU * freq * 2.0 * t) * exp(-t * 9.0) + 0.18 * sin(TAU * freq * 3.0 * t) * exp(-t * 13.0)
+			return body * attack * exp(-t * 5.2)
+		"flute":
+			var env := minf(t / 0.09, 1.0) * clampf((dur - t) / 0.14, 0.0, 1.0)
+			var vib := 1.0 + 0.006 * sin(TAU * 5.2 * t)
+			return (sin(TAU * freq * vib * t) + 0.12 * sin(TAU * freq * 2.0 * t)) * env
+		"bass":
+			return sin(TAU * freq * t) * minf(t / 0.02, 1.0) * exp(-t * 1.1)
+		"drum":
+			var f := 82.0 * exp(-t * 3.2) + 46.0
+			return (sin(TAU * f * t) * 0.85 + _hash_noise(t * 900.0) * 0.22) * exp(-t * 15.0)
+		"shaker":
+			return _hash_noise(t * 2600.0) * exp(-t * 42.0) * 0.5
+		"horn":
+			var env := minf(t / 0.07, 1.0) * clampf((dur - t) / 0.18, 0.0, 1.0)
+			var vib2 := 1.0 + 0.004 * sin(TAU * 4.6 * t)
+			return (0.7 * sin(TAU * freq * vib2 * t) + 0.3 * sin(TAU * freq * 2.0 * t) + 0.12 * sin(TAU * freq * 3.0 * t)) * env
+	return 0.0
+
+func _render_events(events: Array, duration: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(duration * sr)
+	var buf := PackedFloat32Array()
+	buf.resize(total)
+	for ev in events:
+		var start := int(float(ev["start"]) * sr)
+		var count := int(float(ev["len"]) * sr)
+		for i in range(count):
+			var idx := start + i
+			if idx >= total:
+				break
+			var t := float(i) / float(sr)
+			buf[idx] += _instrument(str(ev["f"]), float(ev["freq"]), t, float(ev["len"])) * float(ev["vol"])
+	var peak := 0.0
+	for i in range(total):
+		peak = maxf(peak, absf(buf[i]))
+	if peak > 0.001:
+		var gain := 0.88 / peak
+		for i in range(total):
+			buf[i] = clampf(buf[i] * gain, -1.0, 1.0)
+	return _sound_wav(buf)
+
+func _generate_pluck(freq: float, duration: float, volume: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(duration * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	for i in range(total):
+		arr[i] = _instrument("pluck", freq, float(i) / float(sr), duration) * volume
+	return _sound_wav(arr)
+
+func _generate_pluck_sequence(freqs: Array, note_duration: float, volume: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(note_duration * freqs.size() * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	for n in range(freqs.size()):
+		var base := int(n * note_duration * sr)
+		for i in range(int(note_duration * sr)):
+			var idx := base + i
+			if idx >= total:
+				break
+			arr[idx] += _instrument("pluck", float(freqs[n]), float(i) / float(sr), note_duration) * volume
+	return _sound_wav(arr)
+
+func _generate_horn(freqs: Array, note_duration: float, volume: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(note_duration * freqs.size() * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	for n in range(freqs.size()):
+		var base := int(n * note_duration * sr)
+		for i in range(int(note_duration * sr)):
+			var idx := base + i
+			if idx >= total:
+				break
+			arr[idx] += _instrument("horn", float(freqs[n]), float(i) / float(sr), note_duration) * volume
+	return _sound_wav(arr)
+
+func _generate_wood_hit(duration: float, volume: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(duration * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	for i in range(total):
+		var t := float(i) / float(sr)
+		var f := 165.0 * exp(-t * 18.0) + 72.0
+		var thump := sin(TAU * f * t) * exp(-t * 22.0) * 0.85
+		arr[i] = (thump + randf_range(-0.25, 0.25) * exp(-t * 34.0)) * volume
+	return _sound_wav(arr)
+
+func _generate_whoosh(duration: float, volume: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(duration * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	var lp := 0.0
+	for i in range(total):
+		var t := float(i) / float(sr)
+		lp = lp * 0.86 + randf_range(-1.0, 1.0) * 0.14
+		var sweep := sin(TAU * (900.0 * exp(-t * 9.0) + 120.0) * t) * 0.25
+		arr[i] = (lp + sweep) * exp(-t * 16.0) * volume
+	return _sound_wav(arr)
+
+func _generate_drum(duration: float, volume: float) -> AudioStreamWAV:
+	var sr := 22050
+	var total := int(duration * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	for i in range(total):
+		arr[i] = _instrument("drum", 0.0, float(i) / float(sr), duration) * volume
+	return _sound_wav(arr)
+
+func _generate_harp_gliss() -> AudioStreamWAV:
+	var notes := [392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0]
+	var sr := 22050
+	var total := int(0.7 * sr)
+	var arr := PackedFloat32Array()
+	arr.resize(total)
+	for n in range(notes.size()):
+		var base := int(n * 0.045 * sr)
+		for i in range(int(0.5 * sr)):
+			var idx := base + i
+			if idx >= total:
+				break
+			arr[idx] += _instrument("pluck", float(notes[n]), float(i) / float(sr), 0.5) * 0.28
+	return _sound_wav(arr)
+
+func _generate_medieval_track(track_name: String) -> AudioStreamWAV:
+	var events: Array = []
+	var duration := 9.6
+	if track_name == "battle":
+		duration = 8.0
+		var bar := 2.0
+		var ostinato := [146.83, 174.61, 220.0, 293.66, 220.0, 174.61, 196.0, 146.83]
+		for b in range(4):
+			events.append({"f": "bass", "freq": 73.42, "start": b * bar, "len": bar, "vol": 0.42})
+			for k in range(8):
+				events.append({"f": "pluck", "freq": ostinato[k], "start": b * bar + k * bar / 8.0, "len": bar / 8.0 * 0.95, "vol": 0.42})
+			for beat in range(4):
+				events.append({"f": "drum", "freq": 0.0, "start": b * bar + beat * bar / 4.0, "len": 0.22, "vol": 0.48})
+			for k in range(8):
+				events.append({"f": "shaker", "freq": 0.0, "start": b * bar + k * bar / 8.0 + 0.04, "len": 0.08, "vol": 0.14})
+		var horn_melody := [293.66, 349.23, 440.0, 392.0, 349.23, 293.66, 261.63, 293.66]
+		for k in range(horn_melody.size()):
+			events.append({"f": "horn", "freq": horn_melody[k], "start": k * 1.0, "len": 0.86, "vol": 0.30})
+	else:
+		var bar := 3.2
+		var chords := [
+			[146.83, 174.61, 220.0],
+			[196.00, 246.94, 293.66],
+			[220.00, 261.63, 329.63],
+		]
+		for b in range(3):
+			for k in range(4):
+				events.append({"f": "pluck", "freq": chords[b][k % 3] * 2.0, "start": b * bar + k * bar / 4.0, "len": bar / 4.0 * 0.95, "vol": 0.42})
+			events.append({"f": "bass", "freq": chords[b][0] / 2.0, "start": b * bar, "len": bar, "vol": 0.36})
+		var melody := [293.66, 349.23, 392.0, 440.0, 392.0, 349.23, 293.66, 261.63, 293.66, 349.23, 392.0, 293.66]
+		for k in range(melody.size()):
+			events.append({"f": "flute", "freq": melody[k], "start": k * 0.8, "len": 0.74, "vol": 0.26})
+	return _render_events(events, duration)
 
 func _generate_tone(duration: float, start_freq: float, end_freq: float, volume: float, wave_type: String) -> AudioStreamWAV:
 	var sample_rate = 22050
@@ -154,27 +340,45 @@ func play_sfx(sfx_name: String) -> void:
 	sfx_players[0].play()
 
 func play_music(track_name: String) -> void:
-	if current_track == track_name and music_player.playing:
+	if DisplayServer.get_name() == "headless":
 		return
+	_wanted_track = track_name
+	if _music_cache.has(track_name):
+		if current_track == track_name and music_player.playing:
+			return
+		_start_music(track_name, _music_cache[track_name])
+		return
+	if not _music_tasks.has(track_name):
+		var task_id := WorkerThreadPool.add_task(func(): _music_results[track_name] = _generate_medieval_track(track_name))
+		_music_tasks[track_name] = task_id
+
+func _process(_delta: float) -> void:
+	for track in _music_tasks.keys():
+		if WorkerThreadPool.is_task_completed(_music_tasks[track]):
+			WorkerThreadPool.wait_for_task_completion(_music_tasks[track])
+			_music_tasks.erase(track)
+			var wav: AudioStreamWAV = _music_results.get(track)
+			if wav == null:
+				continue
+			_music_cache[track] = wav
+			if _wanted_track == str(track):
+				_start_music(str(track), wav)
+
+func _start_music(track_name: String, wav: AudioStreamWAV) -> void:
 	current_track = track_name
-	
-	# Gera loop musical curto e agradável para a atmosfera
-	var freqs = [261.63, 329.63, 392.00, 523.25, 440.0, 392.0]
-	if track_name == "battle":
-		freqs = [220.0, 261.63, 329.63, 440.0, 329.63, 293.66]
-	elif track_name == "village":
-		freqs = [261.63, 329.63, 392.00, 329.63, 349.23, 261.63]
-		
-	var wave = "square" if Settings.retro_mode else "triangle"
-	var music_wav = _generate_arpeggio(freqs, 2.4, 0.25, wave)
-	music_wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
-	music_wav.loop_begin = 0
-	music_wav.loop_end = music_wav.data.size() / 2
-	
-	music_player.stream = music_wav
+	wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	wav.loop_begin = 0
+	wav.loop_end = wav.data.size() / 2
+	music_player.stream = wav
 	music_player.play()
 
 func stop_music() -> void:
-	music_player.stop()
+	if music_player:
+		music_player.stop()
 	current_track = ""
+
+func _exit_tree() -> void:
+	for track in _music_tasks.keys():
+		WorkerThreadPool.wait_for_task_completion(_music_tasks[track])
+	_music_tasks.clear()
 

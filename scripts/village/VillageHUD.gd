@@ -83,6 +83,8 @@ func _on_heroes_pressed() -> void:
 	SaveManager.save_data["selected_hero"] = heroes[next_idx]
 	SaveManager.save_game()
 	_update_hero_button()
+	if GameState.king_node and is_instance_valid(GameState.king_node) and GameState.king_node.has_method("refresh_hero_appearance"):
+		GameState.king_node.call("refresh_hero_appearance")
 
 func _hero_ids() -> Array:
 	var file := FileAccess.open("res://data/heroes/heroes.json", FileAccess.READ)

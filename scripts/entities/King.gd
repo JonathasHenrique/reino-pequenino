@@ -23,12 +23,101 @@ const PUFF_SCENE: PackedScene = preload("res://scenes/entities/PuffEffect.tscn")
 @onready var formation_aura: MeshInstance3D = $FormationAura
 @onready var visuals: Node3D = $Visuals
 
+var foot_hero: Node3D = null
+var _vehicle_mode: bool = false
+
+const HERO_LOOKS := {
+	"marta": {"model": "Warrior", "tint": Color(1.80, 1.40, 1.00), "prop": "hammer", "accent": Color(0.85, 0.62, 0.30)},
+	"fidelio": {"model": "Rogue", "tint": Color(1.55, 1.20, 2.00), "prop": "staff", "accent": Color(0.65, 0.45, 1.0)},
+	"rosa": {"model": "Ranger", "tint": Color(2.00, 1.20, 1.00), "prop": "shield", "accent": Color(0.85, 0.20, 0.22)},
+	"clara": {"model": "Ranger", "tint": Color(1.80, 1.90, 1.70), "prop": "staff", "accent": Color(1.0, 0.95, 0.70)},
+	"bento": {"model": "Warrior", "tint": Color(1.90, 1.40, 0.85), "prop": "club", "accent": Color(0.55, 0.36, 0.20), "big": true},
+	"barao": {"model": "Rogue", "tint": Color(1.45, 1.55, 1.75), "prop": "sword", "accent": Color(0.60, 0.65, 0.75)},
+}
+
 func _ready() -> void:
 	GameState.king_node = self
 	base_visual_scale = visuals.scale
 	GameState.hero_ability_used.connect(_on_hero_ability_used)
 	_apply_hero_passives()
+	_apply_hero_visuals()
 	_setup_magnet()
+
+func refresh_hero_appearance() -> void:
+	_apply_hero_visuals()
+
+func _apply_hero_visuals() -> void:
+	var hero_id = str(SaveManager.save_data.get("selected_hero", "teodoro"))
+	var horse := visuals.get_node_or_null("Horse")
+	var rider := visuals.get_node_or_null("KingRider")
+	if foot_hero and is_instance_valid(foot_hero):
+		foot_hero.queue_free()
+		foot_hero = null
+	_vehicle_mode = hero_id == "teodoro"
+	if horse:
+		horse.visible = _vehicle_mode
+	if rider:
+		rider.visible = _vehicle_mode
+	if not _vehicle_mode:
+		_build_foot_hero(hero_id)
+
+func _build_foot_hero(hero_id: String) -> void:
+	var look: Dictionary = HERO_LOOKS.get(hero_id, HERO_LOOKS["marta"])
+	var scene := load("res://assets/models/characters/Quaternius%s.tscn" % str(look["model"])) as PackedScene
+	if scene == null:
+		return
+	var foot := Node3D.new()
+	foot.name = "FootHero"
+	visuals.add_child(foot)
+	var model := scene.instantiate() as Node3D
+	foot.add_child(model)
+	var bounds := _model_bounds(model)
+	var target := 3.40 if bool(look.get("big", false)) else 3.00
+	var scale_factor := target / maxf(0.01, bounds.size.y)
+	model.scale = Vector3.ONE * scale_factor
+	model.position.y = -bounds.position.y * scale_factor
+	if model.has_method("set_tint"):
+		model.call("set_tint", look["tint"])
+	_build_hero_prop(foot, str(look["prop"]), look.get("accent", Color.WHITE))
+	foot_hero = foot
+
+func _model_bounds(model: Node3D) -> AABB:
+	var box := AABB()
+	var first := true
+	for m in model.find_children("*", "MeshInstance3D", true, false):
+		var mi := m as MeshInstance3D
+		var xf := model.global_transform.affine_inverse() * mi.global_transform
+		var a: AABB = xf * mi.get_aabb()
+		if first:
+			box = a
+			first = false
+		else:
+			box = box.merge(a)
+	return box
+
+func _build_hero_prop(parent: Node3D, kind: String, accent: Color) -> void:
+	match kind:
+		"hammer":
+			Art.cyl(parent, 0.055, 0.065, 1.15, Vector3(0.52, 0.8, 0.12), Art.WOOD_DARK, 8)
+			Art.box(parent, Vector3(0.44, 0.24, 0.24), Vector3(0.52, 1.4, 0.12), Art.STONE)
+		"staff":
+			Art.cyl(parent, 0.05, 0.05, 2.25, Vector3(0.55, 1.15, 0.1), Art.WOOD_DARK, 8)
+			var orb := MeshInstance3D.new()
+			var sphere := SphereMesh.new()
+			sphere.radius = 0.17
+			sphere.height = 0.34
+			orb.mesh = sphere
+			orb.material_override = Art.mat(accent, 0.35, 1.6)
+			orb.position = Vector3(0.55, 2.35, 0.1)
+			parent.add_child(orb)
+		"shield":
+			Art.cyl(parent, 0.36, 0.36, 0.12, Vector3(-0.44, 1.2, 0.14), accent, 12, Vector3(PI * 0.5, 0.0, 0.0))
+			Art.cyl(parent, 0.16, 0.16, 0.15, Vector3(-0.44, 1.2, 0.21), Art.GOLD, 12, Vector3(PI * 0.5, 0.0, 0.0))
+		"club":
+			Art.cyl(parent, 0.2, 0.11, 1.45, Vector3(0.58, 0.85, 0.1), Art.WOOD, 8)
+		"sword":
+			Art.box(parent, Vector3(0.06, 0.95, 0.14), Vector3(0.5, 1.0, 0.2), Art.WHITE)
+			Art.box(parent, Vector3(0.28, 0.06, 0.18), Vector3(0.5, 0.53, 0.2), Art.GOLD)
 
 func _apply_hero_passives() -> void:
 	var hero_id = SaveManager.save_data.get("selected_hero", "teodoro")
