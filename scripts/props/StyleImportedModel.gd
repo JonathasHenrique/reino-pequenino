@@ -18,6 +18,8 @@ func set_tint(value: Color) -> void:
 
 func _style_meshes(node: Node) -> void:
 	for child in node.get_children():
+		if str(child.name).begins_with("Face_"):
+			continue
 		if child is MeshInstance3D:
 			var color := Color.WHITE if albedo_texture else fallback_color
 			if albedo_texture == null and child.mesh and child.mesh.get_surface_count() > 0:

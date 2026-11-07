@@ -67,6 +67,9 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 		
 		if enemy_id == "misty_archer":
 			_add_archer_gear(visuals)
+		var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
+		if imported:
+			load("res://scripts/effects/ChibiFace.gd").attach(imported, true)
 
 		# Detalhes do Gigante Titã da Bruma (Capa vermelha fluida e capacete com chifres)
 		if enemy_id == "misty_giant" or scale_mult >= 2.0:
@@ -154,7 +157,7 @@ func _add_archer_gear(parent: Node3D) -> void:
 
 func _apply_enemy_tint(node: Node, tint: Color) -> void:
 	for child in node.get_children():
-		if str(child.name).begins_with("Gear_"):
+		if str(child.name).begins_with("Gear_") or str(child.name).begins_with("Face_"):
 			continue
 		if child.has_method("set_tint"):
 			child.set_tint(tint)

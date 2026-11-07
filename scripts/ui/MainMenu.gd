@@ -31,6 +31,12 @@ func _add_menu_life() -> void:
 		var pulse := create_tween().set_loops()
 		pulse.tween_property(title_label, "scale", Vector2(1.05, 1.05), 0.75).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		pulse.tween_property(title_label, "scale", Vector2.ONE, 0.75).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var crown := get_node_or_null("Header/CrownIcon") as Control
+	if crown:
+		var base_y: float = crown.position.y
+		var bob := create_tween().set_loops()
+		bob.tween_property(crown, "position:y", base_y - 10.0, 0.9).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		bob.tween_property(crown, "position:y", base_y, 0.9).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	for btn in [play_button, village_button, settings_button]:
 		if btn:
 			_add_button_bounce(btn)

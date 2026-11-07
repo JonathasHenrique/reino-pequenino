@@ -15,3 +15,5 @@ func _swap_rider() -> void:
 		if child != imported and child is Node3D:
 			child.visible = CUSTOM_DETAILS.has(str(child.name))
 	imported.visible = true
+	imported.rotation.y = PI
+	load("res://scripts/effects/ChibiFace.gd").attach(imported, false)

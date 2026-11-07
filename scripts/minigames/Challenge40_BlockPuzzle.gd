@@ -1,163 +1,152 @@
-extends Control
+extends Node2D
 
-# Challenge40_BlockPuzzle.gd - Desafio 40: A Muralha de Peças
-# Grade 8x8 de encaixe autoral: arrastar peças poliominó; linhas e colunas completas pontuam e viram muralha
+# Challenge40_BlockPuzzle.gd - "Pula-Nuvens do Herói" (estilo Pou Sky Jump)
+# O herói quica sozinho nas nuvens; a criança só guia para a esquerda/direita.
 
-@export var target_score: int = 300
-var current_score: int = 0
-var grid_size: int = 8
-var board: Array = [] # 8x8 booleanos
-var game_finished: bool = false
-var available_pieces: Array = []
+const UI_FONT = preload("res://assets/fonts/Fredoka-Variable.ttf")
+const GRAVITY := 1500.0
+const JUMP := 640.0
+const SCROLL := 72.0
 
-@onready var grid_container: GridContainer = $CenterContainer/Panel/VBox/GridContainer
-@onready var score_label: Label = $CenterContainer/Panel/VBox/ScoreLabel
-@onready var pieces_container: HBoxContainer = $CenterContainer/Panel/VBox/PiecesContainer
-@onready var victory_ui: CanvasLayer = $VictoryUI
-
-# Definições de peças clássicas em matrizes 2D
-var piece_templates: Array = [
-	[[1, 1], [1, 1]],         # Quadrado 2x2
-	[[1, 1, 1]],              # Linha 3
-	[[1], [1], [1]],          # Coluna 3
-	[[1, 0], [1, 1]],         # L miniatura
-	[[1, 1, 1, 1]],           # Linha 4
-	[[1]]                     # Ponto único
-]
+var hero_x: float = 640.0
+var hero_y: float = 360.0
+var vy: float = 0.0
+var platforms: Array = []
+var spawn_timer: float = 0.0
+var next_id: int = 0
+var landed_ids: Dictionary = {}
+var hearts: int = 3
+var passed: int = 0
+var running: bool = true
+var finished: bool = false
+var overlay: Control = null
 
 func _ready() -> void:
-	_init_board()
-	_update_score_ui()
-	_spawn_piece_options()
-	AudioManager.play_music("village")
+	var view := get_viewport_rect().size
+	for i in range(6):
+		platforms.append({"id": next_id, "x": randf_range(160.0, view.x - 160.0), "y": view.y - 100 - i * 130.0, "w": 210.0})
+		next_id += 1
+	hero_y = platforms[0]["y"] - 34.0
+	vy = -JUMP
+	queue_redraw()
 
-func _init_board() -> void:
-	board.clear()
-	for r in range(grid_size):
-		var row = []
-		for c in range(grid_size):
-			row.append(false)
-		board.append(row)
-		
-	_render_board()
-
-func _render_board() -> void:
-	for child in grid_container.get_children():
-		child.queue_free()
-		
-	grid_container.columns = grid_size
-	
-	for r in range(grid_size):
-		for c in range(grid_size):
-			var cell = ColorRect.new()
-			cell.custom_minimum_size = Vector2(42, 42)
-			cell.color = Color(0.4, 0.7, 0.9) if board[r][c] else Color(0.18, 0.22, 0.28)
-			grid_container.add_child(cell)
-
-func _spawn_piece_options() -> void:
-	for child in pieces_container.get_children():
-		child.queue_free()
-	available_pieces.clear()
-		
-	for i in range(3):
-		var template = piece_templates[randi() % piece_templates.size()]
-		available_pieces.append(template)
-		var btn = Button.new()
-		btn.custom_minimum_size = Vector2(80, 70)
-		btn.text = "Peça %d" % (i + 1)
-		btn.add_theme_font_size_override("font_size", 16)
-		btn.pressed.connect(_on_piece_clicked.bind(template))
-		pieces_container.add_child(btn)
-	_check_game_over()
-
-func _on_piece_clicked(piece: Array) -> void:
-	if game_finished:
+func _process(delta: float) -> void:
+	if not running:
+		queue_redraw()
 		return
-		
-	# Tenta encaixar na primeira posição livre válida
-	var placed = false
-	for r in range(grid_size - piece.size() + 1):
-		for c in range(grid_size - piece[0].size() + 1):
-			if _can_place(piece, r, c):
-				_place(piece, r, c)
-				placed = true
+	var view := get_viewport_rect().size
+	var keyboard := Input.get_axis("ui_left", "ui_right")
+	hero_x = clampf(hero_x + keyboard * 520.0 * delta, 60.0, view.x - 60.0)
+
+	var prev_bottom := hero_y + 30.0
+	vy += GRAVITY * delta
+	hero_y += vy * delta
+
+	for p in platforms:
+		p["y"] += SCROLL * delta
+
+	spawn_timer -= delta
+	if spawn_timer <= 0.0:
+		spawn_timer = 0.85
+		var px := clampf(hero_x + randf_range(-220.0, 220.0), 140.0, view.x - 140.0)
+		platforms.append({"id": next_id, "x": px, "y": -60.0, "w": 210.0})
+		next_id += 1
+
+	if vy > 0.0:
+		for p in platforms:
+			var top := float(p["y"])
+			if prev_bottom <= top + 8.0 and hero_y + 30.0 >= top and absf(hero_x - float(p["x"])) < float(p["w"]) * 0.5:
+				hero_y = top - 30.0
+				vy = -JUMP
+				if not landed_ids.has(int(p["id"])):
+					landed_ids[int(p["id"])] = true
+					passed += 1
 				break
-		if placed:
-			break
-			
-	if placed:
-		AudioManager.play_sfx("build")
-		_clear_full_lines()
-		_render_board()
-		_update_score_ui()
-		
-		if current_score >= target_score:
-			_trigger_victory()
+
+	platforms = platforms.filter(func(p): return float(p["y"]) < view.y + 120.0)
+
+	if hero_y > view.y + 80.0:
+		hearts -= 1
+		if hearts <= 0:
+			_finish(false)
 		else:
-			# Renova as opções
-			_spawn_piece_options()
+			hero_x = view.x * 0.5
+			hero_y = 280.0
+			vy = 0.0
+			platforms.append({"id": next_id, "x": hero_x, "y": 330.0, "w": 240.0})
+			next_id += 1
+
+	if passed >= 12:
+		_finish(true)
+	queue_redraw()
+
+func _unhandled_input(event: InputEvent) -> void:
+	var view := get_viewport_rect().size
+	if event is InputEventScreenTouch and event.pressed:
+		hero_x = clampf(lerpf(hero_x, event.position.x, 0.45), 60.0, view.x - 60.0)
+	elif event is InputEventScreenDrag:
+		hero_x = clampf(lerpf(hero_x, event.position.x, 0.45), 60.0, view.x - 60.0)
+	elif event is InputEventMouseButton and event.pressed:
+		hero_x = clampf(lerpf(hero_x, event.position.x, 0.45), 60.0, view.x - 60.0)
+
+func _draw() -> void:
+	var view := get_viewport_rect().size
+	draw_rect(Rect2(Vector2.ZERO, view), Color(0.62, 0.86, 1.0))
+	for p in platforms:
+		var r := Rect2(Vector2(float(p["x"]) - float(p["w"]) * 0.5, float(p["y"])), Vector2(float(p["w"]), 46))
+		draw_rect(r, Color(1, 1, 1))
+		draw_circle(Vector2(r.position.x + 24, r.position.y + 24), 32.0, Color(1, 1, 1))
+		draw_circle(Vector2(r.end.x - 24, r.position.y + 20), 28.0, Color(1, 1, 1))
+		var shade := Rect2(r.position + Vector2(0, 34), Vector2(r.size.x, 12))
+		draw_rect(shade, Color(0.86, 0.93, 1.0))
+	var hp := Vector2(hero_x, hero_y)
+	draw_circle(hp + Vector2(0, -12), 34.0, Color(0.98, 0.82, 0.64))
+	draw_rect(Rect2(hp + Vector2(-30, 14), Vector2(60, 34)), Color(0.25, 0.5, 0.88))
+	draw_circle(hp + Vector2(-12, -18), 8.0, Color.WHITE)
+	draw_circle(hp + Vector2(12, -18), 8.0, Color.WHITE)
+	draw_circle(hp + Vector2(-11, -17), 4.0, Color(0.1, 0.07, 0.06))
+	draw_circle(hp + Vector2(13, -17), 4.0, Color(0.1, 0.07, 0.06))
+	draw_arc(hp + Vector2(0, 0), 12.0, 0.35, PI - 0.35, 12, Color(0.35, 0.12, 0.1), 3.0)
+	for i in range(hearts):
+		draw_circle(Vector2(view.x - 60 - i * 46, 50), 16.0, Color(0.95, 0.25, 0.3))
+	draw_string(UI_FONT, Vector2(40, 60), "Nuvens: %d/12" % mini(passed, 12), HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(0.15, 0.25, 0.45))
+
+func _finish(won: bool) -> void:
+	if finished:
+		return
+	finished = true
+	running = false
+	if won:
+		MiniGameRunner.complete_challenge(40, {"won": true, "stars": 3})
+	overlay = Control.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(overlay)
+	var panel := ColorRect.new()
+	panel.color = Color(0, 0, 0, 0.5)
+	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(panel)
+	var label := Label.new()
+	label.text = "Você venceu!" if won else "Tente de novo!"
+	label.add_theme_font_override("font", UI_FONT)
+	label.add_theme_font_size_override("font_size", 56)
+	label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.45))
+	label.add_theme_color_override("font_outline_color", Color(0.12, 0.08, 0.05))
+	label.add_theme_constant_override("outline_size", 12)
+	label.set_anchors_preset(Control.PRESET_CENTER)
+	label.position = Vector2(-180, -140)
+	overlay.add_child(label)
+	var btn := Button.new()
+	btn.text = "Ir para a Vila" if won else "Jogar de novo"
+	btn.add_theme_font_override("font", UI_FONT)
+	btn.add_theme_font_size_override("font_size", 34)
+	btn.set_anchors_preset(Control.PRESET_CENTER)
+	btn.position = Vector2(-120, 20)
+	btn.custom_minimum_size = Vector2(240, 70)
+	btn.pressed.connect(_on_overlay_button.bind(won))
+	overlay.add_child(btn)
+
+func _on_overlay_button(won: bool) -> void:
+	if won:
+		get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
 	else:
-		AudioManager.play_sfx("button_click")
-
-func _can_place(piece: Array, start_r: int, start_c: int) -> bool:
-	for pr in range(piece.size()):
-		for pc in range(piece[pr].size()):
-			if piece[pr][pc] == 1:
-				if board[start_r + pr][start_c + pc]:
-					return false
-	return true
-
-func _check_game_over() -> void:
-	if game_finished or available_pieces.is_empty():
-		return
-	for piece in available_pieces:
-		for r in range(grid_size - piece.size() + 1):
-			for c in range(grid_size - piece[0].size() + 1):
-				if _can_place(piece, r, c):
-					return
-	_trigger_game_over()
-
-func _trigger_game_over() -> void:
-	if game_finished:
-		return
-	game_finished = true
-	MiniGameRunner.complete_challenge(40, {"won": false, "stars": 0})
-	var dialog := AcceptDialog.new()
-	dialog.title = "Fim de jogo"
-	dialog.dialog_text = "Não há espaço para nenhuma das peças disponíveis."
-	dialog.confirmed.connect(func(): get_tree().change_scene_to_file("res://scenes/village/Village.tscn"))
-	add_child(dialog)
-	dialog.popup_centered()
-
-func _place(piece: Array, start_r: int, start_c: int) -> void:
-	for pr in range(piece.size()):
-		for pc in range(piece[pr].size()):
-			if piece[pr][pc] == 1:
-				board[start_r + pr][start_c + pc] = true
-	current_score += 15
-
-func _clear_full_lines() -> void:
-	var rows_to_clear = []
-	for r in range(grid_size):
-		if board[r].all(func(val): return val):
-			rows_to_clear.append(r)
-			
-	for r in rows_to_clear:
-		for c in range(grid_size):
-			board[r][c] = false
-		current_score += 60
-		AudioManager.play_sfx("coin_pickup")
-
-func _update_score_ui() -> void:
-	if score_label:
-		score_label.text = "Pontos da Muralha: %d / %d" % [current_score, target_score]
-
-func _trigger_victory() -> void:
-	game_finished = true
-	var stars = 3
-	AudioManager.play_sfx("stage_victory")
-	MiniGameRunner.complete_challenge(40, {"won": true, "stars": stars})
-	
-	if victory_ui:
-		victory_ui.show_victory(40, stars, "Irmã Clara", 4)
-
+		get_tree().reload_current_scene()

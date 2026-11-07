@@ -20,6 +20,7 @@ func _process(delta: float) -> void:
 		return
 	if _base_model_scale == Vector3.ZERO:
 		_base_model_scale = model.scale
+		load("res://scripts/effects/ChibiFace.gd").attach(model, false)
 	bob_time += delta
 	var bounce := absf(sin(bob_time * 7.0))
 	model.scale = _base_model_scale * Vector3(1.0 - 0.04 * bounce, 1.0 + 0.06 * bounce, 1.0 - 0.04 * bounce)

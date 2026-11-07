@@ -24,6 +24,9 @@ var _base_visual_scale: Vector3 = Vector3.ONE
 func _ready() -> void:
 	current_hp = hp
 	_base_visual_scale = visuals.scale
+	var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
+	if imported:
+		load("res://scripts/effects/ChibiFace.gd").attach(imported, false)
 	add_to_group("troops")
 	# Camada própria (bit 3): o Rei atravessa aliados; mundo/paliçadas continuam bloqueando.
 	collision_layer = 8

@@ -1,169 +1,167 @@
-extends Control
+extends Node2D
 
-# Challenge20_Sudoku.gd - Desafio 20: Cofre dos Números (Sudoku Autoral)
-# Grade 4x4 com números mágicos, 3 dicas (nenhuma no modo Veterano) e sem limite de tempo
+# Challenge20_Sudoku.gd - "Chuva de Tesouros do Herói" (estilo Pou Food Drop)
+# A criança move o herói para pegar moedas/poções e desviar de bombas lentas.
 
-var grid_size: int = 4
-var hints_remaining: int = 3
-var selected_row: int = -1
-var selected_col: int = -1
+const UI_FONT = preload("res://assets/fonts/Fredoka-Variable.ttf")
 
-# Quebra-cabeça 4x4 com solução válida única
-var solution: Array = [
-	[1, 2, 3, 4],
-	[3, 4, 1, 2],
-	[2, 1, 4, 3],
-	[4, 3, 2, 1]
-]
-
-var player_grid: Array = []
-var locked_cells: Array = [] # Células originais fixas
-
-@onready var grid_container: GridContainer = $CenterContainer/Panel/VBox/GridContainer
-@onready var hint_button: Button = $CenterContainer/Panel/VBox/HBoxHints/HintButton
-@onready var hints_label: Label = $CenterContainer/Panel/VBox/HBoxHints/HintsLabel
-@onready var num_buttons_container: HBoxContainer = $CenterContainer/Panel/VBox/NumberPad
-@onready var victory_ui: CanvasLayer = $VictoryUI
+var hero_x: float = 640.0
+var target_x: float = 640.0
+var hero_y: float = 600.0
+var score: int = 0
+var hearts: int = 3
+var items: Array = []
+var spawn_timer: float = 0.0
+var elapsed: float = 0.0
+var running: bool = true
+var finished: bool = false
+var overlay: Control = null
 
 func _ready() -> void:
-	if Settings.difficulty == Settings.Difficulty.VETERANO:
-		hints_remaining = 0
+	running = true
+	queue_redraw()
+
+func _process(delta: float) -> void:
+	if not running:
+		queue_redraw()
+		return
+	elapsed += delta
+	var view := get_viewport_rect().size
+	hero_x = lerpf(hero_x, target_x, 10.0 * delta)
+	var keyboard := Input.get_axis("ui_left", "ui_right")
+	if absf(keyboard) > 0.01:
+		target_x = clampf(target_x + keyboard * 620.0 * delta, 70.0, view.x - 70.0)
+	hero_x = clampf(hero_x, 70.0, view.x - 70.0)
+
+	spawn_timer -= delta
+	if spawn_timer <= 0.0:
+		spawn_timer = randf_range(0.55, 0.95)
+		var kind := "coin"
+		var roll := randf()
+		if roll > 0.82:
+			kind = "bomb"
+		elif roll > 0.70:
+			kind = "potion"
+		elif roll > 0.58:
+			kind = "food"
+		items.append({"kind": kind, "x": randf_range(80.0, view.x - 80.0), "y": -40.0, "speed": randf_range(150.0, 210.0)})
+
+	for item in items:
+		item["y"] += float(item["speed"]) * delta
+		if absf(float(item["x"]) - hero_x) < 46.0 and float(item["y"]) > hero_y - 60.0 and float(item["y"]) < hero_y + 40.0:
+			item["y"] = 9999.0
+			match str(item["kind"]):
+				"coin":
+					score += 1
+					AudioManager.play_sfx("coin_pickup")
+				"potion":
+					score += 2
+					hearts = mini(3, hearts + 1)
+					AudioManager.play_sfx("coin_pickup")
+				"food":
+					score += 1
+					AudioManager.play_sfx("coin_pickup")
+				"bomb":
+					hearts -= 1
+					AudioManager.play_sfx("hit")
+	items = items.filter(func(it): return float(it["y"]) < view.y + 60.0)
+
+	if score >= 12:
+		_finish(true)
+	elif hearts <= 0:
+		_finish(false)
+	queue_redraw()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch and event.pressed:
+		target_x = event.position.x
+	elif event is InputEventScreenDrag:
+		target_x = event.position.x
+	elif event is InputEventMouseButton and event.pressed:
+		target_x = event.position.x
+
+func _draw() -> void:
+	var view := get_viewport_rect().size
+	draw_rect(Rect2(Vector2.ZERO, view), Color(0.45, 0.78, 1.0))
+	draw_rect(Rect2(Vector2(0, view.y - 120), Vector2(view.x, 120)), Color(0.36, 0.66, 0.24))
+	for item in items:
+		var p := Vector2(float(item["x"]), float(item["y"]))
+		match str(item["kind"]):
+			"coin":
+				draw_circle(p, 24.0, Color(1.0, 0.78, 0.2))
+				draw_circle(p, 16.0, Color(1.0, 0.92, 0.45))
+			"potion":
+				draw_circle(p, 22.0, Color(0.35, 0.85, 0.45))
+				draw_rect(Rect2(p + Vector2(-7, -30), Vector2(14, 12)), Color(0.75, 0.55, 0.3))
+			"food":
+				draw_circle(p, 22.0, Color(0.9, 0.35, 0.3))
+				draw_circle(p + Vector2(0, -6), 18.0, Color(1.0, 0.6, 0.35))
+			"bomb":
+				draw_circle(p, 24.0, Color(0.18, 0.18, 0.22))
+				draw_circle(p + Vector2(8, -20), 6.0, Color(1.0, 0.6, 0.2))
+	# herói com rosto
+	var hp := Vector2(hero_x, hero_y)
+	draw_circle(hp + Vector2(0, -10), 42.0, Color(0.98, 0.82, 0.64))
+	draw_rect(Rect2(hp + Vector2(-38, 22), Vector2(76, 44)), Color(0.25, 0.5, 0.88))
+	draw_circle(hp + Vector2(-15, -18), 9.0, Color.WHITE)
+	draw_circle(hp + Vector2(15, -18), 9.0, Color.WHITE)
+	draw_circle(hp + Vector2(-14, -16), 4.5, Color(0.1, 0.07, 0.06))
+	draw_circle(hp + Vector2(16, -16), 4.5, Color(0.1, 0.07, 0.06))
+	draw_arc(hp + Vector2(0, 2), 14.0, 0.35, PI - 0.35, 12, Color(0.35, 0.12, 0.1), 3.0)
+	draw_string(UI_FONT, Vector2(40, 60), "Tesouros: %d/12" % mini(score, 12), HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color(0.12, 0.22, 0.45))
+	# corações
+	for i in range(hearts):
+		draw_circle(Vector2(view.x - 60 - i * 46, 50), 16.0, Color(0.95, 0.25, 0.3))
+
+func _draw_text_center(text: String, y: float, size_px: int, color: Color) -> void:
+	var font := UI_FONT
+	var width := get_viewport_rect().size.x
+	draw_string(font, Vector2(0, y), text, HORIZONTAL_ALIGNMENT_CENTER, width, size_px, color)
+
+func _finish(won: bool) -> void:
+	if finished:
+		return
+	finished = true
+	running = false
+	if won:
+		MiniGameRunner.complete_challenge(20, {"won": true, "stars": 3})
+	overlay = Control.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(overlay)
+	var panel := ColorRect.new()
+	panel.color = Color(0, 0, 0, 0.55)
+	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(panel)
+	var label := Label.new()
+	label.text = "Você venceu!" if won else "Tente de novo!"
+	label.add_theme_font_override("font", UI_FONT)
+	label.add_theme_font_size_override("font_size", 56)
+	label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.45))
+	label.add_theme_color_override("font_outline_color", Color(0.12, 0.08, 0.05))
+	label.add_theme_constant_override("outline_size", 12)
+	label.set_anchors_preset(Control.PRESET_CENTER)
+	label.position = Vector2(-180, -140)
+	overlay.add_child(label)
+	var btn := Button.new()
+	btn.text = "Ir para a Vila" if won else "Jogar de novo"
+	btn.add_theme_font_override("font", UI_FONT)
+	btn.add_theme_font_size_override("font_size", 34)
+	btn.set_anchors_preset(Control.PRESET_CENTER)
+	btn.position = Vector2(-120, 20)
+	btn.custom_minimum_size = Vector2(240, 70)
+	btn.pressed.connect(_on_overlay_button.bind(won))
+	overlay.add_child(btn)
+
+func _on_overlay_button(won: bool) -> void:
+	if won:
+		get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
 	else:
-		hints_remaining = 3
-		
-	_init_grid()
-	_update_hints_label()
-	_setup_number_pad()
-	AudioManager.play_music("village")
-
-func _init_grid() -> void:
-	player_grid = [
-		[1, 0, 3, 0],
-		[0, 4, 0, 2],
-		[2, 0, 4, 0],
-		[0, 3, 0, 1]
-	]
-	
-	locked_cells = [
-		[true, false, true, false],
-		[false, true, false, true],
-		[true, false, true, false],
-		[false, true, false, true]
-	]
-	
-	_render_cells()
-
-func _render_cells() -> void:
-	for child in grid_container.get_children():
-		child.queue_free()
-		
-	grid_container.columns = grid_size
-	
-	for r in range(grid_size):
-		for c in range(grid_size):
-			var btn = Button.new()
-			btn.custom_minimum_size = Vector2(70, 70)
-			var val = player_grid[r][c]
-			btn.text = str(val) if val > 0 else ""
-			btn.add_theme_font_size_override("font_size", 28)
-			
-			if locked_cells[r][c]:
-				btn.modulate = Color(0.7, 0.85, 1.0)
-			else:
-				btn.modulate = Color(1.0, 0.95, 0.7)
-				
-			btn.pressed.connect(_on_cell_clicked.bind(r, c))
-			grid_container.add_child(btn)
-
-func _setup_number_pad() -> void:
-	if hint_button:
-		hint_button.pressed.connect(_on_hint_pressed)
-		
-	for i in range(1, 5):
-		var btn = Button.new()
-		btn.custom_minimum_size = Vector2(60, 50)
-		btn.text = str(i)
-		btn.add_theme_font_size_override("font_size", 24)
-		btn.pressed.connect(_on_number_selected.bind(i))
-		num_buttons_container.add_child(btn)
-		
-	var clear_btn = Button.new()
-	clear_btn.custom_minimum_size = Vector2(60, 50)
-	clear_btn.text = "🗑️"
-	clear_btn.pressed.connect(_on_number_selected.bind(0))
-	num_buttons_container.add_child(clear_btn)
-
-func _on_cell_clicked(r: int, c: int) -> void:
-	if locked_cells[r][c]:
-		return
-	selected_row = r
-	selected_col = c
-	AudioManager.play_sfx("button_click")
-
-func _on_number_selected(val: int) -> void:
-	if selected_row != -1 and selected_col != -1 and not locked_cells[selected_row][selected_col]:
-		if not _is_valid_entry(selected_row, selected_col, val):
-			var cell_index := selected_row * grid_size + selected_col
-			var cell := grid_container.get_child(cell_index) as Button
-			if cell:
-				cell.modulate = Color("#D9363E")
-			AudioManager.play_sfx("hit")
-			return
-		player_grid[selected_row][selected_col] = val
-		AudioManager.play_sfx("button_click")
-		_render_cells()
-		_check_solution()
-
-func _is_valid_entry(row: int, col: int, value: int) -> bool:
-	if value == 0:
-		return true
-	for index in range(grid_size):
-		if index != col and player_grid[row][index] == value:
-			return false
-		if index != row and player_grid[index][col] == value:
-			return false
-
-	var box_row := int(row / 2) * 2
-	var box_col := int(col / 2) * 2
-	for box_y in range(box_row, box_row + 2):
-		for box_x in range(box_col, box_col + 2):
-			if (box_y != row or box_x != col) and player_grid[box_y][box_x] == value:
-				return false
-	return true
-
-func _on_hint_pressed() -> void:
-	if hints_remaining <= 0:
-		return
-		
-	# Preenche a primeira célula vazia com o valor correto
-	for r in range(grid_size):
-		for c in range(grid_size):
-			if player_grid[r][c] != solution[r][c]:
-				player_grid[r][c] = solution[r][c]
-				hints_remaining -= 1
-				AudioManager.play_sfx("coin_pickup")
-				_update_hints_label()
-				_render_cells()
-				_check_solution()
-				return
-
-func _update_hints_label() -> void:
-	if hints_label:
-		hints_label.text = "Dicas Mágicas: %d" % hints_remaining
-	if hint_button:
-		hint_button.disabled = (hints_remaining <= 0)
-
-func _check_solution() -> void:
-	for r in range(grid_size):
-		for c in range(grid_size):
-			if player_grid[r][c] != solution[r][c]:
-				return
-				
-	# Solução concluída!
-	var stars = 3 if hints_remaining >= 2 else (2 if hints_remaining >= 1 else 1)
-	AudioManager.play_sfx("stage_victory")
-	MiniGameRunner.complete_challenge(20, {"won": true, "stars": stars})
-	
-	if victory_ui:
-		victory_ui.show_victory(20, stars, "Mago Fidélio", 2)
-
+		score = 0
+		hearts = 3
+		items.clear()
+		spawn_timer = 0.0
+		finished = false
+		running = true
+		if overlay:
+			overlay.queue_free()
+			overlay = null

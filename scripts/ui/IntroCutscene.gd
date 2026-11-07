@@ -25,27 +25,27 @@ func _start_cutscene() -> void:
 		{
 			"speaker": "Dona Zenaide",
 			"icon": "👵",
-			"text": "Teodoro, meu neto... eu avisei trinta vezes para não deixar a grande Coroa Mãe na janela enquanto tomava café com leite."
+			"text": "Teodoro! A Coroa Mãe sumiu!"
 		},
 		{
 			"speaker": "Rei Teodoro",
 			"icon": "👑",
-			"text": "Mas Vovó, o Biscoito só queria ver o reflexo dourado dele no espelho da coroa! Ele achou que era um pacote de aveia gigante."
+			"text": "O Biscoito achou que era aveia!"
 		},
 		{
 			"speaker": "Dona Zenaide",
 			"icon": "👵",
-			"text": "Pois é. Agora o Barão Cinzão ficou amuado porque esqueceram de convidá-lo para a quermesse do reino e levou as 6 Estrelas embora na Bruma."
+			"text": "O Barão levou as 6 Estrelas!"
 		},
 		{
 			"speaker": "Rei Teodoro",
 			"icon": "👑",
-			"text": "Nós vamos resgatar todas as Estrelas, Vovó! O Biscoito já calçou as ferraduras de passeio."
+			"text": "Vamos resgatar todas!"
 		},
 		{
 			"speaker": "Dona Zenaide",
 			"icon": "👵",
-			"text": "Muito bem. Pegue sua espada de madeira, reúna os arqueiros do vilarejo e lembre-se: nada de correr de meia no piso ensaboado. Vamos ao Vale dos Girassóis!"
+			"text": "Pegue a espada e os arqueiros!"
 		}
 	]
 	

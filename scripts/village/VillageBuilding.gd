@@ -41,26 +41,26 @@ func get_benefit_description() -> String:
 			var cur_bonus = (current_level - 1) * 10
 			var next_bonus = current_level * 10
 			if current_level >= max_level:
-				return "⚔ Dano do Exército: +%d%% (MÁXIMO)" % cur_bonus
-			return "⚔ Dano: +%d%% ➔ Nível %d: +%d%%" % [cur_bonus, current_level + 1, next_bonus]
+				return "Dano +%d%% (MAXIMO)" % cur_bonus
+			return "Dano +%d%% -> +%d%%" % [cur_bonus, next_bonus]
 		"blacksmith":
 			var cur_disc = (current_level - 1) * 5
 			var next_disc = current_level * 5
 			if current_level >= max_level:
-				return "Desconto de Moedas: -%d%% (MÁXIMO)" % cur_disc
-			return "Custo na Fase: -%d%% ➔ Nível %d: -%d%%" % [cur_disc, current_level + 1, next_disc]
+				return "Ouro -%d%% (MAXIMO)" % cur_disc
+			return "Ouro -%d%% -> -%d%%" % [cur_disc, next_disc]
 		"stable":
 			var cur_hp = (current_level - 1) * 20
 			var next_hp = current_level * 20
 			if current_level >= max_level:
-				return "Rei Teodoro: +%d HP (MÁXIMO)" % cur_hp
-			return "Rei: +%d HP ➔ Nível %d: +%d HP" % [cur_hp, current_level + 1, next_hp]
+				return "Vida +%d (MAXIMO)" % cur_hp
+			return "Vida +%d -> +%d" % [cur_hp, next_hp]
 		"tavern":
 			return "Taverna Real: Heróis de Batalha"
 		"crown_wall":
 			var coins := 6 + 4 * (current_level - 1)
 			var hp := 20 + 15 * (current_level - 1)
-			return "Moedas +%d | Vida do Rei +%d" % [coins, hp]
+			return "Moedas +%d | Vida +%d" % [coins, hp]
 		_:
 			return "Edifício do Reino"
 
@@ -82,7 +82,7 @@ func _update_labels() -> void:
 			label_upgrade.text = get_benefit_description() + "\nNÍVEL MÁXIMO"
 			label_upgrade.modulate = Color(0.6, 0.95, 0.6)
 		else:
-			label_upgrade.text = "%s\nPróximo nível · %d ouro" % [get_benefit_description(), get_upgrade_cost()]
+			label_upgrade.text = "%s\nProximo: %d ouro" % [get_benefit_description(), get_upgrade_cost()]
 			label_upgrade.modulate = Color(1.0, 0.88, 0.25)
 
 func _rebuild_visuals() -> void:
