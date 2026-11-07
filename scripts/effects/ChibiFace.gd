@@ -14,28 +14,65 @@ static func attach(model: Node3D, angry: bool = false) -> void:
 	if box.size.y < 0.05:
 		return
 	var h := box.size.y
-	var head := _head_center(model, box)
 	var root := Node3D.new()
 	root.name = "Face_Root"
-	root.position = head
+	var head := _head_center(model, box)
+	root.position = Vector3(head.x, box.position.y + h * 0.80, head.z)
 	model.add_child(root)
-	var quad := QuadMesh.new()
-	quad.size = Vector2(h * 0.34, h * 0.34)
-	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = _face_texture(angry)
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.emission_enabled = true
-	mat.emission = Color(1, 1, 1)
-	mat.emission_energy_multiplier = 0.25
-	mat.cull_mode = BaseMaterial3D.CULL_BACK
-	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
-	var face := MeshInstance3D.new()
-	face.name = "Face_Quad"
-	face.mesh = quad
-	face.material_override = mat
-	face.rotation.y = PI
-	root.add_child(face)
+
+	var dark := _mat(Color(0.13, 0.09, 0.08), 0.55)
+	var glint := _mat(Color(1, 1, 1), 1.0, true)
+	var brow_mat := _mat(Color(0.24, 0.15, 0.10), 0.7)
+	var mouth_mat := _mat(Color(0.32, 0.10, 0.10), 0.6)
+
+	var eye_r := h * 0.024
+	var eye_x := h * 0.038
+	var eye_z := eye_r * 0.35
+	for sx in [-1.0, 1.0]:
+		var eye := _sphere(root, eye_r, Vector3(sx * eye_x, 0.0, eye_z), dark)
+		eye.scale = Vector3(1.0, 1.15, 0.5)
+		var shine := _sphere(root, eye_r * 0.34, Vector3(sx * eye_x - eye_r * 0.30, eye_r * 0.35, eye_z - eye_r * 0.42), glint)
+		shine.scale = Vector3(1, 1, 0.6)
+		var brow := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(h * 0.065, h * 0.009, h * 0.014)
+		brow.mesh = bm
+		brow.material_override = brow_mat
+		brow.position = Vector3(sx * eye_x, eye_r * 1.9, eye_z)
+		brow.rotation.z = (-0.38 if angry else 0.10) * sx
+		root.add_child(brow)
+
+	var mouth := MeshInstance3D.new()
+	var mm := BoxMesh.new()
+	mm.size = Vector3(h * 0.05, h * 0.008, h * 0.014)
+	mouth.mesh = mm
+	mouth.material_override = mouth_mat
+	mouth.position = Vector3(0.0, -h * 0.05, eye_z)
+	root.add_child(mouth)
+
+static func _sphere(parent: Node3D, radius: float, pos: Vector3, material: Material) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var sphere := SphereMesh.new()
+	sphere.radius = radius
+	sphere.height = radius * 2.0
+	sphere.radial_segments = 12
+	sphere.rings = 6
+	mi.mesh = sphere
+	mi.material_override = material
+	mi.position = pos
+	parent.add_child(mi)
+	return mi
+
+static func _mat(color: Color, roughness: float, unshaded: bool = false) -> StandardMaterial3D:
+	var m := StandardMaterial3D.new()
+	m.albedo_color = color
+	m.roughness = roughness
+	if unshaded:
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		m.emission_enabled = true
+		m.emission = color
+		m.emission_energy_multiplier = 1.0
+	return m
 
 static func _face_texture(angry: bool) -> ImageTexture:
 	var key := "angry" if angry else "happy"

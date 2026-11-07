@@ -93,8 +93,8 @@ func _instrument(kind: String, freq: float, t: float, dur: float) -> float:
 			return (0.7 * sin(TAU * freq * vib2 * t) + 0.3 * sin(TAU * freq * 2.0 * t) + 0.12 * sin(TAU * freq * 3.0 * t)) * env
 	return 0.0
 
-func _render_events(events: Array, duration: float) -> AudioStreamWAV:
-	var sr := 22050
+func _render_events(events: Array, duration: float, sample_rate: int = 22050) -> AudioStreamWAV:
+	var sr := sample_rate
 	var total := int(duration * sr)
 	var buf := PackedFloat32Array()
 	buf.resize(total)
@@ -114,7 +114,7 @@ func _render_events(events: Array, duration: float) -> AudioStreamWAV:
 		var gain := 0.88 / peak
 		for i in range(total):
 			buf[i] = clampf(buf[i] * gain, -1.0, 1.0)
-	return _sound_wav(buf)
+	return _sound_wav(buf, sr)
 
 func _generate_pluck(freq: float, duration: float, volume: float) -> AudioStreamWAV:
 	var sr := 22050
@@ -203,6 +203,8 @@ func _generate_harp_gliss() -> AudioStreamWAV:
 	return _sound_wav(arr)
 
 func _generate_medieval_track(track_name: String) -> AudioStreamWAV:
+	if track_name == "menu":
+		return _generate_menu_theme()
 	var events: Array = []
 	var duration := 7.6
 	if track_name == "battle":
@@ -237,7 +239,33 @@ func _generate_medieval_track(track_name: String) -> AudioStreamWAV:
 		var melody := [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 440.00, 523.25, 659.25, 783.99, 1046.50]
 		for k in range(melody.size()):
 			events.append({"f": "flute", "freq": melody[k], "start": k * 0.6, "len": 0.55, "vol": 0.26})
-	return _render_events(events, duration)
+	return _render_events(events, duration, 16000)
+
+func _generate_menu_theme() -> AudioStreamWAV:
+	var events: Array = []
+	var duration := 16.0
+	var bar := 16.0 / 6.0
+	var chords := [
+		[130.81, 164.81, 196.00],
+		[98.00, 123.47, 146.83],
+		[110.00, 130.81, 164.81],
+		[87.31, 110.00, 130.81],
+		[130.81, 164.81, 196.00],
+		[98.00, 123.47, 146.83],
+	]
+	for b in range(6):
+		var chord: Array = chords[b]
+		events.append({"f": "bass", "freq": float(chord[0]) * 0.5, "start": b * bar, "len": bar, "vol": 0.30})
+		events.append({"f": "horn", "freq": float(chord[0]), "start": b * bar, "len": bar * 0.95, "vol": 0.10})
+		if b % 2 == 0:
+			events.append({"f": "pluck", "freq": float(chord[0]) * 4.0, "start": b * bar, "len": 1.2, "vol": 0.06})
+		for k in range(4):
+			var tone: float = float(chord[k % 3]) * 2.0
+			events.append({"f": "pluck", "freq": tone, "start": b * bar + k * bar / 4.0, "len": bar / 4.0 * 0.95, "vol": 0.24})
+	var melody := [523.25, 659.25, 587.33, 523.25, 440.00, 392.00, 523.25, 659.25, 783.99, 698.46, 659.25, 523.25]
+	for k in range(melody.size()):
+		events.append({"f": "flute", "freq": melody[k], "start": k * 1.333, "len": 1.2, "vol": 0.22})
+	return _render_events(events, duration, 16000)
 
 func _generate_tone(duration: float, start_freq: float, end_freq: float, volume: float, wave_type: String) -> AudioStreamWAV:
 	var sample_rate = 22050

@@ -11,7 +11,7 @@ extends Control
 @onready var background: TextureRect = $Background
 
 func _ready() -> void:
-	AudioManager.play_music("village")
+	AudioManager.play_music("menu")
 	_style_menu()
 	
 	if play_button:
