@@ -27,12 +27,13 @@ var foot_hero: Node3D = null
 var _vehicle_mode: bool = false
 
 const HERO_LOOKS := {
-	"marta": {"model": "Warrior", "tint": Color(1.80, 1.40, 1.00), "prop": "hammer", "accent": Color(0.85, 0.62, 0.30)},
-	"fidelio": {"model": "Rogue", "tint": Color(1.55, 1.20, 2.00), "prop": "staff", "accent": Color(0.65, 0.45, 1.0)},
-	"rosa": {"model": "Ranger", "tint": Color(2.00, 1.20, 1.00), "prop": "shield", "accent": Color(0.85, 0.20, 0.22)},
-	"clara": {"model": "Ranger", "tint": Color(1.80, 1.90, 1.70), "prop": "staff", "accent": Color(1.0, 0.95, 0.70)},
-	"bento": {"model": "Warrior", "tint": Color(1.90, 1.40, 0.85), "prop": "club", "accent": Color(0.55, 0.36, 0.20), "big": true},
-	"barao": {"model": "Rogue", "tint": Color(1.45, 1.55, 1.75), "prop": "sword", "accent": Color(0.60, 0.65, 0.75)},
+	"teodoro": {"model": "knight", "height": 3.05, "tint": Color.WHITE},
+	"marta": {"model": "barbarian", "height": 3.05, "tint": Color.WHITE},
+	"fidelio": {"model": "mage", "height": 3.05, "tint": Color.WHITE},
+	"rosa": {"model": "rogue_hooded", "height": 3.05, "tint": Color.WHITE},
+	"clara": {"model": "mage", "height": 2.95, "tint": Color(1.15, 1.15, 1.05)},
+	"bento": {"model": "barbarian", "height": 3.35, "tint": Color(1.08, 0.92, 0.72)},
+	"barao": {"model": "rogue", "height": 3.05, "tint": Color(0.85, 0.90, 1.00)},
 }
 
 func _ready() -> void:
@@ -55,33 +56,40 @@ func _apply_hero_visuals() -> void:
 		foot_hero = null
 	_vehicle_mode = hero_id == "teodoro"
 	if horse:
-		horse.visible = _vehicle_mode
+		horse.visible = false
 	if rider:
-		rider.visible = _vehicle_mode
-	if not _vehicle_mode:
-		_build_foot_hero(hero_id)
+		rider.visible = false
+	_build_foot_hero(hero_id)
 
 func _build_foot_hero(hero_id: String) -> void:
-	var look: Dictionary = HERO_LOOKS.get(hero_id, HERO_LOOKS["marta"])
-	var scene := load("res://assets/models/characters/Quaternius%s.tscn" % str(look["model"])) as PackedScene
-	if scene == null:
-		return
+	var look: Dictionary = HERO_LOOKS.get(hero_id, HERO_LOOKS["teodoro"])
 	var foot := Node3D.new()
 	foot.name = "FootHero"
-	foot.rotation.y = PI
 	visuals.add_child(foot)
-	var model := scene.instantiate() as Node3D
-	foot.add_child(model)
-	var bounds := _model_bounds(model)
-	var target := 3.40 if bool(look.get("big", false)) else 3.00
-	var scale_factor := target / maxf(0.01, bounds.size.y)
-	model.scale = Vector3.ONE * scale_factor
-	model.position.y = -bounds.position.y * scale_factor
-	if model.has_method("set_tint"):
-		model.call("set_tint", look["tint"])
-	load("res://scripts/effects/ChibiFace.gd").attach(model, false, Color(0.27, 0.17, 0.11))
-	_build_hero_prop(foot, str(look["prop"]), look.get("accent", Color.WHITE))
+	var height: float = look.get("height", 3.05)
+	var model: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(foot, str(look["model"]), height, look.get("tint", Color.WHITE), false)
+	if model == null:
+		return
+	if hero_id == "teodoro":
+		_add_crown(foot, height)
 	foot_hero = foot
+
+func _add_crown(parent: Node3D, head_height: float) -> void:
+	var crown := Node3D.new()
+	crown.name = "ChibiCrown"
+	crown.position = Vector3(0, head_height * 0.98, 0)
+	parent.add_child(crown)
+	var ring := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.13
+	torus.outer_radius = 0.17
+	ring.mesh = torus
+	ring.material_override = Art.mat(Art.GOLD, 0.35, 0.45)
+	crown.add_child(ring)
+	for i in range(5):
+		var ang := TAU * float(i) / 5.0
+		Art.cone(crown, 0.05, 0.18, Vector3(cos(ang) * 0.14, 0.1, sin(ang) * 0.14), Art.GOLD, 6)
+	Art.sphere(crown, 0.04, Vector3(0, 0.02, 0.17), Art.ROYAL_RED)
 
 func _model_bounds(model: Node3D) -> AABB:
 	var box := AABB()

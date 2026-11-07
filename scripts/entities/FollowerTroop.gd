@@ -20,17 +20,25 @@ var walk_time: float = 0.0
 @onready var visuals: Node3D = $Visuals
 
 var _base_visual_scale: Vector3 = Vector3.ONE
+var _chibi: bool = false
 
 func _ready() -> void:
 	current_hp = hp
-	_base_visual_scale = visuals.scale
-	var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
-	if imported:
-		load("res://scripts/effects/ChibiFace.gd").attach(imported, false, Color(0.16, 0.32, 0.20))
 	add_to_group("troops")
 	# Camada própria (bit 3): o Rei atravessa aliados; mundo/paliçadas continuam bloqueando.
 	collision_layer = 8
 	GameState.register_troop(self)
+	if troop_id == "archer":
+		_chibi = true
+		visuals.visible = false
+		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.7)
+		if chibi:
+			visuals = chibi
+	else:
+		var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
+		if imported:
+			load("res://scripts/effects/ChibiFace.gd").attach(imported, false, Color(0.16, 0.32, 0.20))
+	_base_visual_scale = visuals.scale
 	
 	# Bônus do Quartel da Vila
 	var barracks_lvl = SaveManager.save_data.get("village_buildings", {}).get("barracks", 1)
@@ -76,7 +84,7 @@ func _handle_formation_movement(delta: float) -> void:
 		visuals.scale = _base_visual_scale * Vector3(1.0 - 0.05 * squash, 1.0 + 0.08 * squash, 1.0 - 0.05 * squash)
 		
 		# Rotação para a direção do movimento
-		var target_rot = atan2(dir.x, dir.z) + PI
+		var target_rot = atan2(dir.x, dir.z) + (0.0 if _chibi else PI)
 		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 10.0 * delta)
 	else:
 		velocity = Vector3.ZERO
@@ -96,7 +104,7 @@ func _handle_combat(_delta: float) -> void:
 		var to_enemy = current_target.global_position - global_position
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
-			var target_rot = atan2(to_enemy.x, to_enemy.z) + PI
+			var target_rot = atan2(to_enemy.x, to_enemy.z) + (0.0 if _chibi else PI)
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 14.0 * _delta)
 			
 		if attack_cooldown <= 0.0:
@@ -110,7 +118,7 @@ func _handle_mounted_combat(_delta: float) -> void:
 		var to_enemy = current_target.global_position - global_position
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
-			visuals.rotation.y = atan2(to_enemy.x, to_enemy.z) + PI
+			visuals.rotation.y = atan2(to_enemy.x, to_enemy.z) + (0.0 if _chibi else PI)
 			
 		if attack_cooldown <= 0.0:
 			_perform_attack(current_target, 1.25)

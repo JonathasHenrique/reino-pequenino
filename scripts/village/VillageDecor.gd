@@ -216,12 +216,7 @@ func _build_villagers() -> void:
 	var villagers := Node3D.new()
 	villagers.name = "Villagers"
 	add_child(villagers)
-	var models := [
-		"res://assets/models/characters/QuaterniusRanger.tscn",
-		"res://assets/models/characters/QuaterniusRogue.tscn",
-		"res://assets/models/characters/QuaterniusWarrior.tscn",
-		"res://assets/models/characters/QuaterniusRogue.tscn",
-	]
+	var models := ["mage", "rogue", "barbarian", "knight"]
 	var paths := [
 		[Vector3(-5, 0, -4), Vector3(-7, 0, 4), Vector3(-2, 0, 7)],
 		[Vector3(5, 0, -4), Vector3(8, 0, 3), Vector3(4, 0, 7)],
@@ -229,17 +224,13 @@ func _build_villagers() -> void:
 		[Vector3(9, 0, -8), Vector3(3, 0, -10), Vector3(-3, 0, -8)],
 	]
 	for i in range(models.size()):
-		var model := (load(models[i]) as PackedScene).instantiate() as Node3D
-		model.scale = Vector3.ONE * 0.8
 		var bot := Node3D.new()
 		bot.set_script(load("res://scripts/village/VillagerBot.gd"))
-		bot.add_child(model)
+		villagers.add_child(bot)
 		bot.position = paths[i][0]
+		var model: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(bot, models[i], 2.6)
 		bot.set("waypoints", paths[i])
 		bot.set("model", model)
-		villagers.add_child(bot)
-		model.set("outline_enabled", false)
-		model.call("set_tint", Color(2.0, 1.95, 1.9))
 
 func get_king_spawn() -> Vector3:
 	return KING_SPAWN

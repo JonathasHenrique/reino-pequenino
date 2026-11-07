@@ -23,6 +23,10 @@ Todos os recursos visuais, códigos, efeitos sonoros e músicas deste projeto s�
   - Autor: Quaternius.
   - Fonte: https://quaternius.itch.io/medieval-village-megakit (espelho usado para download: https://github.com/J-Ponzo/gltf-medieval-village-megakit).
   - Licença: CC0 1.0; licença original preservada em `assets/models/village_kit/Quaternius-Medieval-Village-License.txt`.
+* **KayKit Adventurers 1.0** — personagens chibi (Knight, Barbarian, Mage, Rogue e Rogue Hooded) em `assets/models/chibi/`, usados nos heróis, arqueiras e aldeões.
+  - Autor: Kay Lousberg (KayKit).
+  - Fonte: https://kaylousberg.itch.io/kaykit-adventurers (espelho: https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0).
+  - Licença: CC0 1.0; licença original preservada em `assets/models/chibi/KayKit-Adventurers-License.txt`.
 * **LowPoly RPG Characters** — Ranger e Rogue em `assets/models/characters/quaternius/`.
   - Autor: Quaternius.
   - Fonte: https://opengameart.org/content/lowpoly-rpg-characters
