@@ -135,30 +135,30 @@ func _set_step(next_step: int) -> void:
 	match step:
 		0:
 			step_label.text = "TUTORIAL 1/5"
-			objective_label.text = "Mova o Rei pelo acampamento"
-			hint_label.text = "Arraste o joystick. Primeiro aprenda a conduzir Teodoro."
+			objective_label.text = "Mova o Rei"
+			hint_label.text = "Arraste o joystick"
 		1:
 			_set_pad_locks(false, pads[0] if not pads.is_empty() else null)
 			step_label.text = "TUTORIAL 2/5"
-			objective_label.text = "Contrate o primeiro arqueiro"
-			hint_label.text = "Fique sobre o pad ARQUEIRO. Ele está liberado para iniciar a defesa."
+			objective_label.text = "Toque no pad ARQUEIRO"
+			hint_label.text = "Fique em cima do pad"
 		2:
 			_set_pad_locks(true)
 			if wave_manager:
 				wave_manager.tutorial_hold = false
 			step_label.text = "TUTORIAL 3/5"
-			objective_label.text = "Derrote um monstro e recolha o primeiro capacete"
-			hint_label.text = "O capacete aparece depois do puf. Passe com o Rei sobre ele."
+			objective_label.text = "Pegue o capacete"
+			hint_label.text = "Passe por cima dele"
 		3:
 			coins_before_sale = GameState.stage_coins
 			step_label.text = "TUTORIAL 4/5"
-			objective_label.text = "Leve os capacetes ao balcão do Tobias"
-			hint_label.text = "Entre no balcão dourado para trocar CAPACETES por moedas."
+			objective_label.text = "Venda ao Tobias"
+			hint_label.text = "Entre no balcão dourado"
 		4:
 			_set_pad_locks(false, pads[2] if pads.size() > 2 else null)
 			step_label.text = "TUTORIAL 5/5"
-			objective_label.text = "Invista no pad da paliçada"
-			hint_label.text = "Fique sobre o pad PALIÇADA para reforçar o acampamento."
+			objective_label.text = "Compre a paliçada"
+			hint_label.text = "Fique no pad PALIÇADA"
 
 func _set_pad_locks(locked: bool, only_pad: Node = null) -> void:
 	for pad in pads:
@@ -195,8 +195,8 @@ func _finish_tutorial() -> void:
 	SaveManager.save_data["stage_1_tutorial_completed"] = true
 	SaveManager.save_game()
 	step_label.text = "TUTORIAL CONCLUÍDO"
-	objective_label.text = "Agora defenda o acampamento!"
-	hint_label.text = "Todos os pads estão liberados. Priorize sua defesa."
+	objective_label.text = "Defenda o acampamento!"
+	hint_label.text = "Use os pads e vença!"
 	if arrow:
 		arrow.visible = false
 	get_tree().create_timer(2.0).timeout.connect(queue_free)

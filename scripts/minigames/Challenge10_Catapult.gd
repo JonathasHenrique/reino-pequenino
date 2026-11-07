@@ -215,7 +215,7 @@ func _check_objective() -> void:
 		
 	# O totem é considerado derrubado se inclinou > 28 graus ou caiu abaixo da plataforma (Y > 580)
 	var angle_deg = abs(rad_to_deg(target_totem.rotation))
-	if angle_deg > 28.0 or target_totem.global_position.y > 580.0 or target_totem.global_position.x > 1150.0:
+	if angle_deg > 42.0 or target_totem.global_position.y > 720.0 or target_totem.global_position.x > 1230.0:
 		_trigger_victory()
 
 func _trigger_victory() -> void:

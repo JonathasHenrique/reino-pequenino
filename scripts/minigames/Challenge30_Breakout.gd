@@ -3,9 +3,9 @@ extends Node2D
 # Challenge30_Breakout.gd - Desafio 30: Escudo e Bola (Quebra-Blocos de Luz)
 # Escudo móvel na base, bola radiante destrói blocos cinzentos, 3 vidas
 
-@export var paddle_speed: float = 650.0
-var lives: int = 3
-var ball_speed: float = 460.0
+@export var paddle_speed: float = 780.0
+var lives: int = 4
+var ball_speed: float = 330.0
 var ball_dir: Vector2 = Vector2(0.6, -0.8).normalized()
 var is_ball_active: bool = false
 var game_finished: bool = false

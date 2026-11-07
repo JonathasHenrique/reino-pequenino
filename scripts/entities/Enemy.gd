@@ -18,6 +18,8 @@ var current_hp: int = 24
 var attack_timer: float = 0.0
 var alive: bool = true
 var base_tint: Color = Color(0.85, 0.21, 0.24)
+var _base_scale: Vector3 = Vector3.ONE
+var _anim_time: float = 0.0
 var is_frozen: bool = false
 var freeze_remaining: float = 0.0
 var slow_remaining: float = 0.0
@@ -60,6 +62,7 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 		visuals = $Visuals
 	if visuals:
 		visuals.scale = Vector3(scale_mult, scale_mult, scale_mult)
+		_base_scale = visuals.scale
 		_apply_enemy_tint(visuals, tint)
 		
 		if enemy_id == "misty_archer":
@@ -247,7 +250,7 @@ func _physics_process(delta: float) -> void:
 				stuck_time = 0.0
 			velocity = dir * move_speed * slow_factor
 			# Os visuais dos inimigos apontam para +Z.
-			var target_rot = atan2(dir.x, dir.z)
+			var target_rot = atan2(dir.x, dir.z) + PI
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 8.0 * delta)
 		else:
 			velocity = Vector3.ZERO
@@ -255,6 +258,9 @@ func _physics_process(delta: float) -> void:
 				_attack_target(target)
 				
 		move_and_slide()
+		_anim_time += delta
+		var bounce := absf(sin(_anim_time * 8.0)) if velocity.length_squared() > 0.05 else sin(_anim_time * 2.2) * 0.01
+		visuals.scale = _base_scale * Vector3(1.0 - 0.04 * bounce, 1.0 + 0.06 * bounce, 1.0 - 0.04 * bounce)
 		if velocity.length_squared() > 0.01 and get_position_delta().length_squared() < 0.0004:
 			stuck_time += delta
 		else:

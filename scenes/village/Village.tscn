@@ -49,13 +49,13 @@ size = Vector3(2, 6, 60)
 
 [sub_resource type="Environment" id="Environment_village"]
 background_mode = 1
-background_color = Color(0.68, 0.84, 0.96, 1)
+background_color = Color(0.55, 0.80, 0.99, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.541, 0.706, 0.973, 1)
-ambient_light_energy = 0.44
+ambient_light_energy = 0.52
 ambient_light_sky_contribution = 0.3
 tonemap_mode = 3
-tonemap_exposure = 0.82
+tonemap_exposure = 0.95
 glow_enabled = false
 glow_normalized = true
 glow_intensity = 0.12
@@ -75,7 +75,7 @@ environment = SubResource("Environment_village")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 12, 18, 12)
 light_color = Color(1.0, 0.89, 0.69, 1)
-light_energy = 0.92
+light_energy = 1.12
 shadow_enabled = true
 shadow_blur = 1.0
 light_angular_distance = 2.0
@@ -137,13 +137,13 @@ camera_distance = 41.0
 [node name="Buildings" type="Node3D" parent="."]
 
 [node name="Barracks" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 0)
 building_id = "barracks"
 building_name = "Quartel Real"
 base_cost = 40
 
 [node name="Blacksmith" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -14)
 building_id = "blacksmith"
 building_name = "Ferraria da Vila"
 base_cost = 50

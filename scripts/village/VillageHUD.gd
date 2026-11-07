@@ -76,11 +76,17 @@ func _on_battle_pressed() -> void:
 
 func _on_heroes_pressed() -> void:
 	AudioManager.play_sfx("button_click")
-	var heroes := _hero_ids()
+	var unlocked: Array = SaveManager.save_data.get("unlocked_heroes", ["teodoro"])
+	var available: Array = _hero_ids().filter(func(id): return unlocked.has(str(id)))
+	if available.size() <= 1:
+		_show_toast("Vença o Desafio 10 para ganhar Marta!")
+		return
 	var current = str(SaveManager.save_data.get("selected_hero", "teodoro"))
-	var cur_idx = heroes.find(current)
-	var next_idx = (cur_idx + 1) % heroes.size()
-	SaveManager.save_data["selected_hero"] = heroes[next_idx]
+	var cur_idx = available.find(current)
+	if cur_idx < 0:
+		cur_idx = 0
+	var next_idx = (cur_idx + 1) % available.size()
+	SaveManager.save_data["selected_hero"] = available[next_idx]
 	SaveManager.save_game()
 	_update_hero_button()
 	if GameState.king_node and is_instance_valid(GameState.king_node) and GameState.king_node.has_method("refresh_hero_appearance"):
@@ -97,6 +103,22 @@ func _hero_ids() -> Array:
 	var ids: Array = parsed.keys()
 	ids.sort()
 	return ids
+
+func _show_toast(text: String) -> void:
+	var toast := Label.new()
+	toast.text = text
+	toast.add_theme_font_size_override("font_size", 30)
+	toast.add_theme_color_override("font_color", Color(1.0, 0.92, 0.65))
+	toast.add_theme_color_override("font_outline_color", Color(0.12, 0.08, 0.05))
+	toast.add_theme_constant_override("outline_size", 8)
+	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	toast.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	toast.position.y -= 150.0
+	add_child(toast)
+	var tw := create_tween()
+	tw.tween_interval(1.8)
+	tw.tween_property(toast, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(toast.queue_free)
 
 func _update_hero_button() -> void:
 	if heroes_button == null:

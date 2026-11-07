@@ -13,6 +13,7 @@ signal building_upgraded(building_id: String, new_level: int)
 @export var max_level: int = 5
 
 var current_level: int = 1
+var crown_pivot: Node3D = null
 
 @onready var label_level: Label3D = $LabelLevel
 @onready var label_upgrade: Label3D = $LabelUpgrade
@@ -57,7 +58,9 @@ func get_benefit_description() -> String:
 		"tavern":
 			return "Taverna Real: Heróis de Batalha"
 		"crown_wall":
-			return "Mural das 6 Estrelas da Coroa"
+			var coins := 6 + 4 * (current_level - 1)
+			var hp := 20 + 15 * (current_level - 1)
+			return "Moedas +%d | Vida do Rei +%d" % [coins, hp]
 		_:
 			return "Edifício do Reino"
 
@@ -93,7 +96,9 @@ func _rebuild_visuals() -> void:
 		child.queue_free()
 		
 	# Constrói o modelo 3D proporcional ao nível (Evolução Estilo Clash of Clans!)
-	if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
+	if building_id == "crown_wall":
+		_build_crown_monument()
+	elif building_id in ["barracks", "blacksmith", "stable", "tavern"]:
 		_build_modular_house()
 	elif current_level <= 1:
 		_build_level_1_cottage()
@@ -101,6 +106,45 @@ func _rebuild_visuals() -> void:
 		_build_level_2_stone_house()
 	else:
 		_build_level_3_castle_keep()
+
+func _process(delta: float) -> void:
+	if crown_pivot and is_instance_valid(crown_pivot):
+		crown_pivot.rotation.y += delta * 0.9
+
+func _build_crown_monument() -> void:
+	crown_pivot = null
+	Art.cyl(visuals_container, 2.3, 2.6, 0.5, Vector3(0, 0.25, 0), Art.STONE_DARK, 16)
+	Art.cyl(visuals_container, 1.8, 2.1, 0.5, Vector3(0, 0.7, 0), Art.GOLD, 16)
+	var pivot := Node3D.new()
+	pivot.position = Vector3(0, 2.1, 0)
+	visuals_container.add_child(pivot)
+	crown_pivot = pivot
+	var ring := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.95
+	torus.outer_radius = 1.2
+	ring.mesh = torus
+	ring.material_override = Art.mat(Art.GOLD, 0.35, 0.4)
+	pivot.add_child(ring)
+	for i in range(8):
+		var ang := TAU * float(i) / 8.0
+		Art.cone(pivot, 0.2, 0.75, Vector3(cos(ang) * 1.05, 0.5, sin(ang) * 1.05), Art.GOLD, 6)
+		Art.sphere(pivot, 0.08, Vector3(cos(ang) * 1.05, 1.0, sin(ang) * 1.05), Art.ROYAL_RED if i % 2 == 0 else Art.ROYAL_BLUE)
+	for sx in [-2.3, 2.3]:
+		Art.cyl(visuals_container, 0.06, 0.06, 3.2, Vector3(sx, 1.6, 1.5), Art.WOOD_DARK, 6)
+		Art.box(visuals_container, Vector3(0.9, 0.55, 0.05), Vector3(sx, 3.0, 1.55), Art.ROYAL_RED)
+	var sparkle := CPUParticles3D.new()
+	sparkle.amount = 24
+	sparkle.lifetime = 2.0
+	sparkle.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	sparkle.emission_sphere_radius = 1.6
+	sparkle.direction = Vector3(0, 1, 0)
+	sparkle.gravity = Vector3(0, -0.25, 0)
+	sparkle.initial_velocity_min = 0.2
+	sparkle.initial_velocity_max = 0.7
+	sparkle.color = Art.GOLD
+	sparkle.position = Vector3(0, 2.6, 0)
+	visuals_container.add_child(sparkle)
 
 func _build_modular_house() -> void:
 	var footprints := {

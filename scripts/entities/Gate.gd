@@ -13,7 +13,7 @@ const CLOSE_DELAY := 0.9
 const WOOD_COLOR := Color(0.55, 0.36, 0.2)
 const WOOD_DARK := Color(0.36, 0.22, 0.12)
 
-@export var max_hp: int = 260
+@export var max_hp: int = 364
 var current_hp: int = 260
 var alive: bool = true
 

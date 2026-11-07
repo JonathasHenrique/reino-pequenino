@@ -19,8 +19,11 @@ var walk_time: float = 0.0
 
 @onready var visuals: Node3D = $Visuals
 
+var _base_visual_scale: Vector3 = Vector3.ONE
+
 func _ready() -> void:
 	current_hp = hp
+	_base_visual_scale = visuals.scale
 	add_to_group("troops")
 	# Camada própria (bit 3): o Rei atravessa aliados; mundo/paliçadas continuam bloqueando.
 	collision_layer = 8
@@ -66,14 +69,18 @@ func _handle_formation_movement(delta: float) -> void:
 		walk_time += delta * 14.0
 		visuals.position.y = abs(sin(walk_time)) * 0.10
 		visuals.rotation.z = sin(walk_time) * 0.08
+		var squash := absf(sin(walk_time))
+		visuals.scale = _base_visual_scale * Vector3(1.0 - 0.05 * squash, 1.0 + 0.08 * squash, 1.0 - 0.05 * squash)
 		
 		# Rotação para a direção do movimento
-		var target_rot = atan2(dir.x, dir.z)
+		var target_rot = atan2(dir.x, dir.z) + PI
 		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 10.0 * delta)
 	else:
 		velocity = Vector3.ZERO
 		visuals.position.y = lerp(visuals.position.y, 0.0, 10.0 * delta)
 		visuals.rotation.z = lerp(visuals.rotation.z, 0.0, 10.0 * delta)
+		var breathe := sin(Time.get_ticks_msec() * 0.0025)
+		visuals.scale = _base_visual_scale * Vector3(1.0, 1.0 + breathe * 0.02, 1.0)
 		
 	move_and_slide()
 
@@ -86,7 +93,7 @@ func _handle_combat(_delta: float) -> void:
 		var to_enemy = current_target.global_position - global_position
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
-			var target_rot = atan2(to_enemy.x, to_enemy.z)
+			var target_rot = atan2(to_enemy.x, to_enemy.z) + PI
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 14.0 * _delta)
 			
 		if attack_cooldown <= 0.0:
@@ -100,7 +107,7 @@ func _handle_mounted_combat(_delta: float) -> void:
 		var to_enemy = current_target.global_position - global_position
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
-			visuals.rotation.y = atan2(to_enemy.x, to_enemy.z)
+			visuals.rotation.y = atan2(to_enemy.x, to_enemy.z) + PI
 			
 		if attack_cooldown <= 0.0:
 			_perform_attack(current_target, 1.25)

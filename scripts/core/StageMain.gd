@@ -259,9 +259,6 @@ func _spawn_barracks() -> void:
 		b.global_position = Vector3(-6.5, 0, -4.5)
 		Art.pop_in(b)
 		Art.dust_puff(self, b.global_position, 18)
-		var bvisuals := b.get_node_or_null("Visuals") as Node3D
-		if bvisuals:
-			load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(bvisuals, ["Label3D"])
 
 func _spawn_forge() -> void:
 	if forge_built:
@@ -274,9 +271,6 @@ func _spawn_forge() -> void:
 		f.global_position = Vector3(-6.5, 0, 4.5)
 		Art.pop_in(f)
 		Art.dust_puff(self, f.global_position, 18)
-		var fvisuals := f.get_node_or_null("Visuals") as Node3D
-		if fvisuals:
-			load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(fvisuals, ["Label3D"])
 
 func _spawn_archer() -> void:
 	if GameState.active_troops.size() >= MAX_ARCHERS:

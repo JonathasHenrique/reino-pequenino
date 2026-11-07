@@ -43,7 +43,7 @@ func _on_settings_updated() -> void:
 
 func _pregenerate_sounds() -> void:
 	synthesized_sfx["button_click"] = _generate_pluck(660.0, 0.09, 0.30)
-	synthesized_sfx["coin_pickup"] = _generate_pluck_sequence([783.99, 1046.50], 0.08, 0.32)
+	synthesized_sfx["coin_pickup"] = _generate_pluck_sequence([1046.50, 1318.51, 1567.98], 0.06, 0.30)
 	synthesized_sfx["recruit"] = _generate_horn([392.0, 523.25, 659.25], 0.30, 0.30)
 	synthesized_sfx["build"] = _generate_wood_hit(0.20, 0.55)
 	synthesized_sfx["puff"] = _generate_noise_hit(0.25, 120.0, 0.30)
@@ -204,36 +204,39 @@ func _generate_harp_gliss() -> AudioStreamWAV:
 
 func _generate_medieval_track(track_name: String) -> AudioStreamWAV:
 	var events: Array = []
-	var duration := 9.6
+	var duration := 7.6
 	if track_name == "battle":
-		duration = 8.0
-		var bar := 2.0
-		var ostinato := [146.83, 174.61, 220.0, 293.66, 220.0, 174.61, 196.0, 146.83]
+		duration = 7.2
+		var bar := 1.8
+		var ostinato := [261.63, 392.0, 523.25, 659.25, 392.0, 659.25, 523.25, 392.0]
 		for b in range(4):
-			events.append({"f": "bass", "freq": 73.42, "start": b * bar, "len": bar, "vol": 0.42})
+			events.append({"f": "bass", "freq": 65.41, "start": b * bar, "len": bar, "vol": 0.42})
 			for k in range(8):
-				events.append({"f": "pluck", "freq": ostinato[k], "start": b * bar + k * bar / 8.0, "len": bar / 8.0 * 0.95, "vol": 0.42})
+				events.append({"f": "pluck", "freq": ostinato[k], "start": b * bar + k * bar / 8.0, "len": bar / 8.0 * 0.95, "vol": 0.44})
 			for beat in range(4):
-				events.append({"f": "drum", "freq": 0.0, "start": b * bar + beat * bar / 4.0, "len": 0.22, "vol": 0.48})
+				events.append({"f": "drum", "freq": 0.0, "start": b * bar + beat * bar / 4.0, "len": 0.2, "vol": 0.46})
 			for k in range(8):
-				events.append({"f": "shaker", "freq": 0.0, "start": b * bar + k * bar / 8.0 + 0.04, "len": 0.08, "vol": 0.14})
-		var horn_melody := [293.66, 349.23, 440.0, 392.0, 349.23, 293.66, 261.63, 293.66]
-		for k in range(horn_melody.size()):
-			events.append({"f": "horn", "freq": horn_melody[k], "start": k * 1.0, "len": 0.86, "vol": 0.30})
+				events.append({"f": "shaker", "freq": 0.0, "start": b * bar + k * bar / 8.0 + 0.04, "len": 0.07, "vol": 0.12})
+		var fanfare := [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 392.0]
+		for k in range(fanfare.size()):
+			events.append({"f": "horn", "freq": fanfare[k], "start": k * 0.9, "len": 0.82, "vol": 0.30})
 	else:
-		var bar := 3.2
+		var bar := 1.9
 		var chords := [
-			[146.83, 174.61, 220.0],
-			[196.00, 246.94, 293.66],
-			[220.00, 261.63, 329.63],
+			[261.63, 329.63, 392.00],
+			[392.00, 493.88, 587.33],
+			[440.00, 523.25, 659.25],
+			[349.23, 440.00, 523.25],
 		]
-		for b in range(3):
+		for b in range(4):
 			for k in range(4):
-				events.append({"f": "pluck", "freq": chords[b][k % 3] * 2.0, "start": b * bar + k * bar / 4.0, "len": bar / 4.0 * 0.95, "vol": 0.42})
-			events.append({"f": "bass", "freq": chords[b][0] / 2.0, "start": b * bar, "len": bar, "vol": 0.36})
-		var melody := [293.66, 349.23, 392.0, 440.0, 392.0, 349.23, 293.66, 261.63, 293.66, 349.23, 392.0, 293.66]
+				events.append({"f": "pluck", "freq": chords[b][k % 3] * 2.0, "start": b * bar + k * bar / 4.0, "len": bar / 4.0 * 0.95, "vol": 0.40})
+			events.append({"f": "bass", "freq": chords[b][0] / 2.0, "start": b * bar, "len": bar, "vol": 0.34})
+			for k in range(4):
+				events.append({"f": "shaker", "freq": 0.0, "start": b * bar + k * bar / 4.0 + 0.09, "len": 0.07, "vol": 0.08})
+		var melody := [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 440.00, 523.25, 659.25, 783.99, 1046.50]
 		for k in range(melody.size()):
-			events.append({"f": "flute", "freq": melody[k], "start": k * 0.8, "len": 0.74, "vol": 0.26})
+			events.append({"f": "flute", "freq": melody[k], "start": k * 0.6, "len": 0.55, "vol": 0.26})
 	return _render_events(events, duration)
 
 func _generate_tone(duration: float, start_freq: float, end_freq: float, volume: float, wave_type: String) -> AudioStreamWAV:

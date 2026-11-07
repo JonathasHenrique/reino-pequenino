@@ -5,7 +5,7 @@ extends CharacterBody3D
 
 @export var move_speed: float = 6.2
 @export var rotation_speed: float = 12.0
-@export var base_magnet_radius: float = 4.5
+@export var base_magnet_radius: float = 6.0
 @export var formation_radius: float = 2.4
 
 var move_direction: Vector3 = Vector3.ZERO
@@ -68,6 +68,7 @@ func _build_foot_hero(hero_id: String) -> void:
 		return
 	var foot := Node3D.new()
 	foot.name = "FootHero"
+	foot.rotation.y = PI
 	visuals.add_child(foot)
 	var model := scene.instantiate() as Node3D
 	foot.add_child(model)

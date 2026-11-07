@@ -44,7 +44,8 @@ var debug_mode: bool = false
 func start_stage(stage_id: int) -> void:
 	current_stage = stage_id
 	current_world = int((stage_id - 1) / 10) + 1
-	stage_coins = 15 # Moedas iniciais da fase para contratar o 1º arqueiro
+	var crown_lvl = int(SaveManager.save_data.get("village_buildings", {}).get("crown_wall", 1))
+	stage_coins = 23 + 6 + 4 * (crown_lvl - 1)
 	stage_spoils = 0
 	stage_timer = 0.0
 	is_stage_active = true
@@ -61,7 +62,7 @@ func start_stage(stage_id: int) -> void:
 	
 	# Vida inicial baseada em upgrades da vila
 	var stable_lvl = SaveManager.save_data.get("village_buildings", {}).get("stable", 1)
-	king_max_hp = 100 + (stable_lvl - 1) * 20
+	king_max_hp = 140 + 20 + (stable_lvl - 1) * 20 + 15 * (crown_lvl - 1)
 	king_hp = king_max_hp
 	
 	coins_changed.emit(stage_coins)

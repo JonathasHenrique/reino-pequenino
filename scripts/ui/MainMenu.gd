@@ -23,6 +23,26 @@ func _ready() -> void:
 	if settings_button:
 		settings_button.pressed.connect(_on_settings_pressed)
 		_style_chunky_button(settings_button, Color("#8E959E"), Color("#686F77"))
+	call_deferred("_add_menu_life")
+
+func _add_menu_life() -> void:
+	if title_label and title_label.size.x > 1.0:
+		title_label.pivot_offset = title_label.size * 0.5
+		var pulse := create_tween().set_loops()
+		pulse.tween_property(title_label, "scale", Vector2(1.05, 1.05), 0.75).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		pulse.tween_property(title_label, "scale", Vector2.ONE, 0.75).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	for btn in [play_button, village_button, settings_button]:
+		if btn:
+			_add_button_bounce(btn)
+
+func _add_button_bounce(btn: Button) -> void:
+	btn.pivot_offset = btn.size * 0.5
+	btn.button_down.connect(func():
+		create_tween().tween_property(btn, "scale", Vector2(0.94, 0.94), 0.06)
+	)
+	btn.button_up.connect(func():
+		create_tween().tween_property(btn, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	)
 
 func _style_menu() -> void:
 	if background and background.texture is GradientTexture2D:
