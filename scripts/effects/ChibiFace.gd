@@ -20,7 +20,7 @@ static func attach(model: Node3D, angry: bool = false) -> void:
 	root.position = head
 	model.add_child(root)
 	var quad := QuadMesh.new()
-	quad.size = Vector2(h * 0.36, h * 0.36)
+	quad.size = Vector2(h * 0.34, h * 0.34)
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = _face_texture(angry)
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -43,27 +43,67 @@ static func _face_texture(angry: bool) -> ImageTexture:
 		return _cache[key]
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
+	var plate := Color(0.80, 0.84, 0.74, 1.0) if angry else Color(0.97, 0.81, 0.64, 1.0)
+	var outline := Color(0.45, 0.36, 0.28, 1.0)
 	var white := Color(1, 1, 1, 1)
 	var dark := Color(0.10, 0.07, 0.06, 1)
-	var pink := Color(0.96, 0.58, 0.58, 0.85)
-	for eye in [Vector2(22, 28), Vector2(42, 28)]:
-		_disc(img, eye, 9.0, white)
-		_disc(img, eye + Vector2(0, 1), 4.6, dark)
-		_disc(img, eye + Vector2(-2.5, -2.5), 1.6, white)
-	_disc(img, Vector2(12, 40), 3.2, pink)
-	_disc(img, Vector2(52, 40), 3.2, pink)
-	# sobrancelhas
-	_line(img, Vector2(13, 16), Vector2(28, 14 if angry else 12), dark, 3.0)
-	_line(img, Vector2(51, 16), Vector2(36, 14 if angry else 12), dark, 3.0)
-	# boca
+	var brow_col := Color(0.30, 0.20, 0.14, 1.0)
+	var pink := Color(0.96, 0.58, 0.58, 0.8)
+
+	_soft_ellipse(img, Vector2(32, 34), 17.5, 19.0, plate)
+	_soft_ellipse(img, Vector2(32, 34), 17.0, 18.5, plate.darkened(0.05))
+
+	for eye in [Vector2(23, 31), Vector2(41, 31)]:
+		_ellipse(img, eye, 7.2, 8.2, outline)
+		_ellipse(img, eye, 6.2, 7.2, white)
+		_ellipse(img, eye + Vector2(0, 0.8), 3.9, 4.4, dark)
+		_disc(img, eye + Vector2(-1.9, -2.2), 1.3, white)
+
+	_line(img, Vector2(14, 19), Vector2(28, 16 if angry else 17), brow_col, 2.6)
+	_line(img, Vector2(50, 19), Vector2(36, 16 if angry else 17), brow_col, 2.6)
+
+	_disc(img, Vector2(15, 42), 2.8, pink)
+	_disc(img, Vector2(49, 42), 2.8, pink)
+
 	if angry:
-		_line(img, Vector2(24, 44), Vector2(40, 44), dark, 2.6)
+		_line(img, Vector2(26, 46), Vector2(38, 46), dark, 2.2)
 	else:
-		for x in range(24, 41):
-			var t := (x - 32) / 16.0
-			var y := 42 + int((1.0 - t * t) * 4.0)
-			_disc(img, Vector2(x, y), 1.7, dark)
+		for x in range(26, 39):
+			var t := (x - 32) / 13.0
+			var y := 44 + int((1.0 - t * t) * 3.0)
+			_disc(img, Vector2(x, y), 1.5, dark)
 	return ImageTexture.create_from_image(img)
+
+static func _ellipse(img: Image, center: Vector2, rx: float, ry: float, color: Color) -> void:
+	var ix := int(ceil(rx))
+	var iy := int(ceil(ry))
+	for x in range(-ix, ix + 1):
+		for y in range(-iy, iy + 1):
+			var d := Vector2(x / rx, y / ry).length()
+			if d <= 1.0:
+				var px := int(center.x) + x
+				var py := int(center.y) + y
+				if px >= 0 and py >= 0 and px < img.get_width() and py < img.get_height():
+					img.set_pixel(px, py, color)
+
+static func _soft_ellipse(img: Image, center: Vector2, rx: float, ry: float, color: Color) -> void:
+	var ix := int(ceil(rx))
+	var iy := int(ceil(ry))
+	for x in range(-ix, ix + 1):
+		for y in range(-iy, iy + 1):
+			var d := Vector2(x / rx, y / ry).length()
+			if d > 1.0:
+				continue
+			var alpha := clampf((1.0 - d) / 0.22, 0.0, 1.0)
+			var px := int(center.x) + x
+			var py := int(center.y) + y
+			if px < 0 or py < 0 or px >= img.get_width() or py >= img.get_height():
+				continue
+			var existing := img.get_pixel(px, py)
+			var blend := Color(color.r, color.g, color.b, color.a * alpha)
+			if existing.a > 0.01:
+				blend = existing.lerp(Color(color.r, color.g, color.b, 1.0), alpha)
+			img.set_pixel(px, py, blend)
 
 static func _disc(img: Image, center: Vector2, radius: float, color: Color) -> void:
 	var r := int(ceil(radius))
