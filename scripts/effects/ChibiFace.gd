@@ -14,9 +14,10 @@ static func attach(model: Node3D, angry: bool = false) -> void:
 	if box.size.y < 0.05:
 		return
 	var h := box.size.y
+	var head := _head_center(model, box)
 	var root := Node3D.new()
 	root.name = "Face_Root"
-	root.position = Vector3(0, box.position.y + h * 0.86, box.position.z - h * 0.008)
+	root.position = head
 	model.add_child(root)
 	var quad := QuadMesh.new()
 	quad.size = Vector2(h * 0.36, h * 0.36)
@@ -79,6 +80,39 @@ static func _line(img: Image, from: Vector2, to: Vector2, color: Color, width: f
 	for i in range(steps + 1):
 		var p := from.lerp(to, float(i) / float(steps))
 		_disc(img, p, width * 0.5, color)
+
+static func _head_center(model: Node3D, box: AABB) -> Vector3:
+	var threshold := box.position.y + box.size.y * 0.72
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	var sum_y := 0.0
+	var count := 0
+	for m in model.find_children("*", "MeshInstance3D", true, false):
+		var mi := m as MeshInstance3D
+		if str(mi.name).begins_with("Face_") or mi.mesh == null:
+			continue
+		var xf: Transform3D = model.global_transform.affine_inverse() * mi.global_transform
+		for surface in range(mi.mesh.get_surface_count()):
+			var arrays: Array = mi.mesh.surface_get_arrays(surface)
+			if arrays.size() <= Mesh.ARRAY_VERTEX:
+				continue
+			var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			for i in range(verts.size()):
+				var v: Vector3 = xf * verts[i]
+				if v.y >= threshold:
+					min_x = minf(min_x, v.x)
+					max_x = maxf(max_x, v.x)
+					min_z = minf(min_z, v.z)
+					max_z = maxf(max_z, v.z)
+					sum_y += v.y
+					count += 1
+	if count == 0:
+		return Vector3(box.position.x + box.size.x * 0.5, box.position.y + box.size.y * 0.86, box.position.z - box.size.y * 0.008)
+	var center_x := (min_x + max_x) * 0.5
+	var center_z := (min_z + max_z) * 0.5
+	return Vector3(center_x, sum_y / float(count), min_z - box.size.y * 0.006)
 
 static func _bounds(model: Node3D) -> AABB:
 	var box := AABB()
