@@ -79,7 +79,7 @@ func _build_foot_hero(hero_id: String) -> void:
 	model.position.y = -bounds.position.y * scale_factor
 	if model.has_method("set_tint"):
 		model.call("set_tint", look["tint"])
-	load("res://scripts/effects/ChibiFace.gd").attach(model, false)
+	load("res://scripts/effects/ChibiFace.gd").attach(model, false, Color(0.27, 0.17, 0.11))
 	_build_hero_prop(foot, str(look["prop"]), look.get("accent", Color.WHITE))
 	foot_hero = foot
 

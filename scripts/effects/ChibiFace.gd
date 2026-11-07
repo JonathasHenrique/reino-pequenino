@@ -5,7 +5,7 @@ extends RefCounted
 
 static var _cache: Dictionary = {}
 
-static func attach(model: Node3D, angry: bool = false) -> void:
+static func attach(model: Node3D, angry: bool = false, _hair_color: Color = Color(0.27, 0.17, 0.11)) -> void:
 	if model == null or not model.is_inside_tree():
 		return
 	if model.get_node_or_null("Face_Root") != null:
@@ -14,49 +14,60 @@ static func attach(model: Node3D, angry: bool = false) -> void:
 	if box.size.y < 0.05:
 		return
 	var h := box.size.y
+	var info := _head_info(model, box)
+	var center: Vector3 = info["center"]
 	var root := Node3D.new()
 	root.name = "Face_Root"
-	var head := _head_center(model, box)
-	root.position = Vector3(head.x, box.position.y + h * 0.80, head.z)
+	root.position = Vector3(center.x, box.position.y + h * 0.80, center.z - h * 0.004)
 	model.add_child(root)
 
-	var dark := _mat(Color(0.13, 0.09, 0.08), 0.55)
+	var dark := _mat(Color(0.11, 0.08, 0.07), 0.55)
 	var glint := _mat(Color(1, 1, 1), 1.0, true)
-	var brow_mat := _mat(Color(0.24, 0.15, 0.10), 0.7)
-	var mouth_mat := _mat(Color(0.32, 0.10, 0.10), 0.6)
+	var brow_mat := _mat(Color(0.24, 0.15, 0.10), 0.8)
+	var mouth_mat := _mat(Color(0.34, 0.10, 0.10), 0.7)
 
-	var eye_r := h * 0.024
-	var eye_x := h * 0.038
-	var eye_z := eye_r * 0.35
+	var eye_r := h * 0.026
+	var eye_x := h * 0.053
+	var eye_z := -h * 0.006
 	for sx in [-1.0, 1.0]:
 		var eye := _sphere(root, eye_r, Vector3(sx * eye_x, 0.0, eye_z), dark)
-		eye.scale = Vector3(1.0, 1.15, 0.5)
-		var shine := _sphere(root, eye_r * 0.34, Vector3(sx * eye_x - eye_r * 0.30, eye_r * 0.35, eye_z - eye_r * 0.42), glint)
-		shine.scale = Vector3(1, 1, 0.6)
+		eye.scale = Vector3(1.0, 1.18, 0.6)
+		_sphere(root, eye_r * 0.34, Vector3(sx * eye_x - eye_r * 0.32, eye_r * 0.34, eye_z - eye_r * 0.52), glint)
 		var brow := MeshInstance3D.new()
 		var bm := BoxMesh.new()
-		bm.size = Vector3(h * 0.065, h * 0.009, h * 0.014)
+		bm.size = Vector3(h * 0.068, h * 0.012, h * 0.014)
 		brow.mesh = bm
 		brow.material_override = brow_mat
 		brow.position = Vector3(sx * eye_x, eye_r * 1.9, eye_z)
-		brow.rotation.z = (-0.38 if angry else 0.10) * sx
+		brow.rotation.z = (-0.30 if angry else 0.0) * sx
 		root.add_child(brow)
 
-	var mouth := MeshInstance3D.new()
-	var mm := BoxMesh.new()
-	mm.size = Vector3(h * 0.05, h * 0.008, h * 0.014)
-	mouth.mesh = mm
-	mouth.material_override = mouth_mat
-	mouth.position = Vector3(0.0, -h * 0.05, eye_z)
-	root.add_child(mouth)
+	if angry:
+		var mouth := MeshInstance3D.new()
+		var mm := BoxMesh.new()
+		mm.size = Vector3(h * 0.05, h * 0.009, h * 0.012)
+		mouth.mesh = mm
+		mouth.material_override = mouth_mat
+		mouth.position = Vector3(0, -h * 0.050, eye_z)
+		root.add_child(mouth)
+	else:
+		for i in range(5):
+			var t := (float(i) - 2.0) / 2.0
+			var my := -h * 0.045 + t * t * h * 0.010
+			_sphere(root, h * 0.0055, Vector3(t * h * 0.030, my, eye_z), mouth_mat)
+
+	load("res://scripts/core/StaticMeshMerger.gd").merge_subtree(root, [], false, false)
+	for child in root.get_children():
+		if str(child.name).begins_with("Merged_"):
+			child.name = "Face_" + str(child.name)
 
 static func _sphere(parent: Node3D, radius: float, pos: Vector3, material: Material) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	var sphere := SphereMesh.new()
 	sphere.radius = radius
 	sphere.height = radius * 2.0
-	sphere.radial_segments = 12
-	sphere.rings = 6
+	sphere.radial_segments = 16
+	sphere.rings = 8
 	mi.mesh = sphere
 	mi.material_override = material
 	mi.position = pos
@@ -74,41 +85,44 @@ static func _mat(color: Color, roughness: float, unshaded: bool = false) -> Stan
 		m.emission_energy_multiplier = 1.0
 	return m
 
-static func _face_texture(angry: bool) -> ImageTexture:
+static func _face_material(angry: bool) -> StandardMaterial3D:
 	var key := "angry" if angry else "happy"
+	var tex: ImageTexture
 	if _cache.has(key):
-		return _cache[key]
+		tex = _cache[key]
+	else:
+		tex = _face_texture(angry)
+		_cache[key] = tex
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = tex
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.emission_enabled = true
+	m.emission = Color(1, 1, 1)
+	m.emission_energy_multiplier = 0.2
+	m.cull_mode = BaseMaterial3D.CULL_BACK
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	return m
+
+static func _face_texture(angry: bool) -> ImageTexture:
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
-	var plate := Color(0.80, 0.84, 0.74, 1.0) if angry else Color(0.97, 0.81, 0.64, 1.0)
-	var outline := Color(0.45, 0.36, 0.28, 1.0)
 	var white := Color(1, 1, 1, 1)
 	var dark := Color(0.10, 0.07, 0.06, 1)
-	var brow_col := Color(0.30, 0.20, 0.14, 1.0)
-	var pink := Color(0.96, 0.58, 0.58, 0.8)
-
-	_soft_ellipse(img, Vector2(32, 34), 17.5, 19.0, plate)
-	_soft_ellipse(img, Vector2(32, 34), 17.0, 18.5, plate.darkened(0.05))
-
-	for eye in [Vector2(23, 31), Vector2(41, 31)]:
-		_ellipse(img, eye, 7.2, 8.2, outline)
-		_ellipse(img, eye, 6.2, 7.2, white)
-		_ellipse(img, eye + Vector2(0, 0.8), 3.9, 4.4, dark)
-		_disc(img, eye + Vector2(-1.9, -2.2), 1.3, white)
-
-	_line(img, Vector2(14, 19), Vector2(28, 16 if angry else 17), brow_col, 2.6)
-	_line(img, Vector2(50, 19), Vector2(36, 16 if angry else 17), brow_col, 2.6)
-
-	_disc(img, Vector2(15, 42), 2.8, pink)
-	_disc(img, Vector2(49, 42), 2.8, pink)
-
+	var brow_col := Color(0.28, 0.17, 0.12, 1)
+	for eye in [Vector2(23, 30), Vector2(41, 30)]:
+		_ellipse(img, eye, 7.0, 7.8, white)
+		_ellipse(img, eye + Vector2(0, 0.6), 3.9, 4.4, dark)
+		_disc(img, eye + Vector2(-1.8, -2.0), 1.3, white)
+	_line(img, Vector2(14, 19), Vector2(28, 16 if angry else 17), brow_col, 2.4)
+	_line(img, Vector2(50, 19), Vector2(36, 16 if angry else 17), brow_col, 2.4)
 	if angry:
-		_line(img, Vector2(26, 46), Vector2(38, 46), dark, 2.2)
+		_line(img, Vector2(26, 45), Vector2(38, 45), dark, 2.2)
 	else:
 		for x in range(26, 39):
 			var t := (x - 32) / 13.0
-			var y := 44 + int((1.0 - t * t) * 3.0)
-			_disc(img, Vector2(x, y), 1.5, dark)
+			var y := 43 + int((1.0 - t * t) * 3.0)
+			_disc(img, Vector2(x, y), 1.4, dark)
 	return ImageTexture.create_from_image(img)
 
 static func _ellipse(img: Image, center: Vector2, rx: float, ry: float, color: Color) -> void:
@@ -158,12 +172,11 @@ static func _line(img: Image, from: Vector2, to: Vector2, color: Color, width: f
 		var p := from.lerp(to, float(i) / float(steps))
 		_disc(img, p, width * 0.5, color)
 
-static func _head_center(model: Node3D, box: AABB) -> Vector3:
+static func _head_info(model: Node3D, box: AABB) -> Dictionary:
 	var threshold := box.position.y + box.size.y * 0.72
 	var min_x := INF
 	var max_x := -INF
 	var min_z := INF
-	var max_z := -INF
 	var sum_y := 0.0
 	var count := 0
 	for m in model.find_children("*", "MeshInstance3D", true, false):
@@ -182,14 +195,11 @@ static func _head_center(model: Node3D, box: AABB) -> Vector3:
 					min_x = minf(min_x, v.x)
 					max_x = maxf(max_x, v.x)
 					min_z = minf(min_z, v.z)
-					max_z = maxf(max_z, v.z)
 					sum_y += v.y
 					count += 1
 	if count == 0:
-		return Vector3(box.position.x + box.size.x * 0.5, box.position.y + box.size.y * 0.86, box.position.z - box.size.y * 0.008)
-	var center_x := (min_x + max_x) * 0.5
-	var center_z := (min_z + max_z) * 0.5
-	return Vector3(center_x, sum_y / float(count), min_z - box.size.y * 0.006)
+		return {"center": Vector3(box.position.x + box.size.x * 0.5, box.position.y + box.size.y * 0.86, box.position.z), "width": box.size.x * 0.5}
+	return {"center": Vector3((min_x + max_x) * 0.5, sum_y / float(count), min_z), "width": max_x - min_x}
 
 static func _bounds(model: Node3D) -> AABB:
 	var box := AABB()

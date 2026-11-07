@@ -26,7 +26,7 @@ func _ready() -> void:
 	_base_visual_scale = visuals.scale
 	var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
 	if imported:
-		load("res://scripts/effects/ChibiFace.gd").attach(imported, false)
+		load("res://scripts/effects/ChibiFace.gd").attach(imported, false, Color(0.16, 0.32, 0.20))
 	add_to_group("troops")
 	# Camada própria (bit 3): o Rei atravessa aliados; mundo/paliçadas continuam bloqueando.
 	collision_layer = 8

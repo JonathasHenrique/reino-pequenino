@@ -16,4 +16,4 @@ func _swap_rider() -> void:
 			child.visible = CUSTOM_DETAILS.has(str(child.name))
 	imported.visible = true
 	imported.rotation.y = PI
-	load("res://scripts/effects/ChibiFace.gd").attach(imported, false)
+	load("res://scripts/effects/ChibiFace.gd").attach(imported, false, Color(0.27, 0.17, 0.11))

@@ -69,7 +69,7 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 			_add_archer_gear(visuals)
 		var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
 		if imported:
-			load("res://scripts/effects/ChibiFace.gd").attach(imported, true)
+			load("res://scripts/effects/ChibiFace.gd").attach(imported, true, Color(0.32, 0.12, 0.14))
 
 		# Detalhes do Gigante Titã da Bruma (Capa vermelha fluida e capacete com chifres)
 		if enemy_id == "misty_giant" or scale_mult >= 2.0:
