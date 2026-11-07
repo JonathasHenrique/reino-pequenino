@@ -280,10 +280,23 @@ func _find_target() -> Node3D:
 
 func _attack_target(target: Node3D) -> void:
 	attack_timer = 1.0 / attack_rate
+	if attack_range > 3.0:
+		_shoot_arrow(target)
+		return
 	if target == GameState.king_node:
-		GameState.damage_king(damage)
+		GameState.damage_king(damage, self)
 	elif target.has_method("take_damage"):
 		target.take_damage(damage)
+
+func _shoot_arrow(target: Node3D) -> void:
+	if not is_instance_valid(target) or GameState.is_game_over:
+		return
+	var arrow := Node3D.new()
+	arrow.set_script(load("res://scripts/entities/EnemyArrow.gd"))
+	get_parent().add_child(arrow)
+	arrow.global_position = global_position + Vector3(0, 1.7, 0)
+	arrow.call("setup", target, damage, self)
+	AudioManager.play_sfx("shoot")
 
 func take_damage(amount: int) -> void:
 	if not alive:

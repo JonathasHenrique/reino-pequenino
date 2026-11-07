@@ -20,6 +20,14 @@ var output_direction: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	center_pos = base_circle.position + (base_circle.size * 0.5)
 	current_pos = center_pos
+	visibility_changed.connect(func():
+		if not visible:
+			_reset_joystick()
+	)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_reset_joystick()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
@@ -57,6 +65,11 @@ func _input(event: InputEvent) -> void:
 		_update_knob_position()
 
 func _process(_delta: float) -> void:
+	# Pausa/fim de jogo: solta o direcional para o Rei não continuar andando sozinho.
+	if GameState.is_paused or GameState.is_game_over:
+		if is_dragging or output_direction != Vector2.ZERO:
+			_reset_joystick()
+		return
 	# Fallback para teclas direcionais no PC (WASD / Setas)
 	if not is_dragging:
 		var key_dir = Vector2.ZERO

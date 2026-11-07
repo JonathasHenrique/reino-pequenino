@@ -115,19 +115,82 @@ func register_enemy(enemy: Node3D) -> void:
 func unregister_enemy(enemy: Node3D) -> void:
 	active_enemies.erase(enemy)
 
-func damage_king(amount: int) -> void:
+func damage_king(amount: int, source: Node3D = null) -> void:
 	if is_game_over or not is_stage_active:
 		return
 	var applied_damage := ceili(float(amount) * 0.5) if hero_shield_remaining > 0.0 else amount
 	king_hp = maxi(0, king_hp - applied_damage)
 	king_hp_changed.emit(king_hp, king_max_hp)
 	AudioManager.play_sfx("king_hit")
+	_spawn_damage_feedback(applied_damage, source)
 	
 	if Settings.vibration_enabled:
 		Input.vibrate_handheld(60)
 		
 	if king_hp <= 0:
 		fail_stage()
+
+func _spawn_damage_feedback(amount: int, source: Node3D) -> void:
+	if not is_instance_valid(king_node):
+		return
+	var parent := king_node.get_parent()
+	if parent == null:
+		return
+	var pos := king_node.global_position
+	var label := Art.label(parent, "-%d" % amount, pos + Vector3(0, 3.2, 0), 90, Color(1.0, 0.12, 0.10))
+	var tw := label.create_tween()
+	tw.tween_property(label, "position:y", label.position.y + 1.8, 0.9).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(label, "modulate", Color(1.0, 0.12, 0.10, 0.0), 0.9)
+	tw.tween_callback(label.queue_free)
+
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(1.0, 0.2, 0.2, 0.9)
+	mat.emission_enabled = true
+	mat.emission = Color(1.0, 0.15, 0.15)
+	mat.emission_energy_multiplier = 2.0
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var ring := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.6
+	torus.outer_radius = 0.8
+	ring.mesh = torus
+	ring.material_override = mat
+	ring.position = pos + Vector3(0, 0.6, 0)
+	parent.add_child(ring)
+	var rtw := ring.create_tween()
+	rtw.tween_property(ring, "scale", Vector3(4.4, 1.0, 4.4), 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	rtw.parallel().tween_property(mat, "albedo_color", Color(1.0, 0.2, 0.2, 0.0), 0.6)
+	rtw.tween_callback(ring.queue_free)
+
+	if is_instance_valid(source):
+		var dir := source.global_position - pos
+		dir.y = 0.0
+		if dir.length() > 0.1:
+			var arrow := Node3D.new()
+			parent.add_child(arrow)
+			arrow.global_position = pos + Vector3(0, 2.4, 0)
+			arrow.rotation.y = atan2(dir.x, dir.z)
+			var shaft := MeshInstance3D.new()
+			var box := BoxMesh.new()
+			box.size = Vector3(0.2, 0.06, 1.1)
+			shaft.mesh = box
+			shaft.material_override = mat
+			shaft.position = Vector3(0, 0, 0.55)
+			arrow.add_child(shaft)
+			var tip := MeshInstance3D.new()
+			var cone := CylinderMesh.new()
+			cone.top_radius = 0.0
+			cone.bottom_radius = 0.3
+			cone.height = 0.5
+			tip.mesh = cone
+			tip.material_override = mat
+			tip.rotation = Vector3(PI * 0.5, 0, 0)
+			tip.position = Vector3(0, 0, 1.28)
+			arrow.add_child(tip)
+			var atw := arrow.create_tween()
+			atw.tween_property(arrow, "scale", Vector3(0.35, 1.0, 0.35), 0.9).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			atw.tween_callback(arrow.queue_free)
 
 func heal_king(amount: int) -> void:
 	king_hp = mini(king_max_hp, king_hp + amount)
