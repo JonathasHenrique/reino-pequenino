@@ -18,6 +18,13 @@ var step: int = 0
 var start_position: Vector3
 var coins_before_sale: int = 15
 var is_active: bool = false
+var highlight_root: Node3D = null
+var highlight_ring: MeshInstance3D = null
+var highlight_beam: MeshInstance3D = null
+var highlight_mat: StandardMaterial3D = null
+var beam_mat: StandardMaterial3D = null
+var pulse_time: float = 0.0
+var wiggle_time: float = 0.0
 
 func setup(stage_node: Node3D, king_node: Node3D, merchant_node: Node3D, waves: Node, purchase_pads: Array) -> void:
 	stage = stage_node
@@ -28,6 +35,8 @@ func setup(stage_node: Node3D, king_node: Node3D, merchant_node: Node3D, waves: 
 	start_position = king.global_position
 	_build_ui()
 	_build_world_arrow()
+	_build_highlight()
+	_set_hud_locked(true)
 	_set_pad_locks(true)
 	if wave_manager:
 		wave_manager.tutorial_hold = true
@@ -40,11 +49,13 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	if arrow and is_instance_valid(arrow):
 		arrow.queue_free()
+	_set_hud_locked(false)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not is_active or not is_instance_valid(king):
 		return
 	_update_arrow()
+	_update_highlight(delta)
 	match step:
 		0:
 			if king.global_position.distance_to(start_position) >= 1.0:
@@ -130,6 +141,99 @@ func _build_world_arrow() -> void:
 	arrow.render_priority = 20
 	stage.add_child(arrow)
 
+func _build_highlight() -> void:
+	highlight_root = Node3D.new()
+	highlight_root.name = "TutorialHighlight"
+	stage.add_child(highlight_root)
+	highlight_mat = StandardMaterial3D.new()
+	highlight_mat.albedo_color = Color(1.0, 0.78, 0.15, 1.0)
+	highlight_mat.emission_enabled = true
+	highlight_mat.emission = Color(1.0, 0.75, 0.2)
+	highlight_mat.emission_energy_multiplier = 2.4
+	highlight_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	highlight_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	highlight_ring = MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.95
+	torus.outer_radius = 1.2
+	highlight_ring.mesh = torus
+	highlight_ring.material_override = highlight_mat
+	highlight_ring.position.y = 0.09
+	highlight_root.add_child(highlight_ring)
+	beam_mat = StandardMaterial3D.new()
+	beam_mat.albedo_color = Color(1.0, 0.84, 0.35, 0.20)
+	beam_mat.emission_enabled = true
+	beam_mat.emission = Color(1.0, 0.8, 0.3)
+	beam_mat.emission_energy_multiplier = 0.9
+	beam_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	beam_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	beam_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	highlight_beam = MeshInstance3D.new()
+	var cylinder := CylinderMesh.new()
+	cylinder.top_radius = 0.85
+	cylinder.bottom_radius = 0.95
+	cylinder.height = 5.0
+	highlight_beam.mesh = cylinder
+	highlight_beam.material_override = beam_mat
+	highlight_beam.position.y = 2.5
+	highlight_root.add_child(highlight_beam)
+
+func _highlight_target() -> Node3D:
+	match step:
+		0:
+			return king
+		1:
+			return pads[0] if not pads.is_empty() else king
+		2:
+			var spoils := get_tree().get_nodes_in_group("spoils")
+			return spoils[0] if not spoils.is_empty() else null
+		3:
+			return merchant
+		4:
+			return pads[2] if pads.size() > 2 else king
+	return king
+
+func _update_highlight(delta: float) -> void:
+	if highlight_root == null:
+		return
+	var target := _highlight_target()
+	if target == null or not is_instance_valid(target):
+		highlight_root.visible = false
+		return
+	highlight_root.visible = true
+	var wiggle := Vector3.ZERO
+	if wiggle_time > 0.0:
+		wiggle = Vector3(sin(wiggle_time * 55.0) * 0.28, 0, 0)
+	highlight_root.global_position = target.global_position + Vector3(0, 0.03, 0) + wiggle
+	pulse_time += delta
+	var pulse := 1.0 + sin(pulse_time * 4.5) * 0.14
+	highlight_ring.scale = Vector3(pulse, 1.0, pulse)
+	highlight_mat.emission_energy_multiplier = 2.0 + sin(pulse_time * 6.0) * 0.7
+	beam_mat.albedo_color.a = 0.16 + 0.07 * (sin(pulse_time * 3.0) * 0.5 + 0.5)
+	wiggle_time = maxf(0.0, wiggle_time - delta)
+
+func _set_hud_locked(locked: bool) -> void:
+	var hud := stage.get_node_or_null("GameHUD")
+	if hud and hud.has_method("set_tutorial_lock"):
+		hud.call("set_tutorial_lock", locked)
+
+func _input(event: InputEvent) -> void:
+	if not is_active:
+		return
+	if event is InputEventScreenTouch and event.pressed:
+		if step == 0:
+			return
+		var size := get_viewport().get_visible_rect().size
+		if event.position.x < size.x * 0.42 and event.position.y > size.y * 0.55:
+			return
+		var target := _highlight_target()
+		var cam := get_viewport().get_camera_3d()
+		if target and is_instance_valid(target) and cam:
+			var screen_pos := cam.unproject_position(target.global_position)
+			if screen_pos.distance_to(event.position) < 150.0:
+				return
+		wiggle_time = 0.7
+
 func _set_step(next_step: int) -> void:
 	step = next_step
 	match step:
@@ -159,6 +263,10 @@ func _set_step(next_step: int) -> void:
 			step_label.text = "TUTORIAL 5/5"
 			objective_label.text = "Compre a paliçada"
 			hint_label.text = "Fique no pad PALIÇADA"
+
+	if merchant and is_instance_valid(merchant) and merchant.has_method("set_tutorial_locked"):
+		merchant.call("set_tutorial_locked", step != 3)
+	_update_highlight(0.0)
 
 func _set_pad_locks(locked: bool, only_pad: Node = null) -> void:
 	for pad in pads:
@@ -190,6 +298,12 @@ func _finish_tutorial() -> void:
 		return
 	is_active = false
 	_set_pad_locks(false)
+	_set_hud_locked(false)
+	if merchant and is_instance_valid(merchant) and merchant.has_method("set_tutorial_locked"):
+		merchant.call("set_tutorial_locked", false)
+	if highlight_root and is_instance_valid(highlight_root):
+		highlight_root.queue_free()
+		highlight_root = null
 	if wave_manager:
 		wave_manager.tutorial_hold = false
 	SaveManager.save_data["stage_1_tutorial_completed"] = true

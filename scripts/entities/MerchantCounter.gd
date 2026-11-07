@@ -5,6 +5,7 @@ extends Area3D
 
 @export var coin_payout_per_spoil: int = 4
 var is_trading: bool = false
+var tutorial_locked: bool = false
 
 @onready var label_sign: Label3D = $Label3D
 @onready var speech_label: Label3D = $SpeechBubble
@@ -18,10 +19,17 @@ func _update_sign() -> void:
 		label_sign.text = "TOBIAS MERCADOR\n[ CAPACETES -> MOEDAS %d ]" % coin_payout_per_spoil
 
 func _on_body_entered(body: Node3D) -> void:
+	if tutorial_locked:
+		return
 	if body == GameState.king_node or body.is_in_group("king"):
 		_trade_spoils()
 
+func set_tutorial_locked(locked: bool) -> void:
+	tutorial_locked = locked
+
 func _trade_spoils() -> void:
+	if tutorial_locked:
+		return
 	var spoils = GameState.stage_spoils
 	if spoils <= 0:
 		_show_speech("Traga capacetes dos inimigos para trocar por moedas!")

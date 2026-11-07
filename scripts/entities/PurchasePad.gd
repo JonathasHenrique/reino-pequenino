@@ -75,6 +75,23 @@ func _setup_pad_visuals() -> void:
 		if tower: tower.visible = (pad_type == "build_tower")
 		if palisade: palisade.visible = (pad_type == "build_palisade")
 		if forge: forge.visible = (pad_type == "build_forge")
+		var barracks := emblems.get_node_or_null("BarracksEmblem")
+		if barracks == null:
+			barracks = Node3D.new()
+			barracks.name = "BarracksEmblem"
+			barracks.position = Vector3(0, 0.55, 0)
+			Art.box(barracks, Vector3(0.55, 0.4, 0.45), Vector3.ZERO, Art.WOOD_LIGHT)
+			Art.roof(barracks, Vector3(0.7, 0.32, 0.6), Vector3(0, 0.3, 0), Art.ROYAL_RED)
+			emblems.add_child(barracks)
+		barracks.visible = (pad_type == "build_barracks")
+
+	if pad_type == "recruit_archer" and get_node_or_null("Miniature") == null:
+		var mini := load("res://assets/models/characters/QuaterniusRanger.tscn").instantiate() as Node3D
+		mini.name = "Miniature"
+		mini.scale = Vector3.ONE * 0.5
+		mini.position = Vector3(0, 0.08, 0)
+		mini.rotation.y = PI * 1.25
+		add_child(mini)
 	
 	match pad_type:
 		"build_tower":

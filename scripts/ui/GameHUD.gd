@@ -104,6 +104,11 @@ func _on_troop_count_changed(count: int) -> void:
 	if troop_label:
 		troop_label.text = str(count)
 
+func set_tutorial_lock(locked: bool) -> void:
+	if skill_button:
+		skill_button.disabled = locked
+		skill_button.visible = not locked
+
 func _on_skill_pressed() -> void:
 	if GameState.hero_ability_ready:
 		GameState.use_hero_ability()

@@ -16,18 +16,25 @@ static func attach(model: Node3D, angry: bool = false) -> void:
 	var h := box.size.y
 	var root := Node3D.new()
 	root.name = "Face_Root"
-	root.position = Vector3(0, box.position.y + h * 0.82, box.position.z + box.size.z * 0.5)
+	root.position = Vector3(0, box.position.y + h * 0.86, box.position.z - h * 0.008)
 	model.add_child(root)
-	var sprite := Sprite3D.new()
-	sprite.name = "Face_Sprite"
-	sprite.texture = _face_texture(angry)
-	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	sprite.no_depth_test = true
-	sprite.render_priority = 10
-	sprite.shaded = false
-	sprite.pixel_size = h * 0.0050
-	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
-	root.add_child(sprite)
+	var quad := QuadMesh.new()
+	quad.size = Vector2(h * 0.36, h * 0.36)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = _face_texture(angry)
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.emission_enabled = true
+	mat.emission = Color(1, 1, 1)
+	mat.emission_energy_multiplier = 0.25
+	mat.cull_mode = BaseMaterial3D.CULL_BACK
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	var face := MeshInstance3D.new()
+	face.name = "Face_Quad"
+	face.mesh = quad
+	face.material_override = mat
+	face.rotation.y = PI
+	root.add_child(face)
 
 static func _face_texture(angry: bool) -> ImageTexture:
 	var key := "angry" if angry else "happy"
