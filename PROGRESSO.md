@@ -183,3 +183,27 @@ Registro contínuo do desenvolvimento, testes automatizados, decisões técnicas
 ### O que foi testado:
 - Suíte integral de testes com 51 cenas e dados: 100% aprovado (`tests/test_runner.py`).
 - Execução headless no Godot 4.3 de todas as cenas centrais (`StageMain.tscn`, `Village.tscn`, `Challenge10_Catapult.tscn`, `MainMenu.tscn`): 0 erros de GDScript, loop fluído.
+
+---
+
+## [Etapa 12] Melhorias Estruturais de Câmera, Vila, Estrelas Reais, Linha do Tempo e Ilustrações do Prólogo
+**Data:** 9 de Novembro de 2026
+
+### O que foi feito:
+1. **Orientação dos Inimigos e Escala do Mapa (`Enemy.gd`, `FollowerTroop.gd`, `IsometricCamera.gd`, `StageMain.tscn`, `StageCoreTest.tscn`):**
+   - Corrigida a rotação das malhas de inimigos (`visuals.rotation.y` com `atan2(dir.x, dir.z) + PI` e pivô `ChibiPivot` dedicado), garantindo que todos os inimigos corram e ataquem olhando de frente para o Rei e para as defesas.
+   - `Camera3D` afastada em ~20% (`19.5` -> `23.4` em `StageMain.tscn`/`IsometricCamera.gd` e `17.5` -> `21.0` em `StageCoreTest.tscn`) e escala das tropas/inimigos reduzida em ~15%.
+2. **Sistema Real de 3 Estrelas na Vitória (`GameState.gd`, `Palisade.gd`, `VictoryScreen.gd/.tscn`):**
+   - Cálculo de estrelas atualizado: 1 Estrela (vencer a fase), 2 Estrelas (vencer com HP do Rei >= 50%), 3 Estrelas (vencer com HP do Rei >= 85% sem perder defesas principais).
+   - Critérios exibidos na `VictoryScreen` e traduzidos em `pt`, `en` e `es`.
+3. **Reformulação da Vila (`VillageBuilding.gd`, `Village.tscn`, `VillageDecor.gd`):**
+   - Espaçamento vertical ampliado entre `label_level` e `label_upgrade` nos edifícios.
+   - Gramado expandido em 3x (`80x80` -> `240x240`), perímetro fechado por anel de 38 paliçadas (`PerimeterPalisades`) e Ferraria afastada da barra superior do HUD.
+4. **Mapa de Linha do Tempo das Fases (`StageTimeline.gd/.tscn`, `VillageHUD.gd`):**
+   - O botão `Battle` na Vila abre a Linha do Tempo das Fases com nós conectados por trilha tracejada, estrelas conquistadas, destaque na fase atual e cadeados nas fases futuras.
+5. **Ilustrações no Prólogo + Transição de Cortina de Bruma (`IntroCutscene.gd`, `SceneTransition.gd`):**
+   - Ilustrações `prologue_1.png`, `prologue_2.png` e `prologue_3.png` no fundo do Prólogo com fade suave, `ShaderMaterial` (`story_illustration.gdshader`) e `DialogueBox` centralizada em 940px.
+   - Transição suave com cortina de bruma e fade (`CanvasLayer` + `Tween`) entre Prólogo, Vila e Fases.
+6. **Validação Autônoma com Screenshots:**
+   - Capturas geradas e inspecionadas em `tests/print_prologue.png`, `tests/print_village.png`, `tests/print_timeline.png`, `tests/print_battle.png` e `tests/print_victory_3stars.png`.
+   - `tests/smoke_test.gd` (22/22 cenas) e `tests/test_runner.py` (100%) aprovados.

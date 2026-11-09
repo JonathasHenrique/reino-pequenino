@@ -18,6 +18,7 @@ func _ready() -> void:
 	if not build_on_ready:
 		return
 	_build_castle()
+	_build_perimeter_palisades()
 	_build_trees()
 	_build_lamp_posts()
 	_build_plaza_props()
@@ -31,6 +32,27 @@ func _ready() -> void:
 	if not is_inside_tree():
 		return
 	_merge_static()
+
+func _build_perimeter_palisades() -> void:
+	var ring := Node3D.new()
+	ring.name = "PerimeterPalisades"
+	add_child(ring)
+	var fence_scene := load("res://scenes/props/WoodenFence.tscn") as PackedScene
+	if fence_scene == null:
+		return
+	var segments: int = 38
+	var radius: float = 24.5
+	for i in range(segments):
+		var angle := TAU * float(i) / float(segments)
+		var pos := Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
+		# Deixa o espaço do Castelo Real livre ao norte (Z negativo central)
+		if pos.z < -14.5 and absf(pos.x) < 9.5:
+			continue
+		var seg := fence_scene.instantiate() as Node3D
+		seg.scale = Vector3(1.35, 1.5, 1.35)
+		seg.position = pos
+		seg.rotation.y = -angle + PI * 0.5
+		ring.add_child(seg)
 
 func _piece(piece_name: String) -> Node3D:
 	var packed := load(CASTLE_DIR + piece_name + ".glb") as PackedScene
@@ -243,7 +265,7 @@ func get_castle_center() -> Vector3:
 
 func _merge_static() -> void:
 	var merger = load("res://scripts/core/StaticMeshMerger.gd")
-	for node_name in ["CastleBackdrop", "CastleGround", "OuterTrees", "PlazaLamps", "PlazaProps", "CityProps"]:
+	for node_name in ["CastleBackdrop", "CastleGround", "PerimeterPalisades", "OuterTrees", "PlazaLamps", "PlazaProps", "CityProps"]:
 		var n := get_node_or_null(node_name) as Node3D
 		if n:
 			merger.merge_subtree(n, ["Label3D"], false, true)

@@ -13,10 +13,14 @@ var tutorial_locked: bool = false
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	_update_sign()
+	I18n.language_changed.connect(func(_code: String): _update_sign())
 
 func _update_sign() -> void:
 	if label_sign:
-		label_sign.text = "TOBIAS MERCADOR\n[ CAPACETES -> MOEDAS %d ]" % coin_payout_per_spoil
+		var sign_fmt = I18n.t_key("merchant.sign")
+		if sign_fmt == "merchant.sign":
+			sign_fmt = "TOBIAS MERCADOR\n[ CAPACETES -> MOEDAS %d ]"
+		label_sign.text = sign_fmt % coin_payout_per_spoil
 
 func _on_body_entered(body: Node3D) -> void:
 	if tutorial_locked:
@@ -32,7 +36,10 @@ func _trade_spoils() -> void:
 		return
 	var spoils = GameState.stage_spoils
 	if spoils <= 0:
-		_show_speech("Traga capacetes dos inimigos para trocar por moedas!")
+		var msg = I18n.t_key("merchant.bring_spoils")
+		if msg == "merchant.bring_spoils":
+			msg = "Traga capacetes dos inimigos para trocar por moedas!"
+		_show_speech(msg)
 		return
 		
 	if GameState.spend_stage_spoils(spoils):
@@ -41,7 +48,10 @@ func _trade_spoils() -> void:
 		AudioManager.play_sfx("coin_pickup")
 		
 		# Feedback visual e sonoro vibrante
-		_show_speech("Negócio fechado, Majestade! +%d Moedas!" % total_coins)
+		var deal_fmt = I18n.t_key("merchant.deal_done")
+		if deal_fmt == "merchant.deal_done":
+			deal_fmt = "Negócio fechado, Majestade! +%d Moedas!"
+		_show_speech(deal_fmt % total_coins)
 		
 		# Efeito de moedas voando para o Rei
 		var coin_scene = load("res://scenes/entities/Coin.tscn")

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/capture_audit_screenshots.gd" id="1_audit"]
+
+[node name="CaptureAudit" type="Node"]
+script = ExtResource("1_audit")
+

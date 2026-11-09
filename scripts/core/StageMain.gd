@@ -153,17 +153,17 @@ func _trigger_stage_tutorial_if_needed() -> void:
 		2:
 			tutorial_lines = [
 				{
-					"speaker": "Dona Zenaide",
+					"speaker": I18n.tr_text("Dona Zenaide"),
 					"icon": "👵",
-					"text": "Agora os inimigos vêm em maior número! Suba arqueiros nas Torres de Vigia para atirarem com maior alcance e mais dano."
+					"text": I18n.t_key("dialogues.stage_2_zenaide")
 				}
 			]
 		3:
 			tutorial_lines = [
 				{
-					"speaker": "Dona Zenaide",
+					"speaker": I18n.tr_text("Dona Zenaide"),
 					"icon": "👵",
-					"text": "Brumosos com tampas de barril e arqueiros de carvão à vista! Use a Ferraria de Campo para aumentar o dano de todo o exército."
+					"text": I18n.t_key("dialogues.stage_3_zenaide")
 				}
 			]
 			
@@ -191,8 +191,21 @@ func _on_purchase_completed(pad_type: String) -> void:
 func _on_hero_ability_used(hero_id: String) -> void:
 	if not is_instance_valid(king):
 		return
+		
+	# Som potente de corneta de guerra
+	AudioManager.play_sfx("war_horn")
+	
+	# Leve tremor de câmera
+	if camera and camera.has_method("shake"):
+		camera.shake(0.22, 0.35)
+		
+	var buff_color := Color(1.0, 0.75, 0.15) # Teodoro padrão Dourado-Fogo
+	var buff_text := "⚡ +30% SPEED!" if I18n.language == "en" else "⚡ +30% VELOCIDADE!"
+	
 	match hero_id:
 		"teodoro":
+			buff_color = Color(1.0, 0.75, 0.15) # Dourado-Fogo
+			buff_text = "⚡ +30% SPEED!" if I18n.language == "en" else "⚡ +30% VELOCIDADE!"
 			for enemy in get_tree().get_nodes_in_group("enemies"):
 				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 7.0:
 					if enemy.has_method("apply_slow_for"):
@@ -200,28 +213,49 @@ func _on_hero_ability_used(hero_id: String) -> void:
 			for troop in GameState.active_troops:
 				if is_instance_valid(troop) and troop.get("current_hp") != null and troop.get("hp") != null:
 					troop.current_hp = mini(int(troop.hp), int(troop.current_hp) + int(troop.hp) * 0.2)
-			_hero_burst()
 		"marta":
+			buff_color = Color(0.95, 0.32, 0.18) # Vermelho-Brasa
+			buff_text = "🔨 FORTIFY!" if I18n.language == "en" else "🔨 FORTIFICAR!"
 			for palisade in active_palisades:
 				if is_instance_valid(palisade) and palisade.has_method("repair_fully"):
 					palisade.repair_fully()
 		"fidelio":
+			buff_color = Color(0.35, 0.85, 1.0) # Azul-Gelo
+			buff_text = "❄️ FREEZE!" if I18n.language == "en" else "❄️ CONGELAR!"
 			for enemy in get_tree().get_nodes_in_group("enemies"):
 				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 8.0:
 					if enemy.has_method("freeze_for"):
 						enemy.freeze_for(4.0)
+		"rosa":
+			buff_color = Color(1.0, 0.85, 0.35)
+			buff_text = "🛡️ DEFENSE +50%!" if I18n.language == "en" else "🛡️ DEFESA +50%!"
+		"clara":
+			buff_color = Color(0.40, 1.0, 0.55) # Verde-Esmeralda Luz
+			buff_text = "💖 FULL HEAL!" if I18n.language == "en" else "💖 CURA TOTAL!"
 		"bento":
+			buff_color = Color(0.85, 0.55, 0.25) # Marrom-Dourado
+			buff_text = "🐾 ROAR!" if I18n.language == "en" else "🐾 RUGIDO!"
 			for enemy in get_tree().get_nodes_in_group("enemies"):
 				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 9.0:
 					if enemy.has_method("knock_back_from"):
 						enemy.knock_back_from(king.global_position)
 		"barao":
+			buff_color = Color(0.75, 0.45, 0.95) # Roxo-Névoa
+			buff_text = "💨 SLOW MIST!" if I18n.language == "en" else "💨 NÉVOA LENTA!"
 			for enemy in get_tree().get_nodes_in_group("enemies"):
 				if is_instance_valid(enemy) and enemy.global_position.distance_to(king.global_position) <= 8.0:
 					if enemy.has_method("apply_slow_for"):
 						enemy.apply_slow_for(6.0, 0.5)
 
-func _hero_burst() -> void:
+	# Onda de choque circular 3D com a cor do herói
+	_hero_burst(buff_color)
+	
+	# Indicação visual por cor em todas as tropas durante os 8 segundos
+	for troop in GameState.active_troops:
+		if is_instance_valid(troop) and troop.has_method("apply_hero_buff"):
+			troop.apply_hero_buff(buff_color, 8.0, buff_text)
+
+func _hero_burst(color: Color = Color(1.0, 0.82, 0.25)) -> void:
 	if not is_instance_valid(king):
 		return
 	var ring := MeshInstance3D.new()
@@ -230,25 +264,20 @@ func _hero_burst() -> void:
 	torus.outer_radius = 1.15
 	ring.mesh = torus
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(1.0, 0.82, 0.25, 0.95)
+	mat.albedo_color = Color(color.r, color.g, color.b, 0.95)
 	mat.emission_enabled = true
-	mat.emission = Color(1.0, 0.75, 0.2)
-	mat.emission_energy_multiplier = 2.0
+	mat.emission = color
+	mat.emission_energy_multiplier = 2.4
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	ring.material_override = mat
 	ring.position = king.global_position + Vector3(0, 0.12, 0)
 	add_child(ring)
 	var tw := create_tween()
-	tw.tween_property(ring, "scale", Vector3(6.5, 1.0, 6.5), 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tw.parallel().tween_property(mat, "albedo_color", Color(1.0, 0.82, 0.25, 0.0), 0.55)
+	tw.tween_property(ring, "scale", Vector3(7.5, 1.0, 7.5), 0.60).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(mat, "albedo_color", Color(color.r, color.g, color.b, 0.0), 0.60)
 	tw.tween_callback(ring.queue_free)
 	Art.dust_puff(self, king.global_position, 22)
-	var shout := Art.label(self, "GRITO!", king.global_position + Vector3(0, 2.6, 0), 64, Color(1.0, 0.9, 0.4))
-	var ltw := create_tween()
-	ltw.tween_property(shout, "position:y", shout.position.y + 1.4, 0.9)
-	ltw.parallel().tween_property(shout, "modulate", Color(1.0, 0.9, 0.4, 0.0), 0.9)
-	ltw.tween_callback(shout.queue_free)
 
 func _spawn_barracks() -> void:
 	if barracks_built:

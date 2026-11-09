@@ -1,5 +1,7 @@
 {
   "ui": {
+    "game_title": "TINY CROWN",
+    "game_subtitle": "The Quest for the Six Mother Crown Stars",
     "play": "Play",
     "village": "Royal Village",
     "settings": "Settings",
@@ -24,7 +26,15 @@
     "repair": "Repair",
     "upgrade": "Upgrade",
     "collect": "Collect",
-    "full": "Full!"
+    "full": "Full!",
+    "gold_permanent_earned": "+%d Permanent Royal Gold",
+    "star_1_criteria": "★ 1 Star: Complete the stage",
+    "star_2_criteria": "★★ 2 Stars: King HP ≥ 50%",
+    "star_3_criteria": "★★★ 3 Stars: King HP ≥ 85% without losing main defenses",
+    "timeline_title": "ROYAL JOURNEY MAP",
+    "timeline_subtitle": "Select an unlocked stage to defend the Kingdom",
+    "timeline_close": "Back to Village",
+    "timeline_challenge": "CHALLENGE %d"
   },
   "settings": {
     "title": "Kingdom Settings",
@@ -47,7 +57,59 @@
     "tutorial_coins": "Grandma Zenaide: 'Collect the coins on the grass. They're magnetic... cutting edge tech from our local forge.'",
     "tutorial_buy": "Grandma Zenaide: 'Stand still on the purchase square until the coins fill it up. Archers don't volunteer for free.'",
     "tutorial_defense": "Grandma Zenaide: 'Here come the Misty critters with cooking pots on their heads. Keep your archers close and smash that Totem!'",
-    "boss_world_1": "Grandma Zenaide: 'That Valley Totem is billowing smoke all over my freshly hung laundry. Knock it down quickly!'"
+    "boss_world_1": "Grandma Zenaide: 'That Valley Totem is billowing smoke all over my freshly hung laundry. Knock it down quickly!'",
+    "stage_2_zenaide": "Now enemies are coming in greater numbers! Put archers in Watchtowers to shoot with longer range and more damage.",
+    "stage_3_zenaide": "Misty fiends with barrel lids and coal archers in sight! Use the Field Forge to boost the damage of the entire army."
+  },
+  "buildings": {
+    "level_format": "%s · Level %d",
+    "max_level": "MAX LEVEL",
+    "next_cost": "Next: %d gold",
+    "barracks_bonus_max": "Army Damage +%d%% (MAX)",
+    "barracks_bonus_next": "Army Damage +%d%% -> +%d%%",
+    "blacksmith_bonus_max": "Gold Discount -%d%% (MAX)",
+    "blacksmith_bonus_next": "Gold Discount -%d%% -> -%d%%",
+    "stable_bonus_max": "King Health +%d (MAX)",
+    "stable_bonus_next": "King Health +%d -> +%d",
+    "tavern_desc": "Royal Tavern: Battle Heroes",
+    "crown_wall_desc": "Coins +%d | Health +%d",
+    "default_desc": "Kingdom Building"
+  },
+  "trophies": {
+    "title": "Kingdom Trophies",
+    "first_victory_title": "First Royal Victory",
+    "first_victory_desc": "Toppled the first Mist Totem in Sunflower Valley.",
+    "catapult_master_title": "Catapult Master",
+    "catapult_master_desc": "Won Challenge 10 and recovered the 1st Crown Star.",
+    "sudoku_wizard_title": "Number Wizard",
+    "sudoku_wizard_desc": "Completed the Number Vault without making mistakes.",
+    "shield_hero_title": "Unbreakable Shield",
+    "shield_hero_desc": "Won Challenge 30 while keeping all 3 lives.",
+    "village_architect_title": "Village Architect",
+    "village_architect_desc": "Upgraded every village building at least once.",
+    "full_crown_title": "The Crown Reassembled",
+    "full_crown_desc": "Recovered all 6 Stars and brought the Baron to the feast."
+  },
+  "heroes": {
+    "teodoro_skill_name": "Courage Shout",
+    "teodoro_skill_desc": "Troops attack 30% faster for 8 seconds.",
+    "marta_skill_name": "Master Hammer",
+    "marta_skill_desc": "Instantly repairs all active palisades in camp.",
+    "fidelio_skill_name": "Runic Prison",
+    "fidelio_skill_desc": "Freezes enemies near the King for a few seconds.",
+    "rosa_skill_name": "Shield Wall",
+    "rosa_skill_desc": "Halves damage taken by the King for 8 seconds.",
+    "clara_skill_name": "Mill Blessing",
+    "clara_skill_desc": "Instantly restores 100% health of King and active troops.",
+    "bento_skill_name": "Gentle Roar",
+    "bento_skill_desc": "A roar that pushes all nearby enemies away from the King.",
+    "barao_skill_name": "Protective Mist",
+    "barao_skill_desc": "Slows down enemies near the King for 6 seconds."
+  },
+  "merchant": {
+    "sign": "TOBIAS THE MERCHANT\n[ HELMETS -> COINS %d ]",
+    "bring_spoils": "Bring enemy helmets to trade for coins!",
+    "deal_done": "Deal closed, Your Majesty! +%d Coins!"
   }
 }
 

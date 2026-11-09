@@ -10,6 +10,7 @@ const SCENES: Array[String] = [
 	"res://scenes/ui/StoreMenu.tscn",
 	"res://scenes/ui/TrophiesMenu.tscn",
 	"res://scenes/ui/StickerAlbum.tscn",
+	"res://scenes/ui/StageTimeline.tscn",
 	"res://scenes/ui/GameHUD.tscn",
 	"res://scenes/ui/VictoryScreen.tscn",
 	"res://scenes/ui/DefeatScreen.tscn",

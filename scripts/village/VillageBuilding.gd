@@ -25,6 +25,7 @@ func _ready() -> void:
 	_sync_level()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	I18n.language_changed.connect(func(_code: String): _update_labels())
 
 func _sync_level() -> void:
 	var buildings = SaveManager.save_data.get("village_buildings", {})
@@ -41,48 +42,56 @@ func get_benefit_description() -> String:
 			var cur_bonus = (current_level - 1) * 10
 			var next_bonus = current_level * 10
 			if current_level >= max_level:
-				return "Dano +%d%% (MAXIMO)" % cur_bonus
-			return "Dano +%d%% -> +%d%%" % [cur_bonus, next_bonus]
+				return I18n.t_key("buildings.barracks_bonus_max") % cur_bonus
+			return I18n.t_key("buildings.barracks_bonus_next") % [cur_bonus, next_bonus]
 		"blacksmith":
 			var cur_disc = (current_level - 1) * 5
 			var next_disc = current_level * 5
 			if current_level >= max_level:
-				return "Ouro -%d%% (MAXIMO)" % cur_disc
-			return "Ouro -%d%% -> -%d%%" % [cur_disc, next_disc]
+				return I18n.t_key("buildings.blacksmith_bonus_max") % cur_disc
+			return I18n.t_key("buildings.blacksmith_bonus_next") % [cur_disc, next_disc]
 		"stable":
 			var cur_hp = (current_level - 1) * 20
 			var next_hp = current_level * 20
 			if current_level >= max_level:
-				return "Vida +%d (MAXIMO)" % cur_hp
-			return "Vida +%d -> +%d" % [cur_hp, next_hp]
+				return I18n.t_key("buildings.stable_bonus_max") % cur_hp
+			return I18n.t_key("buildings.stable_bonus_next") % [cur_hp, next_hp]
 		"tavern":
-			return "Taverna Real: Heróis de Batalha"
+			return I18n.t_key("buildings.tavern_desc")
 		"crown_wall":
 			var coins := 6 + 4 * (current_level - 1)
 			var hp := 20 + 15 * (current_level - 1)
-			return "Moedas +%d | Vida +%d" % [coins, hp]
+			return I18n.t_key("buildings.crown_wall_desc") % [coins, hp]
 		_:
-			return "Edifício do Reino"
+			return I18n.t_key("buildings.default_desc")
 
 func _update_labels() -> void:
 	if label_level:
-		I18n.set_text(label_level, "%s · Nível %d" % [building_name, current_level])
-		var top := 5.4
+		var name_translated = I18n.tr_text(building_name)
+		var lvl_text = I18n.t_key("buildings.level_format") % [name_translated, current_level]
+		label_level.text = lvl_text
+		label_level.set_meta("i18n_pt", "%s · Nível %d" % [building_name, current_level])
+		var top := 6.0
 		if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
-			top = 9.0 if current_level >= 2 else 7.4
-		label_level.position.y = top
+			top = 9.4 if current_level >= 2 else 7.8
+		label_level.position.y = top + 1.5
 		label_level.no_depth_test = true
 		label_level.render_priority = 10
 		label_level.outline_render_priority = 9
 		if label_upgrade:
-			label_upgrade.position.y = top - 1.1
+			label_upgrade.position.y = top - 1.6
+			label_upgrade.no_depth_test = true
+			label_upgrade.render_priority = 10
+			label_upgrade.outline_render_priority = 9
 	
 	if label_upgrade:
 		if current_level >= max_level or building_id == "crown_wall":
-			I18n.set_text(label_upgrade, get_benefit_description() + "\nNÍVEL MÁXIMO")
+			label_upgrade.text = get_benefit_description() + "\n" + I18n.t_key("buildings.max_level")
+			label_upgrade.set_meta("i18n_pt", get_benefit_description() + "\nNÍVEL MÁXIMO")
 			label_upgrade.modulate = Color(0.6, 0.95, 0.6)
 		else:
-			I18n.set_text(label_upgrade, "%s\nProximo: %d ouro" % [get_benefit_description(), get_upgrade_cost()])
+			label_upgrade.text = "%s\n%s" % [get_benefit_description(), I18n.t_key("buildings.next_cost") % get_upgrade_cost()]
+			label_upgrade.set_meta("i18n_pt", "%s\nPróximo: %d ouro" % [get_benefit_description(), get_upgrade_cost()])
 			label_upgrade.modulate = Color(1.0, 0.88, 0.25)
 
 func _rebuild_visuals() -> void:

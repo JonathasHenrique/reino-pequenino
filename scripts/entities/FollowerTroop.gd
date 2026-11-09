@@ -31,11 +31,12 @@ func _ready() -> void:
 	if troop_id == "archer":
 		_chibi = true
 		visuals.visible = false
-		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.45)
+		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.08)
 		if chibi:
 			visuals = chibi
 			_add_bow(chibi)
 	else:
+		visuals.scale *= 0.85
 		var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
 		if imported:
 			load("res://scripts/effects/ChibiFace.gd").attach(imported, false, Color(0.16, 0.32, 0.20))
@@ -44,6 +45,10 @@ func _ready() -> void:
 	# Bônus do Quartel da Vila
 	var barracks_lvl = SaveManager.save_data.get("village_buildings", {}).get("barracks", 1)
 	base_damage = int(base_damage * (1.0 + (barracks_lvl - 1) * 0.1))
+	
+	# Bônus passivo do Mago Fidélio (+10% de dano)
+	if SaveManager.save_data.get("selected_hero") == "fidelio":
+		base_damage = int(base_damage * 1.10)
 
 func _add_bow(parent: Node3D) -> void:
 	var packed := load("res://assets/models/chibi/bow.gltf") as PackedScene
@@ -198,3 +203,78 @@ func mount_on_tower(tower: Node3D, mount_position: Vector3) -> void:
 	mounted_tower_node = tower
 	global_position = mount_position
 	velocity = Vector3.ZERO
+
+var _buff_ring: MeshInstance3D = null
+var _buff_tween: Tween = null
+
+func take_damage(amount: int) -> void:
+	var final_amount := amount
+	# Passiva da Capitã Rosa: tropas aliadas recebem 15% menos dano
+	if SaveManager.save_data.get("selected_hero") == "rosa":
+		final_amount = maxi(1, int(float(amount) * 0.85))
+	current_hp = maxi(0, current_hp - final_amount)
+	if current_hp <= 0:
+		queue_free()
+
+func apply_hero_buff(buff_color: Color, duration: float, label_text: String) -> void:
+	if not is_inside_tree():
+		return
+		
+	# 1. Floating text subindo da tropa
+	if label_text != "":
+		var floating := Art.label(get_parent(), label_text, global_position + Vector3(0, 2.3, 0), 50, buff_color)
+		if floating:
+			var tw := floating.create_tween()
+			tw.tween_property(floating, "position:y", floating.position.y + 1.8, 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			tw.parallel().tween_property(floating, "modulate:a", 0.0, 1.2)
+			tw.tween_callback(floating.queue_free)
+			
+	# 2. Material overlay emissivo evidente nas malhas da tropa
+	var overlay_mat := StandardMaterial3D.new()
+	overlay_mat.albedo_color = Color(buff_color.r, buff_color.g, buff_color.b, 0.50)
+	overlay_mat.emission_enabled = true
+	overlay_mat.emission = buff_color
+	overlay_mat.emission_energy_multiplier = 2.4
+	overlay_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	overlay_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	
+	for m in visuals.find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).material_overlay = overlay_mat
+		
+	# 3. Anel luminoso pulsante nos pés da tropa
+	if _buff_ring and is_instance_valid(_buff_ring):
+		_buff_ring.queue_free()
+		_buff_ring = null
+		
+	_buff_ring = MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.55
+	torus.outer_radius = 0.80
+	_buff_ring.mesh = torus
+	var ring_mat := StandardMaterial3D.new()
+	ring_mat.albedo_color = Color(buff_color.r, buff_color.g, buff_color.b, 0.88)
+	ring_mat.emission_enabled = true
+	ring_mat.emission = buff_color
+	ring_mat.emission_energy_multiplier = 2.8
+	ring_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	ring_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_buff_ring.material_override = ring_mat
+	_buff_ring.position = Vector3(0, 0.08, 0)
+	add_child(_buff_ring)
+	
+	if _buff_tween and _buff_tween.is_valid():
+		_buff_tween.kill()
+		
+	_buff_tween = create_tween()
+	_buff_tween.tween_interval(maxf(0.1, duration - 1.2))
+	_buff_tween.tween_property(overlay_mat, "albedo_color:a", 0.0, 1.2)
+	if _buff_ring:
+		_buff_tween.parallel().tween_property(ring_mat, "albedo_color:a", 0.0, 1.2)
+	_buff_tween.tween_callback(func():
+		for m in visuals.find_children("*", "MeshInstance3D", true, false):
+			if (m as MeshInstance3D).material_overlay == overlay_mat:
+				(m as MeshInstance3D).material_overlay = null
+		if _buff_ring and is_instance_valid(_buff_ring):
+			_buff_ring.queue_free()
+			_buff_ring = null
+	)

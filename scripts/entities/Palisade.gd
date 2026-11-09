@@ -51,6 +51,7 @@ func repair_fully() -> void:
 
 func _break_palisade() -> void:
 	alive = false
+	GameState.record_defense_lost()
 	AudioManager.play_sfx("puff")
 	Art.dust_puff(get_parent(), global_position + Vector3(0, 1.0, 0), 10)
 	queue_free()

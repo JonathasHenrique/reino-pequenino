@@ -1,5 +1,7 @@
 {
   "ui": {
+    "game_title": "REINO PEQUEÑITO",
+    "game_subtitle": "La Aventura de las Seis Estrellas de la Corona Madre",
     "play": "Jugar",
     "village": "Villa Real",
     "settings": "Ajustes",
@@ -24,7 +26,15 @@
     "repair": "Reparar",
     "upgrade": "Mejorar",
     "collect": "Recoger",
-    "full": "¡Lleno!"
+    "full": "¡Lleno!",
+    "gold_permanent_earned": "+%d Oro Real Permanente",
+    "star_1_criteria": "★ 1 Estrella: Superar la fase",
+    "star_2_criteria": "★★ 2 Estrellas: Vida del Rey ≥ 50%",
+    "star_3_criteria": "★★★ 3 Estrellas: Vida del Rey ≥ 85% sin perder defensas",
+    "timeline_title": "MAPA DE LA JORNADA REAL",
+    "timeline_subtitle": "Elige una fase desbloqueada para defender el Reino",
+    "timeline_close": "Volver a la Aldea",
+    "timeline_challenge": "DESAFÍO %d"
   },
   "settings": {
     "title": "Ajustes del Reino",
@@ -47,6 +57,58 @@
     "tutorial_coins": "Abuela Zenaide: 'Recoge las monedas del suelo. Tienen imán... tecnología punta de nuestro herrero.'",
     "tutorial_buy": "Abuela Zenaide: 'Quédate quieto sobre el cuadro de madera hasta llenar la cajita. Los arqueros no trabajan gratis.'",
     "tutorial_defense": "Abuela Zenaide: 'Ahí vienen los Brumosos con ollas en la cabeza. ¡Mantén cerca a tus arqueros y destruye ese Tótem!'",
-    "boss_world_1": "Abuela Zenaide: 'Ese Tótem del Valle está echando humo sobre mi ropa tendida. ¡Derríbalo ya!'"
+    "boss_world_1": "Abuela Zenaide: 'Ese Tótem del Valle está echando humo sobre mi ropa tendida. ¡Derríbalo ya!'",
+    "stage_2_zenaide": "¡Ahora los enemigos vienen en mayor número! Sube arqueros a las Torres de Vigilancia para disparar con mayor alcance y más daño.",
+    "stage_3_zenaide": "¡Brumosos con tapas de barril y arqueros de carbón a la vista! Usa la Herrería de Campo para aumentar el daño de todo el ejército."
+  },
+  "buildings": {
+    "level_format": "%s · Nivel %d",
+    "max_level": "NIVEL MÁXIMO",
+    "next_cost": "Siguiente: %d oro",
+    "barracks_bonus_max": "Daño del Ejército +%d%% (MÁXIMO)",
+    "barracks_bonus_next": "Daño del Ejército +%d%% -> +%d%%",
+    "blacksmith_bonus_max": "Descuento en Oro -%d%% (MÁXIMO)",
+    "blacksmith_bonus_next": "Descuento en Oro -%d%% -> -%d%%",
+    "stable_bonus_max": "Vida del Rey +%d (MÁXIMO)",
+    "stable_bonus_next": "Vida del Rey +%d -> +%d",
+    "tavern_desc": "Taberna Real: Héroes de Batalla",
+    "crown_wall_desc": "Monedas +%d | Vida +%d",
+    "default_desc": "Edificio del Reino"
+  },
+  "trophies": {
+    "title": "Trofeos del Reino",
+    "first_victory_title": "Primera Victoria Real",
+    "first_victory_desc": "Derribó el primer Tótem de Niebla en el Valle de los Girasoles.",
+    "catapult_master_title": "Maestro de la Catapulta",
+    "catapult_master_desc": "Ganó el Desafío 10 y recuperó la 1ª Estrella de la Corona.",
+    "sudoku_wizard_title": "Sabio de los Números",
+    "sudoku_wizard_desc": "Completó la Bóveda de Números sin cometer errores.",
+    "shield_hero_title": "Escudo Inquebrable",
+    "shield_hero_desc": "Ganó el Desafío 30 conservando las 3 vidas.",
+    "village_architect_title": "Arquitecto de la Villa",
+    "village_architect_desc": "Mejoró todos los edificios de la villa al menos una vez.",
+    "full_crown_title": "La Corona Reunida",
+    "full_crown_desc": "Recuperó las 6 Estrellas y llevó al Barón a la fiesta."
+  },
+  "heroes": {
+    "teodoro_skill_name": "Grito de Coraje",
+    "teodoro_skill_desc": "Las tropas atacan 30% más rápido por 8 segundos.",
+    "marta_skill_name": "Martillazo Maestro",
+    "marta_skill_desc": "Repara al instante todas las empalizadas activas en el campamento.",
+    "fidelio_skill_name": "Prisión Rúnica",
+    "fidelio_skill_desc": "Congela a los enemigos cercanos al Rey durante unos segundos.",
+    "rosa_skill_name": "Muralla de Escudos",
+    "rosa_skill_desc": "Reduce a la mitad el daño recibido por el Rey durante 8 segundos.",
+    "clara_skill_name": "Bendición del Molino",
+    "clara_skill_desc": "Restaura al instante 100% de la vida del Rey y de las tropas activas.",
+    "bento_skill_name": "Rugido Gentil",
+    "bento_skill_desc": "Un rugido que aleja a todos los enemigos cercanos al Rey.",
+    "barao_skill_name": "Niebla Protectora",
+    "barao_skill_desc": "Desacelera a los enemigos cercanos al Rey durante 6 segundos."
+  },
+  "merchant": {
+    "sign": "TOBIAS MERCADER\n[ CASCOS -> MONEDAS %d ]",
+    "bring_spoils": "¡Trae cascos de enemigos para cambiarlos por monedas!",
+    "deal_done": "¡Trato hecho, Majestad! +%d Monedas!"
   }
 }

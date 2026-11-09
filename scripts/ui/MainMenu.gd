@@ -13,6 +13,8 @@ extends Control
 func _ready() -> void:
 	AudioManager.play_music("menu")
 	_style_menu()
+	_update_title_texts()
+	I18n.language_changed.connect(func(_code: String): _update_title_texts())
 	
 	if play_button:
 		play_button.pressed.connect(_on_play_pressed)
@@ -24,6 +26,12 @@ func _ready() -> void:
 		settings_button.pressed.connect(_on_settings_pressed)
 		_style_chunky_button(settings_button, Color("#8E959E"), Color("#686F77"))
 	call_deferred("_add_menu_life")
+
+func _update_title_texts() -> void:
+	if title_label:
+		title_label.text = I18n.t_key("ui.game_title")
+	if subtitle_label:
+		subtitle_label.text = I18n.t_key("ui.game_subtitle")
 
 func _add_menu_life() -> void:
 	if title_label and title_label.size.x > 1.0:
@@ -106,13 +114,13 @@ func _on_play_pressed() -> void:
 	var unlocked = int(SaveManager.save_data.get("unlocked_stages", 1))
 	if unlocked == 1 and not SaveManager.save_data.get("stage_stars", {}).has("1"):
 		# Primeira vez: exibe a cena de abertura e tutorial
-		get_tree().change_scene_to_file("res://scenes/ui/IntroCutscene.tscn")
+		SceneTransition.change_scene("res://scenes/ui/IntroCutscene.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
+		SceneTransition.change_scene("res://scenes/village/Village.tscn")
 
 func _on_village_pressed() -> void:
 	AudioManager.play_sfx("button_click")
-	get_tree().change_scene_to_file("res://scenes/village/Village.tscn")
+	SceneTransition.change_scene("res://scenes/village/Village.tscn")
 
 func _on_settings_pressed() -> void:
 	AudioManager.play_sfx("button_click")

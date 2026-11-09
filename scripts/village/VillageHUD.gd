@@ -67,12 +67,16 @@ func _update_hud() -> void:
 
 func _on_battle_pressed() -> void:
 	AudioManager.play_sfx("button_click")
+	var timeline_scene = load("res://scenes/ui/StageTimeline.tscn")
+	if timeline_scene:
+		add_child(timeline_scene.instantiate())
+		return
 	var next_stage = int(SaveManager.save_data.get("unlocked_stages", 1))
 	if next_stage % 10 == 0:
 		MiniGameRunner.launch_challenge(next_stage)
 	else:
 		GameState.start_stage(next_stage)
-		get_tree().change_scene_to_file("res://scenes/stages/StageMain.tscn")
+		SceneTransition.change_scene("res://scenes/stages/StageMain.tscn")
 
 func _on_heroes_pressed() -> void:
 	AudioManager.play_sfx("button_click")

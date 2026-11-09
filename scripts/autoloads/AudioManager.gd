@@ -4,6 +4,7 @@ extends Node
 # Gera efeitos sonoros e temas com zero dependência externa e 100% livre de direitos autorais
 
 var music_player: AudioStreamPlayer
+var music_player_alt: AudioStreamPlayer
 var sfx_players: Array[AudioStreamPlayer] = []
 var max_sfx_voices: int = 12
 
@@ -13,6 +14,21 @@ var _music_cache: Dictionary = {}
 var _music_tasks: Dictionary = {}
 var _music_results: Dictionary = {}
 var _wanted_track: String = ""
+var _crossfade_tween: Tween = null
+var _active_player_is_primary: bool = true
+
+const REAL_MUSIC_FILES := {
+	"village": "res://assets/audio/music/village_theme.ogg",
+	"battle": "res://assets/audio/music/battle_theme.ogg",
+	"boss": "res://assets/audio/music/battle_theme.ogg",
+	"menu": "res://assets/audio/music/village_theme.ogg",
+	"prologue": "res://assets/audio/music/prologue_theme.ogg",
+}
+
+const REAL_SFX_FILES := {
+	"war_horn": "res://assets/audio/sfx/war_horn.ogg",
+	"hero_skill": "res://assets/audio/sfx/war_horn.ogg",
+}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -25,6 +41,10 @@ func _setup_audio_players() -> void:
 	music_player.bus = "Master"
 	add_child(music_player)
 	
+	music_player_alt = AudioStreamPlayer.new()
+	music_player_alt.bus = "Master"
+	add_child(music_player_alt)
+	
 	for i in range(max_sfx_voices):
 		var p = AudioStreamPlayer.new()
 		p.bus = "Master"
@@ -34,12 +54,30 @@ func _setup_audio_players() -> void:
 	_on_settings_updated()
 
 func _on_settings_updated() -> void:
-	if music_player:
-		music_player.volume_db = linear_to_db(Settings.music_volume)
+	var base_db = linear_to_db(Settings.music_volume)
+	if _crossfade_tween == null or not _crossfade_tween.is_valid():
+		var cur = _get_active_music_player()
+		if cur:
+			cur.volume_db = base_db
 	for p in sfx_players:
 		p.volume_db = linear_to_db(Settings.sfx_volume)
 
+func _get_active_music_player() -> AudioStreamPlayer:
+	return music_player if _active_player_is_primary else music_player_alt
+
+func _get_inactive_music_player() -> AudioStreamPlayer:
+	return music_player_alt if _active_player_is_primary else music_player
+
 # --- Gerador Procedural de Áudio WAV PCM 16-bit ---
+
+func _load_audio_file(path: String) -> AudioStream:
+	if ResourceLoader.exists(path):
+		var res := load(path) as AudioStream
+		if res:
+			return res
+	if FileAccess.file_exists(path) and path.ends_with(".ogg"):
+		return AudioStreamOggVorbis.load_from_file(path)
+	return null
 
 func _pregenerate_sounds() -> void:
 	synthesized_sfx["button_click"] = _generate_pluck(660.0, 0.09, 0.30)
@@ -53,6 +91,11 @@ func _pregenerate_sounds() -> void:
 	synthesized_sfx["stage_victory"] = _generate_horn([392.0, 523.25, 659.25, 783.99], 0.85, 0.36)
 	synthesized_sfx["stage_defeat"] = _generate_arpeggio([440.0, 415.30, 392.00, 349.23], 0.6, 0.5, "triangle")
 	synthesized_sfx["hero_skill"] = _generate_harp_gliss()
+	for sfx_key in REAL_SFX_FILES:
+		var path: String = REAL_SFX_FILES[sfx_key]
+		var res = _load_audio_file(path)
+		if res:
+			synthesized_sfx[sfx_key] = res
 
 func _sound_wav(samples: PackedFloat32Array, sample_rate: int = 22050) -> AudioStreamWAV:
 	var byte_data := PackedByteArray()
@@ -373,11 +416,23 @@ func play_sfx(sfx_name: String) -> void:
 func play_music(track_name: String) -> void:
 	if DisplayServer.get_name() == "headless":
 		return
+	if current_track == track_name and _get_active_music_player().playing:
+		return
 	_wanted_track = track_name
-	if _music_cache.has(track_name):
-		if current_track == track_name and music_player.playing:
+	
+	# 1. Prioriza reprodução de arquivos reais em assets/audio/music/ (.ogg)
+	var real_path: String = REAL_MUSIC_FILES.get(track_name, "")
+	if real_path != "":
+		var stream = _load_audio_file(real_path)
+		if stream:
+			if stream is AudioStreamOggVorbis:
+				(stream as AudioStreamOggVorbis).loop = true
+			_crossfade_to_stream(track_name, stream)
 			return
-		_start_music(track_name, _music_cache[track_name])
+			
+	# 2. Fallback procedural de segurança
+	if _music_cache.has(track_name):
+		_crossfade_to_stream(track_name, _music_cache[track_name])
 		return
 	if not _music_tasks.has(track_name):
 		var task_id := WorkerThreadPool.add_task(func(): _music_results[track_name] = _generate_medieval_track(track_name))
@@ -393,19 +448,45 @@ func _process(_delta: float) -> void:
 				continue
 			_music_cache[track] = wav
 			if _wanted_track == str(track):
-				_start_music(str(track), wav)
+				_crossfade_to_stream(str(track), wav)
 
-func _start_music(track_name: String, wav: AudioStreamWAV) -> void:
+func _crossfade_to_stream(track_name: String, stream: AudioStream) -> void:
 	current_track = track_name
-	wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
-	wav.loop_begin = 0
-	wav.loop_end = wav.data.size() / 2
-	music_player.stream = wav
-	music_player.play()
+	if stream is AudioStreamWAV:
+		var wav := stream as AudioStreamWAV
+		wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		wav.loop_begin = 0
+		wav.loop_end = wav.data.size() / 2
+	
+	var active_p := _get_active_music_player()
+	var next_p := _get_inactive_music_player()
+	var target_db := linear_to_db(Settings.music_volume)
+	
+	if _crossfade_tween and _crossfade_tween.is_valid():
+		_crossfade_tween.kill()
+		
+	next_p.stream = stream
+	next_p.volume_db = -60.0
+	next_p.play()
+	
+	_crossfade_tween = create_tween()
+	_crossfade_tween.set_parallel(true)
+	if active_p.playing:
+		_crossfade_tween.tween_property(active_p, "volume_db", -60.0, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_crossfade_tween.tween_property(next_p, "volume_db", target_db, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_crossfade_tween.chain().tween_callback(func():
+		active_p.stop()
+		active_p.volume_db = target_db
+	)
+	_active_player_is_primary = not _active_player_is_primary
 
 func stop_music() -> void:
+	if _crossfade_tween and _crossfade_tween.is_valid():
+		_crossfade_tween.kill()
 	if music_player:
 		music_player.stop()
+	if music_player_alt:
+		music_player_alt.stop()
 	current_track = ""
 
 func _exit_tree() -> void:

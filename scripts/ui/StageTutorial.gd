@@ -41,12 +41,14 @@ func setup(stage_node: Node3D, king_node: Node3D, merchant_node: Node3D, waves: 
 	if wave_manager:
 		wave_manager.tutorial_hold = true
 	is_active = true
+	GameState.set_dialogue_open(true)
 	_set_step(0)
 
 func _ready() -> void:
 	layer = 30
 
 func _exit_tree() -> void:
+	GameState.set_dialogue_open(false)
 	if arrow and is_instance_valid(arrow):
 		arrow.queue_free()
 	_set_hud_locked(false)
@@ -299,6 +301,7 @@ func _finish_tutorial() -> void:
 	if not is_active:
 		return
 	is_active = false
+	GameState.set_dialogue_open(false)
 	_set_pad_locks(false)
 	_set_hud_locked(false)
 	if merchant and is_instance_valid(merchant) and merchant.has_method("set_tutorial_locked"):

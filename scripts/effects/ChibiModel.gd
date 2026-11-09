@@ -34,7 +34,7 @@ static func spawn(parent: Node3D, model_key: String, target_height: float = 3.05
 	_hide_weapons(inst)
 	var box := _bounds(inst, true)
 	if box.size.y < 0.05:
-		return inst
+		box = AABB(Vector3(-0.5, 0.0, -0.5), Vector3(1.0, 2.5, 1.0))
 	var factor := target_height / box.size.y
 	inst.scale = Vector3.ONE * factor
 	var ground := _foot_y(inst)

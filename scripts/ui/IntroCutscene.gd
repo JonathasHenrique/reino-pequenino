@@ -5,6 +5,11 @@ extends Control
 signal intro_completed()
 
 const ILLUSTRATIONS := [
+	"res://assets/ui/illustrations/prologue_1.png",
+	"res://assets/ui/illustrations/prologue_2.png",
+	"res://assets/ui/illustrations/prologue_3.png",
+]
+const ILLUSTRATIONS_FALLBACK := [
 	"res://assets/ui/illustrations/prologue_1.jpeg",
 	"res://assets/ui/illustrations/prologue_2.jpeg",
 	"res://assets/ui/illustrations/prologue3.jpeg",
@@ -21,9 +26,10 @@ var _current_image: int = -1
 var _finishing: bool = false
 
 func _ready() -> void:
-	AudioManager.play_music("village")
+	AudioManager.play_music("prologue")
 	_setup_illustrations()
 	_style_texts()
+	I18n.language_changed.connect(func(_code: String): _style_texts())
 	if skip_button:
 		skip_button.custom_minimum_size = Vector2(170.0, 46.0)
 		skip_button.add_theme_font_size_override("font_size", 18)
@@ -59,14 +65,15 @@ func _make_illustration(shader: Shader) -> TextureRect:
 
 func _style_texts() -> void:
 	if title_label:
+		title_label.text = I18n.t_key("ui.game_title")
 		title_label.add_theme_color_override("font_outline_color", Color(0.10, 0.06, 0.03))
 		title_label.add_theme_constant_override("outline_size", 10)
 		title_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
 		title_label.add_theme_constant_override("shadow_offset_y", 5)
 	if subtitle_label:
+		subtitle_label.text = I18n.t_key("ui.game_subtitle")
 		subtitle_label.add_theme_color_override("font_outline_color", Color(0.10, 0.06, 0.03))
 		subtitle_label.add_theme_constant_override("outline_size", 5)
-		I18n.set_text(subtitle_label, "A Aventura das Seis Estrelas da Coroa Mãe")
 	if skip_button:
 		I18n.set_text(skip_button, "Pular História ⏩")
 
@@ -100,12 +107,28 @@ func _start_cutscene() -> void:
 	if dialogue_box:
 		dialogue_box.show_dialogue(_story_lines())
 
+func _load_illustration(idx: int) -> Texture2D:
+	var clamped := clampi(idx, 0, ILLUSTRATIONS.size() - 1)
+	var png_path: String = ILLUSTRATIONS[clamped]
+	if ResourceLoader.exists(png_path):
+		var tex := load(png_path) as Texture2D
+		if tex:
+			return tex
+	if FileAccess.file_exists(png_path):
+		var img := Image.load_from_file(png_path)
+		if img and not img.is_empty():
+			return ImageTexture.create_from_image(img)
+	var jpg_path: String = ILLUSTRATIONS_FALLBACK[clamped]
+	if ResourceLoader.exists(jpg_path):
+		return load(jpg_path) as Texture2D
+	return null
+
 func _on_line_changed(_index: int, line: Dictionary) -> void:
 	var image_index := int(line.get("image", 0))
 	if image_index == _current_image:
 		return
 	_current_image = image_index
-	var texture: Texture2D = load(ILLUSTRATIONS[clampi(image_index, 0, ILLUSTRATIONS.size() - 1)])
+	var texture: Texture2D = _load_illustration(image_index)
 	if _front.texture == null:
 		_front.texture = texture
 		_front.modulate.a = 1.0

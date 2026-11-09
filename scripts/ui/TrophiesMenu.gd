@@ -41,13 +41,21 @@ func _populate_trophies() -> void:
 		hbox.add_child(vbox)
 		
 		var title_lbl = Label.new()
-		title_lbl.text = info.get("name", "")
+		var title_key := "trophies.%s_title" % key
+		var translated_title = I18n.t_key(title_key)
+		if translated_title == title_key:
+			translated_title = I18n.tr_text(info.get("name", ""))
+		title_lbl.text = translated_title
 		title_lbl.add_theme_font_size_override("font_size", 18)
 		title_lbl.modulate = Color(1.0, 0.85, 0.25) if is_unlocked else Color(0.6, 0.6, 0.6)
 		vbox.add_child(title_lbl)
 		
 		var desc_lbl = Label.new()
-		desc_lbl.text = info.get("description", "")
+		var desc_key := "trophies.%s_desc" % key
+		var translated_desc = I18n.t_key(desc_key)
+		if translated_desc == desc_key:
+			translated_desc = I18n.tr_text(info.get("description", ""))
+		desc_lbl.text = translated_desc
 		desc_lbl.add_theme_font_size_override("font_size", 14)
 		desc_lbl.modulate = Color(0.85, 0.85, 0.85) if is_unlocked else Color(0.45, 0.45, 0.45)
 		vbox.add_child(desc_lbl)

@@ -63,7 +63,7 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 		visuals = $Visuals
 	if not _chibi:
 		_chibi = true
-		var heights := {"misty_runner": 2.25, "misty_squire": 2.70, "misty_archer": 2.15, "misty_crow": 1.85, "misty_giant": 3.50}
+		var heights := {"misty_runner": 1.91, "misty_squire": 2.30, "misty_archer": 1.83, "misty_crow": 1.57, "misty_giant": 2.98}
 		var models := {"misty_runner": "rogue", "misty_squire": "barbarian", "misty_archer": "rogue_hooded", "misty_crow": "rogue_hooded", "misty_giant": "barbarian"}
 		var tints := {
 			"misty_runner": Color(1.0, 0.55, 0.55),
@@ -72,14 +72,24 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 			"misty_crow": Color(0.70, 0.50, 0.55),
 			"misty_giant": Color(0.75, 0.35, 0.40),
 		}
-		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, str(models.get(enemy_id, "rogue")), float(heights.get(enemy_id, 2.25)), tints.get(enemy_id, Color(1.0, 0.55, 0.55)), true)
+		var chibi_pivot := Node3D.new()
+		chibi_pivot.name = "ChibiPivot"
+		add_child(chibi_pivot)
+		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(chibi_pivot, str(models.get(enemy_id, "rogue")), float(heights.get(enemy_id, 1.91)), tints.get(enemy_id, Color(1.0, 0.55, 0.55)), true)
 		if chibi:
 			visuals.visible = false
-			visuals = chibi
-			_base_scale = visuals.scale
+			visuals = chibi_pivot
+			_base_scale = Vector3.ONE
+			visuals.scale = _base_scale
+			if GameState.king_node and is_instance_valid(GameState.king_node):
+				var init_dir := GameState.king_node.global_position - global_position
+				init_dir.y = 0.0
+				if init_dir.length_squared() > 0.001:
+					visuals.rotation.y = atan2(init_dir.x, init_dir.z) + PI
 			return
+		chibi_pivot.queue_free()
 	if visuals:
-		visuals.scale = Vector3(scale_mult, scale_mult, scale_mult)
+		visuals.scale = Vector3.ONE * (scale_mult * 0.85)
 		_base_scale = visuals.scale
 		_apply_enemy_tint(visuals, tint)
 		
@@ -272,11 +282,15 @@ func _physics_process(delta: float) -> void:
 						dir = tangent
 				stuck_time = 0.0
 			velocity = dir * move_speed * slow_factor
-			# Os visuais dos inimigos apontam para +Z.
+			# A malha em visuals aponta para -Z; somamos PI a atan2(dir.x, dir.z) para olhar para frente.
 			var target_rot = atan2(dir.x, dir.z) + PI
 			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 8.0 * delta)
 		else:
 			velocity = Vector3.ZERO
+			if to_target.length_squared() > 0.001:
+				var atk_dir: Vector3 = to_target.normalized()
+				var target_rot = atan2(atk_dir.x, atk_dir.z) + PI
+				visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 10.0 * delta)
 			if attack_timer <= 0.0:
 				_attack_target(target)
 				

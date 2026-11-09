@@ -15,7 +15,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/ground.gdshader" id="13_shader"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
-size = Vector2(80, 80)
+size = Vector2(240, 240)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_village_grass"]
 shader = ExtResource("13_shader")
@@ -39,7 +39,7 @@ size = Vector3(2.8, 0.04, 24)
 size = Vector3(24, 0.04, 2.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
-size = Vector3(80, 1, 80)
+size = Vector3(240, 1, 240)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wall_h"]
 size = Vector3(60, 6, 2)
@@ -143,7 +143,7 @@ building_name = "Quartel Real"
 base_cost = 40
 
 [node name="Blacksmith" parent="Buildings" instance=ExtResource("4_bld")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -9.5)
 building_id = "blacksmith"
 building_name = "Ferraria da Vila"
 base_cost = 50

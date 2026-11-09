@@ -13,6 +13,7 @@ signal purchase_completed(pad_type: String)
 @export var spend_interval: float = 0.09
 
 var current_cost: int = 5
+var current_raw_cost: int = 5
 var current_paid: int = 0
 var is_king_present: bool = false
 var spend_timer: float = 0.0
@@ -35,8 +36,24 @@ var is_repair_mode: bool = false
 var status_material: StandardMaterial3D
 var cost_material: StandardMaterial3D
 
+func get_total_discount() -> float:
+	var discount = 0.0
+	if SaveManager.save_data.get("selected_hero") == "marta":
+		discount += 0.15
+	var blacksmith_lvl = int(SaveManager.save_data.get("village_buildings", {}).get("blacksmith", 1))
+	if blacksmith_lvl > 1:
+		discount += (blacksmith_lvl - 1) * 0.05
+	return clampf(discount, 0.0, 0.50)
+
+func _calculate_discounted_cost(raw_cost: int) -> int:
+	var discount = get_total_discount()
+	if discount > 0.0:
+		return maxi(3, int(ceil(float(raw_cost) * (1.0 - discount))))
+	return raw_cost
+
 func _ready() -> void:
-	current_cost = base_cost
+	current_raw_cost = base_cost
+	current_cost = _calculate_discounted_cost(current_raw_cost)
 	if cost_label_3d:
 		cost_label_3d.font = UI_FONT
 	_setup_pad_visuals()
@@ -121,7 +138,7 @@ func set_status(current_count: int, max_count: int, is_repair: bool = false, rep
 	else:
 		is_locked = false
 		if is_repair:
-			current_cost = repair_cost
+			current_cost = _calculate_discounted_cost(repair_cost)
 			
 	_update_ui()
 
@@ -158,12 +175,9 @@ func _finalize_purchase() -> void:
 	AudioManager.play_sfx("recruit" if "recruit" in pad_type else "build")
 	Art.pop_in(self)
 	
-	var discount = 0.0
-	if SaveManager.save_data.get("selected_hero") == "marta":
-		discount = 0.15
-	
 	if not is_repair_mode:
-		current_cost = maxi(3, int((current_cost + cost_increment_per_purchase) * (1.0 - discount)))
+		current_raw_cost += cost_increment_per_purchase
+		current_cost = _calculate_discounted_cost(current_raw_cost)
 		
 	_update_ui()
 	purchase_completed.emit(pad_type)

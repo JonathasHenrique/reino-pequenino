@@ -13,6 +13,7 @@ signal stage_completed(stars: int, gold_earned: int)
 signal stage_failed()
 signal hero_ability_used(hero_id: String)
 signal troop_count_changed(count: int)
+signal dialogue_visibility_changed(is_visible: bool)
 
 const HERO_ABILITY_COOLDOWN_SECONDS: float = 30.0
 
@@ -30,14 +31,17 @@ var king_node: Node3D = null
 var is_paused: bool = false
 var is_stage_active: bool = false
 var is_game_over: bool = false
+var is_dialogue_or_tutorial_open: bool = false
 var hero_ability_ready: bool = true
 var hero_ability_active: bool = false
+var hero_ability_duration_remaining: float = 0.0
 var hero_ability_cooldown_remaining: float = 0.0
 var hero_shield_remaining: float = 0.0
 
 var active_troops: Array = []
 var active_enemies: Array = []
 var active_buildings: Array = []
+var lost_main_defense: bool = false
 
 var debug_mode: bool = false
 
@@ -51,8 +55,10 @@ func start_stage(stage_id: int) -> void:
 	is_stage_active = true
 	is_game_over = false
 	is_paused = false
+	lost_main_defense = false
 	hero_ability_ready = true
 	hero_ability_active = false
+	hero_ability_duration_remaining = 0.0
 	hero_ability_cooldown_remaining = 0.0
 	hero_shield_remaining = 0.0
 	
@@ -70,6 +76,16 @@ func start_stage(stage_id: int) -> void:
 
 func _process(delta: float) -> void:
 	hero_shield_remaining = maxf(0.0, hero_shield_remaining - delta)
+	if hero_ability_duration_remaining > 0.0:
+		hero_ability_duration_remaining = maxf(0.0, hero_ability_duration_remaining - delta)
+		if hero_ability_duration_remaining <= 0.0:
+			hero_ability_active = false
+			
+	# Passiva da Clara: regeneração gradual do Rei e tropas
+	if is_stage_active and not is_game_over:
+		if SaveManager.save_data.get("selected_hero") == "clara" and king_hp < king_max_hp:
+			heal_king(maxi(1, int(3.0 * delta)))
+			
 	if hero_ability_ready or not is_stage_active:
 		return
 	hero_ability_cooldown_remaining = maxf(0.0, hero_ability_cooldown_remaining - delta)
@@ -204,21 +220,24 @@ func fail_stage() -> void:
 	AudioManager.play_sfx("stage_defeat")
 	stage_failed.emit()
 
-func complete_stage(totem_destroyed: bool = true) -> void:
+func record_defense_lost() -> void:
+	lost_main_defense = true
+
+func complete_stage(_totem_destroyed: bool = true) -> void:
 	if is_game_over:
 		return
 	is_game_over = true
 	is_stage_active = false
 	
-	# Cálculo de Estrelas (1 a 3):
-	# 3 estrelas: rei com > 70% de vida e tempo bom
-	# 2 estrelas: rei com > 30% de vida
-	# 1 estrela: vitória sobrevivente
+	# Cálculo Real de Estrelas (1 a 3):
+	# 1 Estrela: Vencer a fase
+	# 2 Estrelas: Vencer mantendo HP do Rei >= 50%
+	# 3 Estrelas: Vencer mantendo HP do Rei >= 85% sem perder defesas principais
 	var stars: int = 1
-	var hp_ratio: float = float(king_hp) / float(king_max_hp)
-	if hp_ratio >= 0.7:
+	var hp_ratio: float = float(king_hp) / float(maxi(1, king_max_hp))
+	if hp_ratio >= 0.85 and not lost_main_defense:
 		stars = 3
-	elif hp_ratio >= 0.35:
+	elif hp_ratio >= 0.50:
 		stars = 2
 	
 	# Ouro permanente ganho no fim da fase
@@ -236,16 +255,19 @@ func use_hero_ability() -> void:
 	var hero_id = SaveManager.save_data.get("selected_hero", "teodoro")
 	hero_ability_ready = false
 	hero_ability_cooldown_remaining = HERO_ABILITY_COOLDOWN_SECONDS
-	hero_ability_active = hero_id == "teodoro"
+	hero_ability_duration_remaining = 8.0
+	hero_ability_active = true
 	hero_ability_used.emit(hero_id)
-	AudioManager.play_sfx("hero_skill")
-	if hero_ability_active:
-		get_tree().create_timer(8.0, false).timeout.connect(func(): hero_ability_active = false)
-	elif hero_id == "rosa":
+	AudioManager.play_sfx("war_horn")
+	if hero_id == "rosa":
 		hero_shield_remaining = 8.0
 	elif hero_id == "clara":
 		heal_king(king_max_hp)
 		for troop in active_troops:
 			if is_instance_valid(troop):
 				troop.current_hp = troop.hp
+
+func set_dialogue_open(open: bool) -> void:
+	is_dialogue_or_tutorial_open = open
+	dialogue_visibility_changed.emit(open)
 
