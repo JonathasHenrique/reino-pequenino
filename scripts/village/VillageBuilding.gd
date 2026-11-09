@@ -66,7 +66,7 @@ func get_benefit_description() -> String:
 
 func _update_labels() -> void:
 	if label_level:
-		label_level.text = "%s · Nível %d" % [building_name, current_level]
+		I18n.set_text(label_level, "%s · Nível %d" % [building_name, current_level])
 		var top := 5.4
 		if building_id in ["barracks", "blacksmith", "stable", "tavern"]:
 			top = 9.0 if current_level >= 2 else 7.4
@@ -79,10 +79,10 @@ func _update_labels() -> void:
 	
 	if label_upgrade:
 		if current_level >= max_level or building_id == "crown_wall":
-			label_upgrade.text = get_benefit_description() + "\nNÍVEL MÁXIMO"
+			I18n.set_text(label_upgrade, get_benefit_description() + "\nNÍVEL MÁXIMO")
 			label_upgrade.modulate = Color(0.6, 0.95, 0.6)
 		else:
-			label_upgrade.text = "%s\nProximo: %d ouro" % [get_benefit_description(), get_upgrade_cost()]
+			I18n.set_text(label_upgrade, "%s\nProximo: %d ouro" % [get_benefit_description(), get_upgrade_cost()])
 			label_upgrade.modulate = Color(1.0, 0.88, 0.25)
 
 func _rebuild_visuals() -> void:

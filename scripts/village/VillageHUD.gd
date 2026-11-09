@@ -62,7 +62,7 @@ func _update_hud() -> void:
 		crown_label.text = "%d / 6" % stars
 	if battle_button:
 		var next_stage = int(SaveManager.save_data.get("unlocked_stages", 1))
-		battle_button.text = "⚔ Batalha (Fase %d)" % next_stage
+		I18n.set_text(battle_button, "⚔ Batalha (Fase %d)" % next_stage)
 	_update_hero_button()
 
 func _on_battle_pressed() -> void:
@@ -131,7 +131,7 @@ func _update_hero_button() -> void:
 		file.close()
 		if typeof(parsed) == TYPE_DICTIONARY and parsed.has(hero_id):
 			display = str(parsed[hero_id].get("name", display))
-	heroes_button.text = "Herói: %s" % display
+	I18n.set_text(heroes_button, "Herói: %s" % display)
 
 func _on_settings_pressed() -> void:
 	AudioManager.play_sfx("button_click")

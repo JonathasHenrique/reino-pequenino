@@ -266,6 +266,8 @@ func _set_step(next_step: int) -> void:
 
 	if merchant and is_instance_valid(merchant) and merchant.has_method("set_tutorial_locked"):
 		merchant.call("set_tutorial_locked", step != 3)
+	for lbl in [step_label, objective_label, hint_label]:
+		I18n.set_text(lbl, lbl.text)
 	_update_highlight(0.0)
 
 func _set_pad_locks(locked: bool, only_pad: Node = null) -> void:
@@ -308,9 +310,9 @@ func _finish_tutorial() -> void:
 		wave_manager.tutorial_hold = false
 	SaveManager.save_data["stage_1_tutorial_completed"] = true
 	SaveManager.save_game()
-	step_label.text = "TUTORIAL CONCLUÍDO"
-	objective_label.text = "Defenda o acampamento!"
-	hint_label.text = "Use os pads e vença!"
+	I18n.set_text(step_label, "TUTORIAL CONCLUÍDO")
+	I18n.set_text(objective_label, "Defenda o acampamento!")
+	I18n.set_text(hint_label, "Use os pads e vença!")
 	if arrow:
 		arrow.visible = false
 	get_tree().create_timer(2.0).timeout.connect(queue_free)

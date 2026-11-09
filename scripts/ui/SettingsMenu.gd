@@ -22,14 +22,15 @@ func _ready() -> void:
 func _populate_options() -> void:
 	if diff_option:
 		diff_option.clear()
-		diff_option.add_item("Tranquilo (Modo Passeio)", Settings.Difficulty.TRANQUILO)
-		diff_option.add_item("Clássico (Recomendado)", Settings.Difficulty.CLASSICO)
-		diff_option.add_item("Veterano (Sem Dicas & Desafio Alto)", Settings.Difficulty.VETERANO)
+		diff_option.add_item(I18n.t_key("settings.diff_tranquilo"), Settings.Difficulty.TRANQUILO)
+		diff_option.add_item(I18n.t_key("settings.diff_classico"), Settings.Difficulty.CLASSICO)
+		diff_option.add_item(I18n.t_key("settings.diff_veterano"), Settings.Difficulty.VETERANO)
 	
 	if lang_option:
 		lang_option.clear()
 		lang_option.add_item("Português (Brasil)", 0)
 		lang_option.add_item("English", 1)
+		lang_option.add_item("Español", 2)
 
 func _load_current_values() -> void:
 	if music_slider:
@@ -45,7 +46,13 @@ func _load_current_values() -> void:
 	if diff_option:
 		diff_option.select(Settings.difficulty)
 	if lang_option:
-		lang_option.select(0 if Settings.language == "pt_BR" else 1)
+		match Settings.language:
+			"en":
+				lang_option.select(1)
+			"es":
+				lang_option.select(2)
+			_:
+				lang_option.select(0)
 
 func _connect_signals() -> void:
 	if music_slider:
@@ -89,8 +96,10 @@ func _on_diff_selected(idx: int) -> void:
 	Settings.save_settings()
 
 func _on_lang_selected(idx: int) -> void:
-	Settings.language = "pt_BR" if idx == 0 else "en"
-	Settings.save_settings()
+	var code := "pt_BR" if idx == 0 else ("es" if idx == 2 else "en")
+	I18n.set_language(code)
+	_populate_options()
+	_load_current_values()
 
 func _on_close_pressed() -> void:
 	AudioManager.play_sfx("button_click")

@@ -63,7 +63,7 @@ func _on_spoils_changed(amount: int) -> void:
 
 func _process(_delta: float) -> void:
 	if fps_label:
-		fps_label.text = "FPS: %d | Tropas: %d" % [Engine.get_frames_per_second(), GameState.active_troops.size()]
+		I18n.set_text(fps_label, "FPS: %d | Tropas: %d" % [Engine.get_frames_per_second(), GameState.active_troops.size()])
 	if skill_button:
 		if GameState.hero_ability_ready:
 			skill_button.disabled = GameState.is_game_over
@@ -98,7 +98,7 @@ func _on_king_hp_changed(current: int, max_val: int) -> void:
 
 func _on_wave_started(wave_idx: int, total_waves: int) -> void:
 	if wave_label:
-		wave_label.text = "Onda %d / %d" % [wave_idx, total_waves]
+		I18n.set_text(wave_label, "Onda %d / %d" % [wave_idx, total_waves])
 
 func _on_troop_count_changed(count: int) -> void:
 	if troop_label:

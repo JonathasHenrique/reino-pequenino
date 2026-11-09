@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "play": "Jugar",
+    "village": "Villa Real",
+    "settings": "Ajustes",
+    "store": "Tienda del Mercader",
+    "trophies": "Trofeos del Reino",
+    "album": "Álbum de Pegatinas",
+    "stage": "Fase",
+    "world": "Mundo",
+    "victory": "¡Victoria Gloriosa!",
+    "defeat": "¡Reagrupa el Reino!",
+    "defeat_sub": "¡La Niebla Gris avanzó un poco, pero el joven rey Teodoro se sacudió el polvo y Biscuito reunió a las tropas!",
+    "retry": "Intentar de Nuevo",
+    "continue": "Continuar",
+    "pause": "Pausa",
+    "resume": "Reanudar",
+    "quit_to_village": "Volver a la Villa",
+    "gold_earned": "Oro permanente ganado:",
+    "coins": "Monedas",
+    "wave": "Ola",
+    "recruit": "Reclutar",
+    "build": "Construir",
+    "repair": "Reparar",
+    "upgrade": "Mejorar",
+    "collect": "Recoger",
+    "full": "¡Lleno!"
+  },
+  "settings": {
+    "title": "Ajustes del Reino",
+    "music": "Música",
+    "sfx": "Efectos de Sonido",
+    "vibration": "Vibración",
+    "difficulty": "Dificultad",
+    "diff_tranquilo": "Tranquilo (Modo Paseo)",
+    "diff_classico": "Clásico (Recomendado)",
+    "diff_veterano": "Veterano (Sin Pistas y Más Difícil)",
+    "retro_mode": "Modo Retro (Pantalla Vintage y Chiptune)",
+    "reduced_effects": "Reducir Efectos Visuales",
+    "language": "Idioma"
+  },
+  "dialogues": {
+    "intro_1": "Abuela Zenaide: '¡Teodoro, cariño... te dije que no dejaras la Corona Madre en la ventana mientras desayunabas.'",
+    "intro_2": "Teodoro: '¡Pero Abuela, Biscuito quería ver su brillante reflejo!'",
+    "intro_3": "Abuela Zenaide: 'Pues sí. Ahora el Barón Cenizo se enfadó porque no lo invitaron al baile y se llevó las 6 Estrellas a la Niebla. ¡Toma tu espada de madera y ve a buscarlas!'",
+    "tutorial_move": "Abuela Zenaide: 'Usa el joystick virtual para caminar. Nada de correr con calcetines por el suelo pulido.'",
+    "tutorial_coins": "Abuela Zenaide: 'Recoge las monedas del suelo. Tienen imán... tecnología punta de nuestro herrero.'",
+    "tutorial_buy": "Abuela Zenaide: 'Quédate quieto sobre el cuadro de madera hasta llenar la cajita. Los arqueros no trabajan gratis.'",
+    "tutorial_defense": "Abuela Zenaide: 'Ahí vienen los Brumosos con ollas en la cabeza. ¡Mantén cerca a tus arqueros y destruye ese Tótem!'",
+    "boss_world_1": "Abuela Zenaide: 'Ese Tótem del Valle está echando humo sobre mi ropa tendida. ¡Derríbalo ya!'"
+  }
+}

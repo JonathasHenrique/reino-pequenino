@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Settings="*res://scripts/autoloads/Settings.gd"
+I18n="*res://scripts/autoloads/I18n.gd"
+SceneTransition="*res://scripts/autoloads/SceneTransition.gd"
 SaveManager="*res://scripts/autoloads/SaveManager.gd"
 GameState="*res://scripts/autoloads/GameState.gd"
 AudioManager="*res://scripts/autoloads/AudioManager.gd"
