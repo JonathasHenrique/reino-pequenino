@@ -10,7 +10,7 @@ const MODELS := {
 	"rogue_hooded": "Rogue_Hooded",
 }
 
-static func spawn(parent: Node3D, model_key: String, target_height: float = 3.05, tint: Color = Color.WHITE, rotate_pi: bool = false) -> Node3D:
+static func spawn(parent: Node3D, model_key: String, target_height: float = 3.05, tint: Color = Color.WHITE, rotate_pi: bool = false, cast_shadows: bool = false) -> Node3D:
 	var model_name: String = MODELS.get(model_key, "Knight")
 	var packed := load("res://assets/models/chibi/%s.glb" % model_name) as PackedScene
 	if packed == null:
@@ -31,6 +31,7 @@ static func spawn(parent: Node3D, model_key: String, target_height: float = 3.05
 			elif bone == "lowerarm.r":
 				skeleton.set_bone_pose_rotation(b, Quaternion(Vector3(0, 0, 1), 0.15))
 
+	_hide_weapons(inst)
 	var box := _bounds(inst, true)
 	if box.size.y < 0.05:
 		return inst
@@ -44,7 +45,8 @@ static func spawn(parent: Node3D, model_key: String, target_height: float = 3.05
 		inst.rotation.y = PI
 	if tint != Color.WHITE:
 		_tint(inst, tint)
-	_hide_weapons(inst)
+	for m in inst.find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if cast_shadows else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return inst
 
 static func _hide_weapons(root: Node3D) -> void:

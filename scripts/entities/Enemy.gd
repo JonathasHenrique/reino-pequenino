@@ -20,6 +20,7 @@ var alive: bool = true
 var base_tint: Color = Color(0.85, 0.21, 0.24)
 var _base_scale: Vector3 = Vector3.ONE
 var _anim_time: float = 0.0
+var _chibi: bool = false
 var is_frozen: bool = false
 var freeze_remaining: float = 0.0
 var slow_remaining: float = 0.0
@@ -60,6 +61,23 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 	base_tint = tint
 	if not visuals:
 		visuals = $Visuals
+	if not _chibi:
+		_chibi = true
+		var heights := {"misty_runner": 2.25, "misty_squire": 2.70, "misty_archer": 2.15, "misty_crow": 1.85, "misty_giant": 3.50}
+		var models := {"misty_runner": "rogue", "misty_squire": "barbarian", "misty_archer": "rogue_hooded", "misty_crow": "rogue_hooded", "misty_giant": "barbarian"}
+		var tints := {
+			"misty_runner": Color(1.0, 0.55, 0.55),
+			"misty_squire": Color(0.90, 0.45, 0.45),
+			"misty_archer": Color(1.0, 0.45, 0.40),
+			"misty_crow": Color(0.70, 0.50, 0.55),
+			"misty_giant": Color(0.75, 0.35, 0.40),
+		}
+		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, str(models.get(enemy_id, "rogue")), float(heights.get(enemy_id, 2.25)), tints.get(enemy_id, Color(1.0, 0.55, 0.55)), true)
+		if chibi:
+			visuals.visible = false
+			visuals = chibi
+			_base_scale = visuals.scale
+			return
 	if visuals:
 		visuals.scale = Vector3(scale_mult, scale_mult, scale_mult)
 		_base_scale = visuals.scale
@@ -172,7 +190,8 @@ func freeze_for(duration: float) -> void:
 		return
 	is_frozen = true
 	freeze_remaining = maxf(freeze_remaining, duration)
-	_apply_enemy_tint(visuals, Color(0.48, 0.82, 1.0))
+	if not _chibi:
+		_apply_enemy_tint(visuals, Color(0.48, 0.82, 1.0))
 	if faction_ring:
 		var ice_material := StandardMaterial3D.new()
 		ice_material.albedo_color = Color("#76DDF2")
@@ -185,7 +204,8 @@ func freeze_for(duration: float) -> void:
 func _clear_freeze() -> void:
 	is_frozen = false
 	freeze_remaining = 0.0
-	_apply_enemy_tint(visuals, base_tint)
+	if not _chibi:
+		_apply_enemy_tint(visuals, base_tint)
 	if faction_ring:
 		faction_ring.material_override = null
 

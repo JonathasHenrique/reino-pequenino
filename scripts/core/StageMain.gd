@@ -52,6 +52,8 @@ func _ready() -> void:
 	GameState.king_hp_changed.connect(_on_king_hp_changed)
 	GameState.start_stage(stage_id)
 	AudioManager.play_music("battle")
+	if king and king.has_method("apply_size_multiplier"):
+		king.call("apply_size_multiplier", 0.86)
 	
 	# Totem protegido até o final de todas as ondas
 	if totem and wave_manager:

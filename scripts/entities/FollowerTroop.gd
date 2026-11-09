@@ -31,9 +31,10 @@ func _ready() -> void:
 	if troop_id == "archer":
 		_chibi = true
 		visuals.visible = false
-		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.7)
+		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.45)
 		if chibi:
 			visuals = chibi
+			_add_bow(chibi)
 	else:
 		var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
 		if imported:
@@ -43,6 +44,30 @@ func _ready() -> void:
 	# Bônus do Quartel da Vila
 	var barracks_lvl = SaveManager.save_data.get("village_buildings", {}).get("barracks", 1)
 	base_damage = int(base_damage * (1.0 + (barracks_lvl - 1) * 0.1))
+
+func _add_bow(parent: Node3D) -> void:
+	var packed := load("res://assets/models/chibi/bow.gltf") as PackedScene
+	if packed == null:
+		return
+	var holder := Node3D.new()
+	holder.position = Vector3(0.55, 1.10, 0.18)
+	parent.add_child(holder)
+	var bow := packed.instantiate() as Node3D
+	holder.add_child(bow)
+	bow.rotation.x = -PI * 0.5
+	bow.scale = Vector3.ONE * 0.72
+	var box := AABB()
+	var first := true
+	for m in bow.find_children("*", "MeshInstance3D", true, false):
+		var mi := m as MeshInstance3D
+		var xf: Transform3D = holder.global_transform.affine_inverse() * mi.global_transform
+		var a: AABB = xf * mi.get_aabb()
+		if first:
+			box = a
+			first = false
+		else:
+			box = box.merge(a)
+	bow.position -= box.get_center()
 
 func _exit_tree() -> void:
 	GameState.unregister_troop(self)

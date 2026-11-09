@@ -25,6 +25,7 @@ const PUFF_SCENE: PackedScene = preload("res://scenes/entities/PuffEffect.tscn")
 
 var foot_hero: Node3D = null
 var _vehicle_mode: bool = false
+var _size_multiplier: float = 1.0
 
 const HERO_LOOKS := {
 	"teodoro": {"model": "knight", "height": 3.05, "tint": Color.WHITE},
@@ -47,6 +48,10 @@ func _ready() -> void:
 func refresh_hero_appearance() -> void:
 	_apply_hero_visuals()
 
+func apply_size_multiplier(factor: float) -> void:
+	_size_multiplier = factor
+	visuals.scale = base_visual_scale * factor
+
 func _apply_hero_visuals() -> void:
 	var hero_id = str(SaveManager.save_data.get("selected_hero", "teodoro"))
 	var horse := visuals.get_node_or_null("Horse")
@@ -67,7 +72,7 @@ func _build_foot_hero(hero_id: String) -> void:
 	foot.name = "FootHero"
 	visuals.add_child(foot)
 	var height: float = look.get("height", 3.05)
-	var model: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(foot, str(look["model"]), height, look.get("tint", Color.WHITE), false)
+	var model: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(foot, str(look["model"]), height, look.get("tint", Color.WHITE), false, true)
 	if model == null:
 		return
 	if hero_id == "teodoro":
