@@ -116,5 +116,34 @@ func _run_captures() -> void:
 
 	stage.queue_free()
 	await _wait_frames(5)
+
+	# 6. FASE 1 — TUTORIAL PASSO 1 (Pads com Nomes Claros + Bloqueio Linear + Lanterna no Pad Azul)
+	SaveManager.save_data["stage_1_tutorial_completed"] = false
+	GameState.current_stage = 1
+	GameState.start_stage(1)
+	var stage1 := stage_scene.instantiate()
+	root.add_child(stage1)
+	await _wait_frames(20)
+	Engine.time_scale = 1.0
+	await _save_viewport_png("res://tests/print_pads_tutorial.png")
+
+	# 7. FASE 1 — TUTORIAL PASSO 6 (Lanterna de Alvo Principal na Torre/Totem da Bruma + Pan de Câmera)
+	var tut_node: Node = null
+	for child in stage1.get_children():
+		if child.get_script() == load("res://scripts/ui/StageTutorial.gd"):
+			tut_node = child
+			break
+	if tut_node:
+		tut_node.call("_set_step", 6)
+		var cam1 := stage1.get_node_or_null("IsometricCamera") as Camera3D
+		var totem1 := stage1.get_node_or_null("MistTotem") as Node3D
+		if cam1 and totem1 and cam1.has_method("focus_instant_on"):
+			cam1.call("focus_instant_on", Vector3(6.8, 0.0, 0.0))
+	Engine.time_scale = 1.0
+	await _wait_frames(15)
+	await _save_viewport_png("res://tests/print_alvo_torre.png")
+
+	stage1.queue_free()
+	await _wait_frames(5)
 	print("[QA] Todas as capturas e verificações concluídas com sucesso!")
 	get_tree().quit(0)

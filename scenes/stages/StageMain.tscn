@@ -191,10 +191,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 14)
 transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 18, 0, -15)
 
 [node name="Flower1" parent="DioramaScenery" instance=ExtResource("18_flower")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, 9.5)
 
 [node name="Flower2" parent="DioramaScenery" instance=ExtResource("18_flower")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -11.5)
 
 [node name="CampBackFence1" parent="DioramaScenery" instance=ExtResource("19_fence")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, -8.2)
@@ -272,7 +272,7 @@ pad_type = "build_tower"
 base_cost = 11
 
 [node name="PurchasePad_Palisade" parent="." instance=ExtResource("5_pad")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0, 0, 3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0, 1.8)
 pad_type = "build_palisade"
 base_cost = 6
 

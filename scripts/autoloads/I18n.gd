@@ -17,7 +17,10 @@ var _pt_flat: Dictionary = {}
 var _reverse: Dictionary = {}
 var _extra: Dictionary = {}
 
+var ui_font: FontFile = preload("res://assets/fonts/Fredoka-Variable.ttf")
+
 func _ready() -> void:
+	_setup_emoji_fallback()
 	language = _normalize(Settings.language)
 	_pt_flat = _load_flat("pt_BR")
 	for key in _pt_flat:
@@ -26,6 +29,21 @@ func _ready() -> void:
 	_flat = _load_flat(language)
 	get_tree().node_added.connect(_on_node_added)
 	call_deferred("apply_tree", get_tree().root)
+
+func _setup_emoji_fallback() -> void:
+	if not ui_font:
+		return
+	ui_font.allow_system_fallback = true
+	ui_font.disable_embedded_bitmaps = false
+	var families := ["Symbola", "Noto Sans Symbols 2", "Noto Sans Symbols", "Noto Emoji", "DejaVu Sans"]
+	var fb_list: Array[Font] = []
+	for fam in families:
+		var sf := SystemFont.new()
+		sf.font_names = PackedStringArray([fam])
+		sf.disable_embedded_bitmaps = false
+		sf.allow_system_fallback = true
+		fb_list.append(sf)
+	ui_font.fallbacks = fb_list
 
 func _normalize(code: String) -> String:
 	var low := code.to_lower()

@@ -13,6 +13,9 @@ var target_node: Node3D = null
 var offset_vector: Vector3
 var shake_remaining: float = 0.0
 var shake_strength: float = 0.0
+var custom_focus_active: bool = false
+var custom_focus_point: Vector3 = Vector3.ZERO
+var _pan_tween: Tween = null
 
 func _ready() -> void:
 	if not target_path.is_empty():
@@ -37,6 +40,7 @@ func _physics_process(delta: float) -> void:
 		target_node = GameState.king_node
 		
 	if target_node and is_instance_valid(target_node):
+		var focus_pos: Vector3 = custom_focus_point if custom_focus_active else target_node.global_position
 		var shake_offset := Vector3.ZERO
 		if shake_remaining > 0.0:
 			shake_remaining = maxf(0.0, shake_remaining - delta)
@@ -44,10 +48,34 @@ func _physics_process(delta: float) -> void:
 			shake_offset = Vector3(randf_range(-strength, strength), randf_range(-strength, strength), 0.0)
 		else:
 			shake_strength = 0.0
-		var target_pos = target_node.global_position + offset_vector + shake_offset
+		var target_pos = focus_pos + offset_vector + shake_offset
 		var smooth := 1.0 - exp(-follow_speed * delta)
 		global_position = global_position.lerp(target_pos, smooth)
-		look_at(target_node.global_position, Vector3.UP)
+		look_at(focus_pos, Vector3.UP)
+
+func pan_to_point(world_pos: Vector3, hold_duration: float = 1.5) -> void:
+	if not target_node and GameState.king_node:
+		target_node = GameState.king_node
+	var start_pos: Vector3 = target_node.global_position if (target_node and is_instance_valid(target_node)) else Vector3.ZERO
+	custom_focus_point = start_pos
+	custom_focus_active = true
+	if _pan_tween and _pan_tween.is_valid():
+		_pan_tween.kill()
+	_pan_tween = create_tween()
+	_pan_tween.tween_property(self, "custom_focus_point", world_pos, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_pan_tween.tween_interval(hold_duration)
+	_pan_tween.tween_callback(func():
+		var back_pos: Vector3 = target_node.global_position if (target_node and is_instance_valid(target_node)) else start_pos
+		var back_tw := create_tween()
+		back_tw.tween_property(self, "custom_focus_point", back_pos, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		back_tw.tween_callback(func(): custom_focus_active = false)
+	)
+
+func focus_instant_on(world_pos: Vector3) -> void:
+	custom_focus_point = world_pos
+	custom_focus_active = true
+	global_position = world_pos + offset_vector
+	look_at(world_pos, Vector3.UP)
 
 func shake(strength: float = 0.12, duration: float = 0.22) -> void:
 	shake_strength = maxf(shake_strength, strength)
