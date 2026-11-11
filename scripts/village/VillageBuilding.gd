@@ -237,6 +237,7 @@ func try_upgrade() -> bool:
 		current_level += 1
 		SaveManager.save_data["village_buildings"][building_id] = current_level
 		SaveManager.save_game()
+		SaveManager.check_and_unlock_achievements(true)
 		
 		AudioManager.play_sfx("build")
 		_rebuild_visuals()

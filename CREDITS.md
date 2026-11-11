@@ -33,8 +33,9 @@ Todos os recursos visuais, códigos, efeitos sonoros e músicas deste projeto s�
   - Licença: CC0 1.0; licença original preservada em `assets/models/characters/quaternius/Quaternius-RPG-Characters-License.txt`.
   - O Warrior é usado como Rei Teodoro em `assets/models/characters/QuaterniusWarrior.tscn`.
 
-* **Ilustrações de Prólogo e História:**
+* **Ilustrações de Prólogo, História e Álbum de Figurinhas:**
   - `assets/ui/illustrations/prologue_1.jpeg`, `prologue_2.jpeg`, `prologue3.jpeg`
+  - `assets/ui/illustrations/sticker_1.jpeg` a `sticker_6.jpeg`
   - Licença: CC0 1.0 Universal / Domínio Público.
 * **Retratos Estilizados de Personagens (Diálogos e Avisos):**
   - `assets/ui/portraits/zenaide.png` (Dona Zenaide)

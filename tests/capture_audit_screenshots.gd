@@ -69,6 +69,24 @@ func _run_captures() -> void:
 	await _wait_frames(15)
 	await _save_viewport_png("res://tests/print_timeline.png")
 	timeline.queue_free()
+	await _wait_frames(5)
+
+	# 3B. TROFÉUS DO REINO NA VILA (TrophiesMenu.tscn — "Primeira Vitória Real" desbloqueado)
+	var trophies_scene := load("res://scenes/ui/TrophiesMenu.tscn") as PackedScene
+	var trophies := trophies_scene.instantiate()
+	root.add_child(trophies)
+	await _wait_frames(15)
+	await _save_viewport_png("res://tests/print_trophies_unlocked.png")
+	trophies.queue_free()
+	await _wait_frames(5)
+
+	# 3C. ÁLBUM DE FIGURINHAS DA COROA NA VILA (StickerAlbum.tscn — sticker_1.jpeg visível)
+	var album_scene := load("res://scenes/ui/StickerAlbum.tscn") as PackedScene
+	var album := album_scene.instantiate()
+	root.add_child(album)
+	await _wait_frames(15)
+	await _save_viewport_png("res://tests/print_sticker_album.png")
+	album.queue_free()
 	village.queue_free()
 	await _wait_frames(5)
 
