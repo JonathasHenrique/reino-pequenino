@@ -102,8 +102,15 @@ offset_right = -40.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 alignment = 2
+
+[node name="SupplyChestButton" type="Button" parent="BottomBar"]
+custom_minimum_size = Vector2(150, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.75, 1)
+theme_override_font_sizes/font_size = 18
+text = "🎬 +50 Ouro"
 
 [node name="HeroesButton" type="Button" parent="BottomBar"]
 custom_minimum_size = Vector2(180, 56)

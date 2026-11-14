@@ -7,6 +7,7 @@ const SafeArea = preload("res://scripts/ui/SafeArea.gd")
 
 @onready var gold_label: Label = $TopBar/HBox/GoldContainer/GoldLabel
 @onready var crown_label: Label = $TopBar/HBox/CrownContainer/CrownLabel
+@onready var supply_chest_button: Button = get_node_or_null("BottomBar/SupplyChestButton")
 @onready var battle_button: Button = $BottomBar/BattleButton
 @onready var heroes_button: Button = $BottomBar/HeroesButton
 @onready var settings_button: Button = $TopBar/HBox/SettingsButton
@@ -19,12 +20,17 @@ const SafeArea = preload("res://scripts/ui/SafeArea.gd")
 func _ready() -> void:
 	_apply_safe_area()
 	get_viewport().size_changed.connect(_apply_safe_area)
+	_style_supply_chest_button()
 	_update_hud()
 	SaveManager.save_saved.connect(_update_hud)
+	AdManager.ad_reward_earned.connect(_on_ad_reward_earned)
+	I18n.language_changed.connect(func(_code: String): _update_hud())
 	
 	if joystick:
 		joystick.joystick_updated.connect(_on_joystick_updated)
 	
+	if supply_chest_button:
+		supply_chest_button.pressed.connect(_on_supply_chest_pressed)
 	if battle_button:
 		battle_button.pressed.connect(_on_battle_pressed)
 	if heroes_button:
@@ -35,6 +41,63 @@ func _ready() -> void:
 		album_button.pressed.connect(_on_album_pressed)
 	if trophies_button:
 		trophies_button.pressed.connect(_on_trophies_pressed)
+
+func _process(_delta: float) -> void:
+	if supply_chest_button:
+		_update_supply_chest_button()
+
+func _style_supply_chest_button() -> void:
+	if not supply_chest_button:
+		return
+	var st := StyleBoxFlat.new()
+	st.bg_color = Color(0.55, 0.38, 0.10, 0.96)
+	st.border_color = Color(1.0, 0.84, 0.22, 1.0)
+	st.set_border_width_all(2)
+	st.set_corner_radius_all(14)
+	st.content_margin_left = 12.0
+	st.content_margin_right = 12.0
+	supply_chest_button.add_theme_stylebox_override("normal", st)
+
+func _update_supply_chest_button() -> void:
+	if not supply_chest_button:
+		return
+	if AdManager.is_village_chest_ready():
+		supply_chest_button.disabled = false
+		var lang: String = I18n.language
+		if lang == "en":
+			supply_chest_button.text = "🎬 +50 Gold"
+		elif lang == "es":
+			supply_chest_button.text = "🎬 +50 Oro"
+		else:
+			supply_chest_button.text = "🎬 +50 Ouro"
+	else:
+		supply_chest_button.disabled = true
+		var rem: int = maxi(1, ceili(AdManager.get_village_chest_cooldown_remaining()))
+		var mins: int = int(rem / 60)
+		var secs: int = int(rem % 60)
+		supply_chest_button.text = "⏳ %d:%02d" % [mins, secs]
+	I18n.protect(supply_chest_button)
+
+func _on_supply_chest_pressed() -> void:
+	if not AdManager.is_village_chest_ready():
+		return
+	AudioManager.play_sfx("button_click")
+	AdManager.show_rewarded_ad("village_chest", 50)
+
+func _on_ad_reward_earned(reward_type: String, amount: int) -> void:
+	if reward_type != "village_chest":
+		return
+	var reward_gold: int = amount if amount > 0 else 50
+	SaveManager.add_gold(reward_gold)
+	AudioManager.play_sfx("coin_pickup")
+	_update_hud()
+	var lang: String = I18n.language
+	if lang == "en":
+		_show_toast("🎁 +%d Royal Gold!" % reward_gold)
+	elif lang == "es":
+		_show_toast("🎁 ¡+%d Oro Real!" % reward_gold)
+	else:
+		_show_toast("🎁 +%d Ouro Real!" % reward_gold)
 
 func _apply_safe_area() -> void:
 	if top_bar:
@@ -63,6 +126,7 @@ func _update_hud() -> void:
 	if battle_button:
 		var next_stage = int(SaveManager.save_data.get("unlocked_stages", 1))
 		I18n.set_text(battle_button, "⚔ Batalha (Fase %d)" % next_stage)
+	_update_supply_chest_button()
 	_update_hero_button()
 
 func _on_battle_pressed() -> void:

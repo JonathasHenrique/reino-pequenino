@@ -44,13 +44,16 @@ var tower_slots: Array[Vector3] = [
 var active_towers: Array = []
 var barracks_built: bool = false
 var forge_built: bool = false
+var revive_used: bool = false
 var last_king_hp: int = -1
 
 func _ready() -> void:
 	_apply_mobile_3d_optimizations()
 	stage_id = GameState.current_stage
+	revive_used = false
 	last_king_hp = GameState.king_hp
 	GameState.king_hp_changed.connect(_on_king_hp_changed)
+	GameState.stage_revived.connect(_on_stage_revived)
 	GameState.start_stage(stage_id)
 	AudioManager.play_music("battle")
 	if king and king.has_method("apply_size_multiplier"):
@@ -122,6 +125,41 @@ func _on_king_hp_changed(current_hp: int, _max_hp: int) -> void:
 	if last_king_hp >= 0 and current_hp < last_king_hp and camera and camera.has_method("shake"):
 		camera.call("shake", 0.12, 0.22)
 	last_king_hp = current_hp
+
+func _on_stage_revived() -> void:
+	revive_used = true
+	# Restaura pelo menos 50% da vida das paliçadas/muralha ativas
+	active_palisades = active_palisades.filter(func(p): return is_instance_valid(p))
+	for p in active_palisades:
+		if is_instance_valid(p) and p.get("max_hp") != null and p.get("current_hp") != null:
+			var target_hp: int = maxi(int(p.current_hp), int(ceil(float(p.max_hp) * 0.50)))
+			p.current_hp = mini(int(p.max_hp), target_hp)
+			if p.has_method("_update_ui"):
+				p.call("_update_ui")
+	# Empurra fortemente ou elimina os inimigos colados na muralha/Rei para dar fôlego imediato
+	var origin: Vector3 = king.global_position if is_instance_valid(king) else Vector3.ZERO
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not is_instance_valid(enemy) or enemy.is_in_group("totems"):
+			continue
+		var dist_to_king: float = enemy.global_position.distance_to(origin)
+		var close_to_wall: bool = false
+		for p in active_palisades:
+			if is_instance_valid(p) and enemy.global_position.distance_to(p.global_position) <= 4.0:
+				close_to_wall = true
+				break
+		if dist_to_wall_or_king(dist_to_king, close_to_wall):
+			if dist_to_king <= 4.5 or close_to_wall:
+				if enemy.has_method("knock_back_from"):
+					enemy.call("knock_back_from", origin, 18.0)
+				if enemy.has_method("freeze_for"):
+					enemy.call("freeze_for", 1.8)
+				elif enemy.has_method("apply_slow_for"):
+					enemy.call("apply_slow_for", 3.5, 0.4)
+	_hero_burst(Color(0.35, 1.0, 0.55))
+	_update_pad_statuses()
+
+func dist_to_wall_or_king(dist_to_king: float, close_to_wall: bool) -> bool:
+	return dist_to_king <= 10.0 or close_to_wall
 
 func _update_pad_statuses() -> void:
 	active_towers = active_towers.filter(func(t): return is_instance_valid(t))

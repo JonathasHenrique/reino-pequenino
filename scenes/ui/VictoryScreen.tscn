@@ -42,16 +42,16 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.5)
 
 [node name="Panel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(560, 410)
+custom_minimum_size = Vector2(760, 420)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -205.0
-offset_right = 280.0
-offset_bottom = 205.0
+offset_left = -380.0
+offset_top = -210.0
+offset_right = 380.0
+offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
@@ -101,7 +101,7 @@ horizontal_alignment = 1
 
 [node name="HBox" type="HBoxContainer" parent="Panel/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="VillageButton" type="Button" parent="Panel/VBox/HBox"]
@@ -112,8 +112,16 @@ theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_wood")
 text = "Vila Real"
 
+[node name="DoubleGoldButton" type="Button" parent="Panel/VBox/HBox"]
+custom_minimum_size = Vector2(230, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.04, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_gold")
+text = "🎬 Dobrar Ouro (x2)"
+
 [node name="NextButton" type="Button" parent="Panel/VBox/HBox"]
-custom_minimum_size = Vector2(160, 52)
+custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.15, 0.1, 0.05, 1)
 theme_override_font_sizes/font_size = 18

@@ -136,10 +136,22 @@ func _run_captures() -> void:
 		print("[QA] Enemy rot_y=", snappedf(vis.rotation.y, 0.01), " chibi_rot_y=", snappedf(chibi_child.rotation.y, 0.01), " dot=", snappedf(forward.dot(dir_to_king), 0.01))
 	await _save_viewport_png("res://tests/print_battle.png")
 
-	# 5. TELA DE VITÓRIA 3 ESTRELAS (VictoryScreen.tscn)
+	# 5. TELA DE VITÓRIA 3 ESTRELAS + BOTÃO DOBRAR OURO (VictoryScreen.tscn)
 	GameState.complete_stage(true)
 	await _wait_frames(15)
 	await _save_viewport_png("res://tests/print_victory_3stars.png")
+
+	# 5B. TELA DE DERROTA NA FASE 2 COM SEGUNDA CHANCE (DefeatScreen.tscn)
+	var vic_node := stage.get_node_or_null("VictoryScreen")
+	if vic_node:
+		vic_node.visible = false
+	GameState.is_game_over = false
+	GameState.is_stage_active = true
+	GameState.revive_used = false
+	GameState.current_stage = 2
+	GameState.fail_stage()
+	await _wait_frames(15)
+	await _save_viewport_png("res://tests/print_defeat_second_chance.png")
 
 	stage.queue_free()
 	await _wait_frames(5)

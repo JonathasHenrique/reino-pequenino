@@ -11,6 +11,7 @@ signal wave_completed(wave_number: int)
 signal totem_hp_changed(current_hp: int, max_hp: int)
 signal stage_completed(stars: int, gold_earned: int)
 signal stage_failed()
+signal stage_revived()
 signal hero_ability_used(hero_id: String)
 signal troop_count_changed(count: int)
 signal dialogue_visibility_changed(is_visible: bool)
@@ -42,6 +43,7 @@ var active_troops: Array = []
 var active_enemies: Array = []
 var active_buildings: Array = []
 var lost_main_defense: bool = false
+var revive_used: bool = false
 
 var debug_mode: bool = false
 
@@ -56,6 +58,7 @@ func start_stage(stage_id: int) -> void:
 	is_game_over = false
 	is_paused = false
 	lost_main_defense = false
+	revive_used = false
 	hero_ability_ready = true
 	hero_ability_active = false
 	hero_ability_duration_remaining = 0.0
@@ -219,6 +222,26 @@ func fail_stage() -> void:
 	is_stage_active = false
 	AudioManager.play_sfx("stage_defeat")
 	stage_failed.emit()
+
+func revive_wall_second_chance() -> void:
+	if revive_used:
+		return
+	revive_used = true
+	is_game_over = false
+	is_stage_active = true
+	is_paused = false
+	get_tree().paused = false
+	king_hp = maxi(1, int(ceil(float(king_max_hp) * 0.50)))
+	king_hp_changed.emit(king_hp, king_max_hp)
+	AudioManager.play_sfx("war_horn")
+	stage_revived.emit()
+
+func add_bonus_stage_gold(amount: int) -> void:
+	if amount <= 0:
+		return
+	stage_gold_reward += amount
+	SaveManager.add_gold(amount)
+	AudioManager.play_sfx("coin_pickup")
 
 func record_defense_lost() -> void:
 	lost_main_defense = true
