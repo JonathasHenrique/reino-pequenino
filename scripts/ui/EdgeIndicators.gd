@@ -6,6 +6,7 @@ extends Control
 @export var margin: float = 36.0
 var indicator_pool: Array[Label] = []
 var max_indicators: int = 8
+var _update_timer: float = 0.0
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
@@ -20,7 +21,11 @@ func _ready() -> void:
 		add_child(lbl)
 		indicator_pool.append(lbl)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_update_timer -= delta
+	if _update_timer > 0.0:
+		return
+	_update_timer = 0.1
 	var camera = get_viewport().get_camera_3d()
 	if not camera:
 		return

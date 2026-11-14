@@ -10,9 +10,16 @@ const MODELS := {
 	"rogue_hooded": "Rogue_Hooded",
 }
 
+static var _scene_cache: Dictionary = {}
+
 static func spawn(parent: Node3D, model_key: String, target_height: float = 3.05, tint: Color = Color.WHITE, rotate_pi: bool = false, cast_shadows: bool = false) -> Node3D:
 	var model_name: String = MODELS.get(model_key, "Knight")
-	var packed := load("res://assets/models/chibi/%s.glb" % model_name) as PackedScene
+	var path := "res://assets/models/chibi/%s.glb" % model_name
+	var packed: PackedScene = _scene_cache.get(path)
+	if packed == null:
+		packed = load(path) as PackedScene
+		if packed != null:
+			_scene_cache[path] = packed
 	if packed == null:
 		return null
 	var inst := packed.instantiate() as Node3D

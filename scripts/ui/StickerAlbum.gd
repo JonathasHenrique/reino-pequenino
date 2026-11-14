@@ -3,8 +3,8 @@ extends CanvasLayer
 # StickerAlbum.gd - Álbum de Figurinhas Colecionável da Coroa
 # Exibe as 6 ilustrações reais (sticker_1.jpeg a sticker_6.jpeg) conforme o progresso.
 
-@onready var grid_container: GridContainer = $Panel/VBox/Scroll/GridContainer
-@onready var back_button: Button = $Panel/VBox/BackButton
+@onready var grid_container: GridContainer = find_child("GridContainer", true, false) as GridContainer
+@onready var back_button: Button = find_child("BackButton", true, false) as Button
 
 const STICKER_IMAGES := {
 	"star_1": "res://assets/ui/illustrations/sticker_1.jpeg",
@@ -108,35 +108,45 @@ func _populate_stickers() -> void:
 		var is_unlocked: bool = unlocked_stickers.has(key)
 		
 		var card = PanelContainer.new()
-		card.custom_minimum_size = Vector2(225, 205)
+		card.custom_minimum_size = Vector2(228, 194)
+		card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		card.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		card.add_theme_stylebox_override("panel", _make_card_style(is_unlocked))
 		
 		var vbox = VBoxContainer.new()
 		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-		vbox.add_theme_constant_override("separation", 6)
+		vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		vbox.add_theme_constant_override("separation", 5)
 		card.add_child(vbox)
 		
 		if is_unlocked:
 			var img_path: String = str(STICKER_IMAGES.get(key, ""))
 			var tex: Texture2D = _load_sticker_texture(img_path)
 			if tex:
+				var img_center := CenterContainer.new()
+				img_center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				var tex_rect := TextureRect.new()
 				tex_rect.texture = tex
 				tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				tex_rect.custom_minimum_size = Vector2(180, 122)
+				tex_rect.custom_minimum_size = Vector2(176, 114)
 				tex_rect.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-				vbox.add_child(tex_rect)
+				tex_rect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				img_center.add_child(tex_rect)
+				vbox.add_child(img_center)
 			else:
 				var icon_lbl = Label.new()
 				icon_lbl.text = info.get("icon", "⭐")
 				icon_lbl.add_theme_font_size_override("font_size", 46)
 				icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				icon_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				I18n.protect(icon_lbl)
 				vbox.add_child(icon_lbl)
 		else:
 			var locked_box := CenterContainer.new()
-			locked_box.custom_minimum_size = Vector2(180, 110)
+			locked_box.custom_minimum_size = Vector2(176, 114)
+			locked_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			var q_lbl := Label.new()
 			q_lbl.text = "?"
 			q_lbl.add_theme_font_size_override("font_size", 56)
@@ -144,6 +154,7 @@ func _populate_stickers() -> void:
 			q_lbl.add_theme_color_override("font_outline_color", Color(0.10, 0.04, 0.04))
 			q_lbl.add_theme_constant_override("outline_size", 6)
 			q_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			q_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			I18n.protect(q_lbl)
 			locked_box.add_child(q_lbl)
 			vbox.add_child(locked_box)
@@ -159,6 +170,7 @@ func _populate_stickers() -> void:
 			name_lbl.modulate = Color(0.75, 0.78, 0.84)
 		name_lbl.add_theme_font_size_override("font_size", 15)
 		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		I18n.protect(name_lbl)
 		vbox.add_child(name_lbl)
 		
@@ -173,6 +185,7 @@ func _populate_stickers() -> void:
 			sub_lbl.modulate = Color(0.62, 0.68, 0.76)
 		sub_lbl.add_theme_font_size_override("font_size", 13)
 		sub_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		sub_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		I18n.protect(sub_lbl)
 		vbox.add_child(sub_lbl)
 		

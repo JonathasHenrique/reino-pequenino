@@ -73,6 +73,8 @@ static func _collect(root: Node3D, node: Node, exclude_names: Array, out: Array)
 	for child in node.get_children():
 		if exclude_names.has(str(child.name)):
 			continue
+		if child is Node3D and not (child as Node3D).visible:
+			continue
 		if child is MeshInstance3D:
 			var mi := child as MeshInstance3D
 			if mi.mesh != null and mi.mesh.get_surface_count() > 0:

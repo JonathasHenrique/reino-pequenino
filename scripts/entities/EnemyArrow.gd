@@ -23,6 +23,7 @@ func _ready() -> void:
 	var box := BoxMesh.new()
 	box.size = Vector3(0.07, 0.07, 0.8)
 	shaft.mesh = box
+	shaft.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	shaft.material_override = wood
 	add_child(shaft)
 	var tip := MeshInstance3D.new()
@@ -31,6 +32,7 @@ func _ready() -> void:
 	cone.bottom_radius = 0.1
 	cone.height = 0.28
 	tip.mesh = cone
+	tip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	tip.material_override = wood
 	tip.position = Vector3(0, 0, 0.48)
 	tip.rotation = Vector3(PI * 0.5, 0, 0)

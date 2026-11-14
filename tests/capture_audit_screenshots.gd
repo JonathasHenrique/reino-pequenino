@@ -85,6 +85,15 @@ func _run_captures() -> void:
 	var album := album_scene.instantiate()
 	root.add_child(album)
 	await _wait_frames(15)
+	var album_panel := album.get_node_or_null("Panel") as Control
+	var album_grid := album.find_child("GridContainer", true, false) as Control
+	var album_btn := album.find_child("BackButton", true, false) as Control
+	if album_panel and album_grid and album_btn:
+		var left_margin := album_grid.global_position.x - album_panel.global_position.x
+		var right_margin := (album_panel.global_position.x + album_panel.size.x) - (album_grid.global_position.x + album_grid.size.x)
+		var btn_left := album_btn.global_position.x - album_panel.global_position.x
+		var btn_right := (album_panel.global_position.x + album_panel.size.x) - (album_btn.global_position.x + album_btn.size.x)
+		print("[QA] StickerAlbum Grid left_margin=", left_margin, " right_margin=", right_margin, " | BackButton left=", btn_left, " right=", btn_right)
 	await _save_viewport_png("res://tests/print_sticker_album.png")
 	album.queue_free()
 	village.queue_free()

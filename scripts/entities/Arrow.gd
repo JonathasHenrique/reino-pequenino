@@ -10,6 +10,10 @@ var target_node: Node3D = null
 var direction: Vector3 = Vector3.FORWARD
 var life_time: float = 2.5
 
+func _ready() -> void:
+	for m in find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
 func setup(p_target: Node3D, p_damage: int, p_speed: float = 20.0) -> void:
 	target_node = p_target
 	damage = p_damage

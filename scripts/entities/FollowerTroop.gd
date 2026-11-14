@@ -10,10 +10,15 @@ extends CharacterBody3D
 @export var base_damage: int = 12
 @export var hp: int = 35
 
+const TARGET_SEARCH_INTERVAL: float = 0.18
+const ARROW_SCENE: PackedScene = preload("res://scenes/entities/Arrow.tscn")
+const BOW_SCENE: PackedScene = preload("res://assets/models/chibi/bow.gltf")
+
 var current_hp: int = 35
 var is_mounted_on_tower: bool = false
 var mounted_tower_node: Node3D = null
 var attack_cooldown: float = 0.0
+var target_search_timer: float = 0.0
 var current_target: Node3D = null
 var walk_time: float = 0.0
 
@@ -24,23 +29,29 @@ var _chibi: bool = false
 
 func _ready() -> void:
 	current_hp = hp
+	target_search_timer = randf_range(0.0, TARGET_SEARCH_INTERVAL)
 	add_to_group("troops")
 	# Camada própria (bit 3): o Rei atravessa aliados; mundo/paliçadas continuam bloqueando.
 	collision_layer = 8
 	GameState.register_troop(self)
 	if troop_id == "archer":
 		_chibi = true
-		visuals.visible = false
-		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.08)
+		var old_visuals := visuals
+		if old_visuals:
+			old_visuals.visible = false
+		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(self, "rogue_hooded", 2.08, Color.WHITE, false, false)
 		if chibi:
 			visuals = chibi
 			_add_bow(chibi)
+			if old_visuals and old_visuals != visuals:
+				old_visuals.queue_free()
 	else:
 		visuals.scale *= 0.85
 		var imported := visuals.get_node_or_null("ImportedCharacter") as Node3D
 		if imported:
 			load("res://scripts/effects/ChibiFace.gd").attach(imported, false, Color(0.16, 0.32, 0.20))
 	_base_visual_scale = visuals.scale
+	_disable_shadows_recursive(self)
 	
 	# Bônus do Quartel da Vila
 	var barracks_lvl = SaveManager.save_data.get("village_buildings", {}).get("barracks", 1)
@@ -50,14 +61,17 @@ func _ready() -> void:
 	if SaveManager.save_data.get("selected_hero") == "fidelio":
 		base_damage = int(base_damage * 1.10)
 
+func _disable_shadows_recursive(node: Node) -> void:
+	for m in node.find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
 func _add_bow(parent: Node3D) -> void:
-	var packed := load("res://assets/models/chibi/bow.gltf") as PackedScene
-	if packed == null:
+	if BOW_SCENE == null:
 		return
 	var holder := Node3D.new()
 	holder.position = Vector3(0.55, 1.10, 0.18)
 	parent.add_child(holder)
-	var bow := packed.instantiate() as Node3D
+	var bow := BOW_SCENE.instantiate() as Node3D
 	holder.add_child(bow)
 	bow.rotation.x = -PI * 0.5
 	bow.scale = Vector3.ONE * 0.72
@@ -65,6 +79,7 @@ func _add_bow(parent: Node3D) -> void:
 	var first := true
 	for m in bow.find_children("*", "MeshInstance3D", true, false):
 		var mi := m as MeshInstance3D
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		var xf: Transform3D = holder.global_transform.affine_inverse() * mi.global_transform
 		var a: AABB = xf * mi.get_aabb()
 		if first:
@@ -125,9 +140,15 @@ func _handle_formation_movement(delta: float) -> void:
 		
 	move_and_slide()
 
-func _handle_combat(_delta: float) -> void:
-	# Busca inimigo mais próximo dentro do raio de ataque
-	current_target = _find_nearest_enemy(attack_range)
+func _handle_combat(delta: float) -> void:
+	# Busca inimigo mais próximo a cada TARGET_SEARCH_INTERVAL (evita varrer grupos a cada frame)
+	target_search_timer -= delta
+	if target_search_timer <= 0.0 or not is_instance_valid(current_target) or (current_target.has_method("is_alive") and not current_target.is_alive()):
+		if target_search_timer <= 0.0:
+			target_search_timer = TARGET_SEARCH_INTERVAL
+			current_target = _find_nearest_enemy(attack_range)
+		else:
+			current_target = null
 	
 	if current_target and is_instance_valid(current_target):
 		# Vira na direção do alvo
@@ -135,14 +156,20 @@ func _handle_combat(_delta: float) -> void:
 		to_enemy.y = 0
 		if to_enemy.length_squared() > 0.01:
 			var target_rot = atan2(to_enemy.x, to_enemy.z) + (0.0 if _chibi else PI)
-			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 14.0 * _delta)
+			visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rot, 14.0 * delta)
 			
 		if attack_cooldown <= 0.0:
 			_perform_attack(current_target)
 
-func _handle_mounted_combat(_delta: float) -> void:
+func _handle_mounted_combat(delta: float) -> void:
 	var extended_range = attack_range * 1.35
-	current_target = _find_nearest_enemy(extended_range)
+	target_search_timer -= delta
+	if target_search_timer <= 0.0 or not is_instance_valid(current_target) or (current_target.has_method("is_alive") and not current_target.is_alive()):
+		if target_search_timer <= 0.0:
+			target_search_timer = TARGET_SEARCH_INTERVAL
+			current_target = _find_nearest_enemy(extended_range)
+		else:
+			current_target = null
 	
 	if current_target and is_instance_valid(current_target):
 		var to_enemy = current_target.global_position - global_position
@@ -178,9 +205,8 @@ func _animate_archer_attack() -> void:
 	tween.parallel().tween_property(bow, "rotation:z", bow_rest, 0.12)
 
 func _spawn_arrow(target: Node3D, dmg: int) -> void:
-	var arrow_scene = load("res://scenes/entities/Arrow.tscn")
-	if arrow_scene:
-		var arrow = arrow_scene.instantiate()
+	if ARROW_SCENE:
+		var arrow = ARROW_SCENE.instantiate()
 		get_parent().add_child(arrow)
 		arrow.global_position = global_position + Vector3(0, 0.8, 0)
 		arrow.setup(target, dmg)

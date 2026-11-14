@@ -3,6 +3,10 @@
 [ext_resource type="Script" path="res://scripts/ui/StickerAlbum.gd" id="1_album"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 24.0
+content_margin_top = 18.0
+content_margin_right = 24.0
+content_margin_bottom = 18.0
 bg_color = Color(0.1, 0.12, 0.16, 0.96)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
@@ -44,30 +48,40 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+alignment = 1
 
 [node name="Title" type="Label" parent="Panel/VBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 26
 text = "ÁLBUM DE FIGURINHAS DA COROA"
 horizontal_alignment = 1
 
-[node name="Scroll" type="ScrollContainer" parent="Panel/VBox"]
+[node name="CenterContainer" type="CenterContainer" parent="Panel/VBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GridContainer" type="GridContainer" parent="Panel/VBox/Scroll"]
+[node name="GridContainer" type="GridContainer" parent="Panel/VBox/CenterContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/h_separation = 16
+theme_override_constants/h_separation = 18
 theme_override_constants/v_separation = 16
 columns = 3
 
-[node name="BackButton" type="Button" parent="Panel/VBox"]
-custom_minimum_size = Vector2(160, 44)
+[node name="FooterCenter" type="CenterContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="Panel/VBox/FooterCenter"]
+custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Fechar Álbum"
+alignment = 1
 

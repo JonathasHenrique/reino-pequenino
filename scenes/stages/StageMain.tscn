@@ -71,6 +71,8 @@ ambient_light_energy = 0.40
 ambient_light_sky_contribution = 0.3
 tonemap_mode = 3
 tonemap_exposure = 0.95
+ssr_enabled = false
+ssao_enabled = false
 glow_enabled = false
 glow_normalized = true
 glow_intensity = 0.12
@@ -80,6 +82,7 @@ fog_light_color = Color(0.65, 0.74, 0.88, 1)
 fog_light_energy = 0.12
 fog_density = 0.002
 fog_sky_affect = 0.20
+volumetric_fog_enabled = false
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
 size = Vector3(90, 1, 90)
@@ -100,14 +103,14 @@ environment = SubResource("Environment_sunset")
 transform = Transform3D(0.707107, -0.454519, 0.541675, 0, 0.766044, 0.642788, -0.707107, -0.454519, 0.541675, 12, 18, 12)
 light_color = Color(1, 0.89, 0.69, 1)
 light_energy = 1.10
-shadow_enabled = true
+shadow_enabled = false
 directional_shadow_mode = 0
 directional_shadow_max_distance = 26.0
-directional_shadow_blend_splits = true
+directional_shadow_blend_splits = false
 shadow_bias = 0.03
 shadow_normal_bias = 1.5
-shadow_blur = 1.0
-light_angular_distance = 2.0
+shadow_blur = 0.0
+light_angular_distance = 0.0
 
 [node name="DioramaIslandSlab" parent="." instance=ExtResource("23_slab")]
 

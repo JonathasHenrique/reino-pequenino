@@ -8,6 +8,18 @@ extends Node3D
 @onready var hud: CanvasLayer = $VillageHUD
 
 func _ready() -> void:
+	var dir_light := get_node_or_null("DirectionalLight3D") as DirectionalLight3D
+	if dir_light:
+		dir_light.shadow_enabled = false
+	var world_env := get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if world_env and world_env.environment:
+		world_env.environment.glow_enabled = false
+		world_env.environment.ssao_enabled = false
+		world_env.environment.ssr_enabled = false
+		world_env.environment.volumetric_fog_enabled = false
+	for m in find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
 	# Garante que o estado de fim de jogo seja resetado para o rei poder se mover livremente
 	GameState.is_stage_active = false
 	GameState.is_game_over = false

@@ -21,6 +21,7 @@ func _style_meshes(node: Node) -> void:
 		if str(child.name).begins_with("Face_"):
 			continue
 		if child is MeshInstance3D:
+			(child as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			var color := Color.WHITE if albedo_texture else fallback_color
 			if albedo_texture == null and child.mesh and child.mesh.get_surface_count() > 0:
 				var source_material: Material = child.mesh.surface_get_material(0)

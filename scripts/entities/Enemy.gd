@@ -14,8 +14,17 @@ signal died(enemy: Node3D)
 @export var coin_drop_count: int = 2
 @export var is_flying: bool = false
 
+const TARGET_SEARCH_INTERVAL: float = 0.18
+const FLOATING_NUM_SCENE: PackedScene = preload("res://scenes/ui/FloatingNumber.tscn")
+const SPOIL_SCENE: PackedScene = preload("res://scenes/entities/SpoilLoot.tscn")
+const PUFF_SCENE: PackedScene = preload("res://scenes/entities/PuffEffect.tscn")
+const COIN_SCENE: PackedScene = preload("res://scenes/entities/Coin.tscn")
+const ENEMY_ARROW_SCRIPT: Script = preload("res://scripts/entities/EnemyArrow.gd")
+
 var current_hp: int = 24
 var attack_timer: float = 0.0
+var target_search_timer: float = 0.0
+var current_target: Node3D = null
 var alive: bool = true
 var base_tint: Color = Color(0.85, 0.21, 0.24)
 var _base_scale: Vector3 = Vector3.ONE
@@ -53,9 +62,15 @@ func _ready() -> void:
 		Settings.Difficulty.VETERANO:
 			diff_scale = 1.20
 	current_hp = int(base_hp * stage_scale * diff_scale)
+	target_search_timer = randf_range(0.0, TARGET_SEARCH_INTERVAL)
+	_disable_shadows_recursive(self)
 	
 	add_to_group("enemies")
 	GameState.register_enemy(self)
+
+func _disable_shadows_recursive(node: Node) -> void:
+	for m in node.find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func apply_look(scale_mult: float, tint: Color) -> void:
 	base_tint = tint
@@ -77,10 +92,15 @@ func apply_look(scale_mult: float, tint: Color) -> void:
 		add_child(chibi_pivot)
 		var chibi: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(chibi_pivot, str(models.get(enemy_id, "rogue")), float(heights.get(enemy_id, 1.91)), tints.get(enemy_id, Color(1.0, 0.55, 0.55)), true)
 		if chibi:
-			visuals.visible = false
+			var old_visuals := visuals
+			if old_visuals:
+				old_visuals.visible = false
 			visuals = chibi_pivot
 			_base_scale = Vector3.ONE
 			visuals.scale = _base_scale
+			if old_visuals and old_visuals != visuals:
+				old_visuals.queue_free()
+			_disable_shadows_recursive(self)
 			if GameState.king_node and is_instance_valid(GameState.king_node):
 				var init_dir := GameState.king_node.global_position - global_position
 				init_dir.y = 0.0
@@ -259,9 +279,13 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	attack_timer = maxf(0.0, attack_timer - delta)
+	target_search_timer -= delta
+	if target_search_timer <= 0.0 or not is_instance_valid(current_target):
+		target_search_timer = TARGET_SEARCH_INTERVAL
+		current_target = _find_target()
 	
 	# Busca alvo: Paliçadas no caminho ou o Rei
-	var target = _find_target()
+	var target = current_target
 	if target and is_instance_valid(target):
 		var to_target = target.global_position - global_position
 		if not is_flying:
@@ -326,7 +350,7 @@ func _shoot_arrow(target: Node3D) -> void:
 	if not is_instance_valid(target) or GameState.is_game_over:
 		return
 	var arrow := Node3D.new()
-	arrow.set_script(load("res://scripts/entities/EnemyArrow.gd"))
+	arrow.set_script(ENEMY_ARROW_SCRIPT)
 	get_parent().add_child(arrow)
 	arrow.global_position = global_position + Vector3(0, 1.7, 0)
 	arrow.call("setup", target, damage, self)
@@ -368,9 +392,8 @@ func _flash_white_and_squash() -> void:
 	tw.tween_property(visuals, "scale", orig_scale, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _spawn_damage_number(val: int) -> void:
-	var float_scene = load("res://scenes/ui/FloatingNumber.tscn")
-	if float_scene:
-		var fn = float_scene.instantiate()
+	if FLOATING_NUM_SCENE:
+		var fn = FLOATING_NUM_SCENE.instantiate()
 		get_parent().add_child(fn)
 		fn.global_position = global_position + Vector3(randf_range(-0.3, 0.3), 1.5, randf_range(-0.3, 0.3))
 		fn.setup(val, Color(1.0, 0.9, 0.4))
@@ -387,28 +410,25 @@ func _die() -> void:
 	queue_free()
 
 func _drop_spoils() -> void:
-	var spoil_scene = load("res://scenes/entities/SpoilLoot.tscn")
-	if not spoil_scene:
+	if not SPOIL_SCENE:
 		return
-	var spoil = spoil_scene.instantiate()
+	var spoil = SPOIL_SCENE.instantiate()
 	get_parent().add_child(spoil)
 	spoil.global_position = global_position + Vector3(randf_range(-0.4, 0.4), 0.25, randf_range(-0.4, 0.4))
 
 func _spawn_puff_effect() -> void:
 	# Nuvem cinza fofa ("puf")
-	var puff_scene = load("res://scenes/entities/PuffEffect.tscn")
-	if puff_scene:
-		var p = puff_scene.instantiate()
+	if PUFF_SCENE:
+		var p = PUFF_SCENE.instantiate()
 		get_parent().add_child(p)
 		p.global_position = global_position + Vector3(0, 0.5, 0)
 
 func _drop_coins() -> void:
-	var coin_scene = load("res://scenes/entities/Coin.tscn")
-	if not coin_scene:
+	if not COIN_SCENE:
 		return
 		
 	for i in range(coin_drop_count):
-		var coin = coin_scene.instantiate()
+		var coin = COIN_SCENE.instantiate()
 		get_parent().add_child(coin)
 		var rand_offset = Vector3(randf_range(-0.7, 0.7), 0.2, randf_range(-0.7, 0.7))
 		coin.global_position = global_position + rand_offset

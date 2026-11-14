@@ -62,9 +62,13 @@ func _apply_hero_visuals() -> void:
 	_vehicle_mode = hero_id == "teodoro"
 	if horse:
 		horse.visible = false
+		horse.queue_free()
 	if rider:
 		rider.visible = false
+		rider.queue_free()
 	_build_foot_hero(hero_id)
+	for m in find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _build_foot_hero(hero_id: String) -> void:
 	var look: Dictionary = HERO_LOOKS.get(hero_id, HERO_LOOKS["teodoro"])
@@ -72,7 +76,7 @@ func _build_foot_hero(hero_id: String) -> void:
 	foot.name = "FootHero"
 	visuals.add_child(foot)
 	var height: float = look.get("height", 3.05)
-	var model: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(foot, str(look["model"]), height, look.get("tint", Color.WHITE), false, true)
+	var model: Node3D = load("res://scripts/effects/ChibiModel.gd").spawn(foot, str(look["model"]), height, look.get("tint", Color.WHITE), false, false)
 	if model == null:
 		return
 	if hero_id == "teodoro":

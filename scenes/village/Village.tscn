@@ -56,6 +56,8 @@ ambient_light_energy = 0.52
 ambient_light_sky_contribution = 0.3
 tonemap_mode = 3
 tonemap_exposure = 0.95
+ssr_enabled = false
+ssao_enabled = false
 glow_enabled = false
 glow_normalized = true
 glow_intensity = 0.12
@@ -65,6 +67,7 @@ fog_light_color = Color(0.65, 0.74, 0.88, 1)
 fog_light_energy = 0.12
 fog_density = 0.002
 fog_sky_affect = 0.15
+volumetric_fog_enabled = false
 
 [node name="Village" type="Node3D"]
 script = ExtResource("1_vil")
@@ -76,9 +79,9 @@ environment = SubResource("Environment_village")
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 12, 18, 12)
 light_color = Color(1.0, 0.89, 0.69, 1)
 light_energy = 1.12
-shadow_enabled = true
-shadow_blur = 1.0
-light_angular_distance = 2.0
+shadow_enabled = false
+shadow_blur = 0.0
+light_angular_distance = 0.0
 
 [node name="Floor" type="StaticBody3D" parent="."]
 

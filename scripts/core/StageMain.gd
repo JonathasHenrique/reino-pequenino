@@ -47,6 +47,7 @@ var forge_built: bool = false
 var last_king_hp: int = -1
 
 func _ready() -> void:
+	_apply_mobile_3d_optimizations()
 	stage_id = GameState.current_stage
 	last_king_hp = GameState.king_hp
 	GameState.king_hp_changed.connect(_on_king_hp_changed)
@@ -90,6 +91,19 @@ func _ready() -> void:
 	)
 	# Depois que o estilo toon do cenário é aplicado (diferido), funde as malhas estáticas.
 	get_tree().create_timer(0.35).timeout.connect(_optimize_static_geometry)
+
+func _apply_mobile_3d_optimizations() -> void:
+	var dir_light := get_node_or_null("DirectionalLight3D") as DirectionalLight3D
+	if dir_light:
+		dir_light.shadow_enabled = false
+	var world_env := get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if world_env and world_env.environment:
+		world_env.environment.glow_enabled = false
+		world_env.environment.ssao_enabled = false
+		world_env.environment.ssr_enabled = false
+		world_env.environment.volumetric_fog_enabled = false
+	for m in find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _optimize_static_geometry() -> void:
 	var merger = load("res://scripts/core/StaticMeshMerger.gd")

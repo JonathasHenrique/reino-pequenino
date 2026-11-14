@@ -94,6 +94,7 @@ static func _add(parent: Node3D, mesh: Mesh, pos: Vector3, color: Color, rot: Ve
 	mi.mesh = mesh
 	mi.position = pos
 	mi.rotation = rot
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.material_override = toon_mat(color, roughness)
 	parent.add_child(mi)
 	return mi

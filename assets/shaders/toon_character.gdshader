@@ -16,8 +16,12 @@ uniform vec4 emission_color : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform float emission_energy = 0.0;
 
 void fragment() {
-	vec3 texture_color = texture(albedo_texture, UV).rgb;
-	ALBEDO = use_albedo_texture ? pow(texture_color, vec3(0.78)) : base_color.rgb;
+	if (use_albedo_texture) {
+		vec3 texture_color = texture(albedo_texture, UV).rgb;
+		ALBEDO = pow(texture_color, vec3(0.78));
+	} else {
+		ALBEDO = base_color.rgb;
+	}
 	ROUGHNESS = roughness_val;
 	METALLIC = metallic_val;
 	if (emission_energy > 0.0) {
